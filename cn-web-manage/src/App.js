@@ -32,6 +32,7 @@ class App extends Component {
     for(let i = 0;i<paths_hide_menu.length; i++){
       if(paths_hide_menu[i] == path){
         this.hide_menu = true;
+        break;
       }
     }
     console.log('path:', window.location.pathname);
