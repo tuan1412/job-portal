@@ -3,32 +3,24 @@ import React, { Component } from 'react';
 class LoginPage extends Component {
     render() {
         return (
-            <div class="splash-container">
-                <div class="card ">
-                    <div class="card-header text-center"><a href="../index.html"><img class="logo-img" src="../assets/images/logo.png" alt="logo" /></a><span class="splash-description">Please enter your user information.</span></div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <input class="form-control form-control-lg" id="username" type="text" placeholder="Username" autocomplete="off" />
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control form-control-lg" id="password" type="password" placeholder="Password" />
-                            </div>
-                            <div class="form-group">
-                                <label class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" /><span class="custom-control-label">Remember Me</span>
-                                </label>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
-                        </form>
+            <div class="wrapper fadeInDown">
+                <div id="formContent">
+                    <div class="fadeIn first">
+                        <img src="https://cdn0.iconfinder.com/data/icons/business-human-resources-2/128/54-512.png" id="icon" alt="User Icon" />
                     </div>
-                    <div class="card-footer bg-white p-0  ">
-                        <div class="card-footer-item card-footer-item-bordered">
-                            <a href="#" class="footer-link">Create An Account</a></div>
-                        <div class="card-footer-item card-footer-item-bordered">
-                            <a href="#" class="footer-link">Forgot Password</a>
-                        </div>
+
+                    <form>
+                        <input type="text" id="login" class="fadeIn second" name="login" placeholder="login" />
+                        <input type="text" id="password" class="fadeIn third" name="login" placeholder="password" />
+                        <input type="submit" class="fadeIn fourth" value="Log In" />
+                    </form>
+
+                    <div id="formFooter">
+                        <a class="underlineHover" href="/sign-up">Sign Up?</a>
+                        <br/>
+                        <a class="underlineHover" href="/forgot-password">Forgot Password?</a>
                     </div>
+
                 </div>
             </div>
         );

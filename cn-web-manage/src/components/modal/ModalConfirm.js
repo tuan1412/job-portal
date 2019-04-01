@@ -19,6 +19,9 @@ class ModalConfirm extends Component {
     render() {
         return (
             <>
+                {/* <button type="button" class={"btn btn-" + this.type} data-toggle="modal" data-target="#confirmModal">
+                    {this.props.name}
+                </button> */}
                 <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
