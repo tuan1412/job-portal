@@ -17,6 +17,10 @@ class ErrorPage extends Component {
         console.log('trongnv');
     }
 
+    callback(data){
+        
+    }
+
     render() {
         return (
             <>
@@ -30,9 +34,8 @@ class ErrorPage extends Component {
                                         <h1 class="display-3">Page Not Found</h1>
                                         <p> The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>
                                         <a href="/" class="btn btn-secondary btn-lg">Back to homepage</a>
-                                        <FormButton title="title" content="trongnv" name="name" confirm="true" type="info"></FormButton>
+                                        {/* <FormButton title="title" content="trongnv" name="name" confirm="true" type="info" callback={this.callback}></FormButton> */}
                                         <button onClick={this.show}>show</button>
-                                        <Alert timeout={this._alert.timeout} mess={this._alert.mess}></Alert>
                                     </div>
                                 </div>
                             </div>

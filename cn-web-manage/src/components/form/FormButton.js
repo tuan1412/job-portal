@@ -8,7 +8,7 @@ class FormButton extends Component {
         super(props);
         this.state = {};
 
-        if(!!props.type){
+        if (!!props.type) {
             this.type = props.type;
         }
 
@@ -16,19 +16,23 @@ class FormButton extends Component {
             this.data_confirm_modal = {
                 title: props.title,
                 content: props.content,
-                type : this.type
+                type: this.type
             }
         }
-
-
+        this.callback = this.callback.bind(this);
     }
+
+    callback(data) {
+        this.props.callback(data);
+    }
+
     render() {
         return (
             <>
-                <button type="button"  class={"btn btn-" + this.type} data-toggle="modal" data-target="#confirmModal">
-                    {this.props.name} 
+                <button type="button" class={"btn btn-" + this.type} data-toggle="modal" data-target="#confirmModal">
+                    {this.props.name}
                 </button>
-                {this.props.confirm ? <ModalConfirm data={this.data_confirm_modal}></ModalConfirm> : <></>}
+                {this.props.confirm ? <ModalConfirm data={this.data_confirm_modal} callback={this.callback}></ModalConfirm> : <></>}
             </>
         );
     }

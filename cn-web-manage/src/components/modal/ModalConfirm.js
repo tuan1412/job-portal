@@ -4,7 +4,18 @@ class ModalConfirm extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.cancel = this.cancel.bind(this);
+        this.submit = this.submit.bind(this);
     }
+
+    cancel() {
+        this.props.callback("cancel");
+    }
+
+    submit() {
+        this.props.callback("submit");
+    }
+
     render() {
         return (
             <>
@@ -18,8 +29,8 @@ class ModalConfirm extends Component {
                                 {this.props.data.content}
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class={"btn btn-" + this.props.data.type}>Save</button>
+                                <button type="button" onClick={this.cancel} class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" onClick={this.submit} class={"btn btn-" + this.props.data.type} data-dismiss="modal">Save</button>
                             </div>
                         </div>
                     </div>
