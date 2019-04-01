@@ -1,0 +1,23 @@
+.tab-pane-container .tab-label {
+    text-transform: uppercase;
+    color: #000;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .1em;
+}
+
+.tab-pane-container .tab-content {
+    position: relative;
+    z-index: 2;
+}
+
+.tab-pane-container .nav-pills .nav-link {
+    border-radius: 0;
+}
+
+.tab-pane-container .nav {
+    display: -webkit-box;
+    flex-wrap: nowrap;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
