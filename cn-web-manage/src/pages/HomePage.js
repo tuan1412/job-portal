@@ -13,13 +13,10 @@ class HomePage extends Component {
 
 
   render() {
-
-
     return (
       <>
         <Header></Header>
         <LeftMenu></LeftMenu>
-        <Alert type="danger" mess="trongnv" timeout="3000"></Alert>
       </>
     );
   }
