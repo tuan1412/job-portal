@@ -20,7 +20,21 @@ class LeftMenu extends Component {
                                 <li class="nav-divider">
                                     Menu
                             </li>
-                                <li class="nav-item ">
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/">Dashboard</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/new-jobs">New Jobs</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/companys">Companys</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/jobs">Jobs</a>
+                                </li>
+                                
+                                {/* <li class="nav-item ">
                                     <a class="nav-link active" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1"><i class="fa fa-fw fa-user-circle"></i>Dashboard <span class="badge badge-success">6</span></a>
                                     <div id="submenu-1" class="collapse submenu" >
                                         <ul class="nav flex-column">
@@ -96,7 +110,7 @@ class LeftMenu extends Component {
                                         </ul>
                                     </div>
                                 </li>
-                                
+
                                 <li class="nav-item ">
                                     <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-4" aria-controls="submenu-4"><i class="fab fa-fw fa-wpforms"></i>Forms</a>
                                     <div id="submenu-4" class="collapse submenu" >
@@ -266,7 +280,7 @@ class LeftMenu extends Component {
                                             </li>
                                         </ul>
                                     </div>
-                                </li>
+                                </li>*/}
                             </ul>
                         </div>
                     </nav>
