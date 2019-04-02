@@ -5,24 +5,49 @@ export const LoginPage = Loadable({
     loader: () => import(_LoginPage)
 });
 class _LoginPage extends Component {
+    account = {
+        username: "",
+        password: ""
+    }
+    constructor(props) {
+        super(props);
+        this.handleChangeUsername = this.handleChangeUsername.bind(this);
+        this.handleChangePassword = this.handleChangePassword.bind(this);
+        this.login = this.login.bind(this);
+    }
 
     changePage(page) {
         console.log("next-page: ", page);
         this.props.history.push(page);
     }
-    
+
+    handleChangeUsername(event) {
+        this.account.username = event.target.value;
+        this.forceUpdate();
+    }
+    handleChangePassword(event) {
+        this.account.password = event.target.value;
+        this.forceUpdate();
+    }
+
+    login(event) {
+        console.log('account-login', this.account);
+        event.preventDefault();
+
+    }
+
     render() {
         return (
             <div class="wrapper fadeInDown">
                 <div id="formContent">
                     <div class="fadeIn first">
-                        <img src="https://cdn0.iconfinder.com/data/icons/business-human-resources-2/128/54-512.png" id="icon" alt="User Icon" />
+                        <img onClick={(e) => this.changePage("/")} src="/assets/images/login.png" id="icon" alt="User Icon" />
                     </div>
 
                     <form>
-                        <input type="text" id="login" class="fadeIn second" name="login" placeholder="login" />
-                        <input type="text" id="password" class="fadeIn third" name="login" placeholder="password" />
-                        <input onClick={() => this.changePage("/app")} type="submit" class="fadeIn fourth" value="Log In" />
+                        <input type="text" id="login" class="fadeIn second" name="login" placeholder="Username" value={this.account.username} onChange={this.handleChangeUsername} />
+                        <input type="text" id="password" class="fadeIn third" name="login" placeholder="Password" value={this.account.password} onChange={this.handleChangePassword} />
+                        <input onClick={(e) => this.login(e)} type="submit" class="fadeIn fourth" value="Log In" />
                     </form>
 
                     <div id="formFooter">
