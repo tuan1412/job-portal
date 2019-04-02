@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import HomeService from '../services/HomeSerivce';
 import Header from '../components/layout/Header';
 import LeftMenu from '../components/layout/LeftMenu';
-
+import Loadable from '../components/lazyload';
 class HomePage extends Component {
   constructor(props) {
     super(props);
@@ -10,7 +10,6 @@ class HomePage extends Component {
     this.service = new HomeService();
     // this.service.getWorks();
   }
-
 
   render() {
     return (
@@ -21,5 +20,9 @@ class HomePage extends Component {
     );
   }
 }
-
 export default HomePage;
+
+export const AsyncHomePage = Loadable({
+  loader: () => import(HomePage)
+});
+

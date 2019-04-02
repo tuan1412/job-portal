@@ -4,7 +4,7 @@ import {
   Route,
   Switch
 } from "react-router-dom";
-import HomePage from './pages/HomePage';
+import AsyncHomePage from './pages/HomePage';
 import ErrorPage from './pages/ErrorPage';
 import LoginPage from './pages/LoginPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -38,17 +38,17 @@ class App extends Component {
     console.log('path:', window.location.pathname);
   }
   render() {
-    return (
+    return (<>
+      { !this.hide_menu ? 
+        <>
+        <Header></Header>
+        <LeftMenu></LeftMenu>
+        </>
+        : <></>
+      }
       <Router>
-        { !this.hide_menu ? 
-          <>
-          <Header></Header>
-          <LeftMenu></LeftMenu>
-          </>
-          : <></>
-        }
         <Switch>
-          <Route path="/" exact component={HomePage} />
+          <Route path="/" exact component={AsyncHomePage} />
           <Route path="/login" component={LoginPage} />
           <Route path="/sign-up" component={SignUpPage} />
           <Route path="/forgot-password" component={ForgotPasswordPage} />
@@ -61,7 +61,7 @@ class App extends Component {
           <Route path="/user/:id" component={UserDetailPage} />
           <Route component={ErrorPage} />
         </Switch>
-      </Router>
+      </Router></>
     );
   }
 }
