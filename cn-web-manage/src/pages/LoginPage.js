@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import Loadable from '../components/lazyload';
-
+import { withRouter } from 'react-router';
 export const LoginPage = Loadable({
     loader: () => import(_LoginPage)
 });
 class _LoginPage extends Component {
+
+    changePage(page) {
+        console.log("next-page: ", page);
+        this.props.history.push(page);
+    }
+    
     render() {
         return (
             <div class="wrapper fadeInDown">
@@ -16,13 +22,13 @@ class _LoginPage extends Component {
                     <form>
                         <input type="text" id="login" class="fadeIn second" name="login" placeholder="login" />
                         <input type="text" id="password" class="fadeIn third" name="login" placeholder="password" />
-                        <input type="submit" class="fadeIn fourth" value="Log In" />
+                        <input onClick={() => this.changePage("/app")} type="submit" class="fadeIn fourth" value="Log In" />
                     </form>
 
                     <div id="formFooter">
-                        <a class="underlineHover" href="/sign-up">Sign Up?</a>
+                        <a class="underlineHover" onClick={() => this.changePage("/sign-up")} href="/sign-up">Sign Up?</a>
                         <br />
-                        <a class="underlineHover" href="/forgot-password">Forgot Password?</a>
+                        <a class="underlineHover" onClick={() => this.changePage("/forgot-password")} href="/forgot-password">Forgot Password?</a>
                     </div>
 
                 </div>
@@ -31,4 +37,4 @@ class _LoginPage extends Component {
     }
 }
 
-export default _LoginPage;
+export default withRouter(_LoginPage);

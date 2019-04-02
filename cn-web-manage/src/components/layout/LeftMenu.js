@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-
+import { withRouter } from 'react-router';
 class LeftMenu extends Component {
     constructor(props) {
         super(props);
+        this.changePage = this.changePage.bind(this);
     }
 
+    changePage(page) {
+        console.log("next-page: ", page);
+        this.props.history.push(page);
+    }
 
     render() {
         return (
@@ -26,16 +31,16 @@ class LeftMenu extends Component {
                                         <ul class="nav flex-column">
 
                                             <li class="nav-item">
-                                                <a class="nav-link" href="/new-jobs">New Jobs</a>
+                                                <a class="nav-link" onClick={() => this.changePage("/app/new-jobs")}>New Jobs</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" href="/jobs">Jobs</a>
+                                                <a class="nav-link" onClick={() => this.changePage("/app/jobs")} >Jobs</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" href="/companies">Companies</a>
+                                                <a class="nav-link" onClick={() => this.changePage("/app/companies")} >Companies</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" href="/users">Users</a>
+                                                <a class="nav-link" onClick={() => this.changePage("/app/users")} >Users</a>
                                             </li>
 
                                             {/* <li class="nav-item">
@@ -290,4 +295,4 @@ class LeftMenu extends Component {
     }
 }
 
-export default LeftMenu;
+export default withRouter(LeftMenu);
