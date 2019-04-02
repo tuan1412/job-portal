@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
+import Loadable from '../components/lazyload';
 
-class CompanyDetailPage extends Component {
+export const CompanyDetailPage = Loadable({
+    loader: () => import(_CompanyDetailPage)
+});
+
+class _CompanyDetailPage extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+        console.log('CompanyDetailPage: ', props);
     }
     render() {
         return (
@@ -12,4 +18,4 @@ class CompanyDetailPage extends Component {
     }
 }
 
-export default CompanyDetailPage;
+export default _CompanyDetailPage;

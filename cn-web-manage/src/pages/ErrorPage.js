@@ -1,24 +1,28 @@
 import React, { Component } from 'react';
-import FormButton from '../components/form/FormButton';
-import Alert from '../components/Alert';
-class ErrorPage extends Component {
+import Loadable from '../components/lazyload';
+
+export const ErrorPage = Loadable({
+    loader: () => import(_ErrorPage)
+});
+
+class _ErrorPage extends Component {
     _alert = {
-        type : "",
-        timeout : 0,
-        mess : ""
+        type: "",
+        timeout: 0,
+        mess: ""
     }
-    
-    constructor(props){
+
+    constructor(props) {
         super(props);
         this.show = this.show.bind(this);
     }
 
-    show(){
+    show() {
         console.log('trongnv');
     }
 
-    callback(data){
-        
+    callback(data) {
+
     }
 
     render() {
@@ -35,7 +39,6 @@ class ErrorPage extends Component {
                                         <p> The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>
                                         <a href="/" class="btn btn-secondary btn-lg">Back to homepage</a>
                                         {/* <FormButton title="title" content="trongnv" name="name" confirm="true" type="info" callback={this.callback}></FormButton> */}
-                                        <button onClick={this.show}>show</button>
                                     </div>
                                 </div>
                             </div>
@@ -47,4 +50,4 @@ class ErrorPage extends Component {
     }
 }
 
-export default ErrorPage;
+export default _ErrorPage;

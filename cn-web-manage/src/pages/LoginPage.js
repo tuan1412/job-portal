@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import Loadable from '../components/lazyload';
 
-class LoginPage extends Component {
+export const LoginPage = Loadable({
+    loader: () => import(_LoginPage)
+});
+class _LoginPage extends Component {
     render() {
         return (
             <div class="wrapper fadeInDown">
@@ -17,7 +21,7 @@ class LoginPage extends Component {
 
                     <div id="formFooter">
                         <a class="underlineHover" href="/sign-up">Sign Up?</a>
-                        <br/>
+                        <br />
                         <a class="underlineHover" href="/forgot-password">Forgot Password?</a>
                     </div>
 
@@ -27,4 +31,4 @@ class LoginPage extends Component {
     }
 }
 
-export default LoginPage;
+export default _LoginPage;

@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
+import Loadable from '../components/lazyload';
 
-class SignUpPage extends Component {
+export const SignUpPage = Loadable({
+    loader: () => import(_SignUpPage)
+});
+
+class _SignUpPage extends Component {
     render() {
 
         return (
@@ -49,4 +54,4 @@ class SignUpPage extends Component {
     }
 }
 
-export default SignUpPage;
+export default _SignUpPage;

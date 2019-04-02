@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
+import Loadable from '../components/lazyload';
 
-class ForgotPasswordPage extends Component {
+export const ForgotPasswordPage = Loadable({
+  loader: () => import(_ForgotPasswordPage)
+});
+
+class _ForgotPasswordPage extends Component {
   render() {
 
     return (
@@ -25,4 +30,4 @@ class ForgotPasswordPage extends Component {
   }
 }
 
-export default ForgotPasswordPage;
+export default _ForgotPasswordPage;

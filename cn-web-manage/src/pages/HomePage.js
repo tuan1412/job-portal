@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import HomeService from '../services/HomeSerivce';
-import Header from '../components/layout/Header';
-import LeftMenu from '../components/layout/LeftMenu';
 import Loadable from '../components/lazyload';
-class HomePage extends Component {
+
+export const HomePage = Loadable({
+  loader: () => import(_HomePage)
+});
+
+
+class _HomePage extends Component {
   constructor(props) {
     super(props);
-    console.log('trongnv');
     this.service = new HomeService();
     // this.service.getWorks();
   }
@@ -20,9 +23,4 @@ class HomePage extends Component {
     );
   }
 }
-export default HomePage;
-
-export const AsyncHomePage = Loadable({
-  loader: () => import(HomePage)
-});
-
+export default _HomePage;
