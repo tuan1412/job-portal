@@ -31,7 +31,7 @@ class FormButton extends Component {
             <>
                 <button type="button" onClick={(e) => { 
                     console.log('click button');
-                    e.preventDefault() }} class={"btn btn-" + this.type} data-toggle="modal" data-target="#confirmModal">
+                    e.stopPropagation() }} class={"btn btn-" + this.type} data-toggle="modal" data-target="#confirmModal">
                     {this.props.name}
                 </button>
                 {this.props.confirm ? <ModalConfirm data={this.data_confirm_modal} callback={this.callback}></ModalConfirm> : <></>}

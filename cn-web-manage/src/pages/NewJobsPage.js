@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import FormButton from './../components/form/FormButton';
 import TitlePage from '../components/layout/TitlePage';
+import ModalConfirm2 from '../components/modal/ModalConfirm2';
+import ConfirmModal from '../utils/confirm-modal';
 class NewJobsPage extends Component {
     list = [];
 
     constructor(props) {
         super(props);
+        this.confirmModal = new ConfirmModal();
         this.state = {};
         this.list.push({
             name: "a" + this.list.length,
@@ -69,6 +72,12 @@ class NewJobsPage extends Component {
         return false;
     }
 
+    preGotoDetail(index) {
+        this.confirmModal.show(123);
+        console.log(index);
+        
+    }
+
     callbackDetail(data) {
         console.log(data);
     }
@@ -109,18 +118,17 @@ class NewJobsPage extends Component {
                         {
                             this.list.map((item, index) => {
                                 let i = index;
-                                return <tr key={index} >
+                                return <tr key={index} onClick={() => { this.preGotoDetail(index) }}>
                                     <th scope="row">{index}</th>
                                     <td>Mark</td>
                                     <td>{item.name}</td>
+                                    <td>Mark</td>
                                     <td>
-                                        <div class="switch-button switch-button-success" onClick={() => { this.selectRow(index) }}>
+                                        <div class="switch-button switch-button-success" onClick={(e) => { e.stopPropagation(); this.selectRow(index) }}>
                                             <input type="checkbox" disabled checked={item.checked} name="switch13" id="switch13" />
                                             <span><label for="switch13"></label></span>
                                         </div>
                                     </td>
-                                    <td> <FormButton callback={this.callbackDetail} type="info" confirm="true" title={"Go to detail: " + item.name} content="sure?" name="Detail"></FormButton> </td>
-                                    <td> <FormButton callback={this.callbackIgnore} type="danger" confirm="true" title={"Delete: " + index} content="sure?" name="Ignore"></FormButton> </td>
                                 </tr>;
                             })
                         }
@@ -136,6 +144,7 @@ class NewJobsPage extends Component {
                         </tr>
                     </tfoot>
                 </table>
+                <ModalConfirm2 id="123" callback={() => { }}></ModalConfirm2>
             </>
         );
     }
