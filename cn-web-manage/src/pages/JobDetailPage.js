@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import TitlePage from '../components/layout/TitlePage';
 
 class JobDetailPage extends Component {
     constructor(props) {
@@ -7,7 +8,9 @@ class JobDetailPage extends Component {
     }
     render() {
         return (
-            <></>
+            <>
+                <TitlePage data={["Jobs", "Detail"]}></TitlePage>
+            </>
         );
     }
 }
