@@ -31,16 +31,16 @@ class LeftMenu extends Component {
                                         <ul class="nav flex-column">
 
                                             <li class="nav-item">
-                                                <a class="nav-link" onClick={() => this.changePage("/app/new-jobs")}>New Jobs</a>
+                                                <a class="nav-link" href="#" onClick={() => this.changePage("/app/new-jobs")}>New Jobs</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" onClick={() => this.changePage("/app/jobs")} >Jobs</a>
+                                                <a class="nav-link" href="#" onClick={() => this.changePage("/app/jobs")} >Jobs</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" onClick={() => this.changePage("/app/companies")} >Companies</a>
+                                                <a class="nav-link" href="#" onClick={() => this.changePage("/app/companies")} >Companies</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" onClick={() => this.changePage("/app/users")} >Users</a>
+                                                <a class="nav-link" href="#" onClick={() => this.changePage("/app/users")} >Users</a>
                                             </li>
 
                                             {/* <li class="nav-item">

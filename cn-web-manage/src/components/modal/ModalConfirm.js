@@ -32,8 +32,8 @@ class ModalConfirm extends Component {
                                 {this.props.data.content}
                             </div>
                             <div class="modal-footer">
-                                <button type="button" onClick={this.cancel} class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" onClick={this.submit} class={"btn btn-" + this.props.data.type} data-dismiss="modal">Save</button>
+                                <button type="button" onClick={this.cancel} class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="button" onClick={this.submit} class={"btn btn-" + this.props.data.type} data-dismiss="modal">Submit</button>
                             </div>
                         </div>
                     </div>

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import Loadable from '../components/lazyload';
+
 import { withRouter } from 'react-router';
-export const LoginPage = Loadable({
-    loader: () => import(_LoginPage)
-});
-class _LoginPage extends Component {
+
+class LoginPage extends Component {
     account = {
         username: "",
         password: ""
@@ -62,4 +60,4 @@ class _LoginPage extends Component {
     }
 }
 
-export default withRouter(_LoginPage);
+export default withRouter(LoginPage);

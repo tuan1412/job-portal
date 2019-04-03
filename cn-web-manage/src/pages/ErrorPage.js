@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import Loadable from '../components/lazyload';
 
-export const ErrorPage = Loadable({
-    loader: () => import(_ErrorPage)
-});
 
-class _ErrorPage extends Component {
-    _alert = {
+class ErrorPage extends Component {
+    alert = {
         type: "",
         timeout: 0,
         mess: ""
@@ -50,4 +46,4 @@ class _ErrorPage extends Component {
     }
 }
 
-export default _ErrorPage;
+export default ErrorPage;
