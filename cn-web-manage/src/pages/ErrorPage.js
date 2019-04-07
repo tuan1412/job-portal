@@ -1,6 +1,26 @@
 import React, { Component } from 'react';
 
+
 class ErrorPage extends Component {
+    alert = {
+        type: "",
+        timeout: 0,
+        mess: ""
+    }
+
+    constructor(props) {
+        super(props);
+        this.show = this.show.bind(this);
+    }
+
+    show() {
+        console.log('trongnv');
+    }
+
+    callback(data) {
+
+    }
+
     render() {
         return (
             <>
@@ -14,6 +34,7 @@ class ErrorPage extends Component {
                                         <h1 class="display-3">Page Not Found</h1>
                                         <p> The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>
                                         <a href="/" class="btn btn-secondary btn-lg">Back to homepage</a>
+                                        {/* <FormButton title="title" content="trongnv" name="name" confirm="true" type="info" callback={this.callback}></FormButton> */}
                                     </div>
                                 </div>
                             </div>

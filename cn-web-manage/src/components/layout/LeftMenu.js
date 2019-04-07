@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-
+import { withRouter } from 'react-router';
 class LeftMenu extends Component {
     constructor(props) {
         super(props);
+        this.changePage = this.changePage.bind(this);
     }
 
+    changePage(page) {
+        console.log("next-page: ", page);
+        this.props.history.push(page);
+    }
 
     render() {
         return (
@@ -21,10 +26,24 @@ class LeftMenu extends Component {
                                     Menu
                             </li>
                                 <li class="nav-item ">
-                                    <a class="nav-link active" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1"><i class="fa fa-fw fa-user-circle"></i>Dashboard <span class="badge badge-success">6</span></a>
+                                    <a class="nav-link active" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1"><i class="fa fa-fw fa-user-circle"></i>Features <span class="badge badge-success">6</span></a>
                                     <div id="submenu-1" class="collapse submenu" >
                                         <ul class="nav flex-column">
+
                                             <li class="nav-item">
+                                                <a class="nav-link" href="#" onClick={() => this.changePage("/app/new-jobs")}>New Jobs</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#" onClick={() => this.changePage("/app/jobs")} >Jobs</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#" onClick={() => this.changePage("/app/companies")} >Companies</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#" onClick={() => this.changePage("/app/users")} >Users</a>
+                                            </li>
+
+                                            {/* <li class="nav-item">
                                                 <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-1-2" aria-controls="submenu-1-2">E-Commerce</a>
                                                 <div id="submenu-1-2" class="collapse submenu" >
                                                     <ul class="nav flex-column">
@@ -64,11 +83,11 @@ class LeftMenu extends Component {
                                                         </li>
                                                     </ul>
                                                 </div>
-                                            </li>
+                                            </li> */}
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="nav-item">
+                                {/*  <li class="nav-item">
                                     <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-2" aria-controls="submenu-2"><i class="fa fa-fw fa-rocket"></i>UI Elements</a>
                                     <div id="submenu-2" class="collapse submenu" >
                                         <ul class="nav flex-column">
@@ -96,7 +115,7 @@ class LeftMenu extends Component {
                                         </ul>
                                     </div>
                                 </li>
-                                
+
                                 <li class="nav-item ">
                                     <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-4" aria-controls="submenu-4"><i class="fab fa-fw fa-wpforms"></i>Forms</a>
                                     <div id="submenu-4" class="collapse submenu" >
@@ -266,7 +285,7 @@ class LeftMenu extends Component {
                                             </li>
                                         </ul>
                                     </div>
-                                </li>
+                                </li>*/}
                             </ul>
                         </div>
                     </nav>
@@ -276,4 +295,4 @@ class LeftMenu extends Component {
     }
 }
 
-export default LeftMenu;
+export default withRouter(LeftMenu);

@@ -1,38 +1,63 @@
 import React, { Component } from 'react';
 
+import { withRouter } from 'react-router';
+
 class LoginPage extends Component {
+    account = {
+        username: "",
+        password: ""
+    }
+    constructor(props) {
+        super(props);
+        this.handleChangeUsername = this.handleChangeUsername.bind(this);
+        this.handleChangePassword = this.handleChangePassword.bind(this);
+        this.login = this.login.bind(this);
+    }
+
+    changePage(page) {
+        console.log("next-page: ", page);
+        this.props.history.push(page);
+    }
+
+    handleChangeUsername(event) {
+        this.account.username = event.target.value;
+        this.forceUpdate();
+    }
+    handleChangePassword(event) {
+        this.account.password = event.target.value;
+        this.forceUpdate();
+    }
+
+    login(event) {
+        console.log('account-login', this.account);
+        event.preventDefault();
+
+    }
+
     render() {
         return (
-            <div class="splash-container">
-                <div class="card ">
-                    <div class="card-header text-center"><a href="../index.html"><img class="logo-img" src="../assets/images/logo.png" alt="logo" /></a><span class="splash-description">Please enter your user information.</span></div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <input class="form-control form-control-lg" id="username" type="text" placeholder="Username" autocomplete="off" />
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control form-control-lg" id="password" type="password" placeholder="Password" />
-                            </div>
-                            <div class="form-group">
-                                <label class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" /><span class="custom-control-label">Remember Me</span>
-                                </label>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
-                        </form>
+            <div class="wrapper fadeInDown">
+                <div id="formContent">
+                    <div class="fadeIn first">
+                        <img onClick={(e) => this.changePage("/")} src="/assets/images/login.png" id="icon" alt="User Icon" />
                     </div>
-                    <div class="card-footer bg-white p-0  ">
-                        <div class="card-footer-item card-footer-item-bordered">
-                            <a href="#" class="footer-link">Create An Account</a></div>
-                        <div class="card-footer-item card-footer-item-bordered">
-                            <a href="#" class="footer-link">Forgot Password</a>
-                        </div>
+
+                    <form>
+                        <input type="text" id="login" class="fadeIn second" name="login" placeholder="Username" value={this.account.username} onChange={this.handleChangeUsername} />
+                        <input type="text" id="password" class="fadeIn third" name="login" placeholder="Password" value={this.account.password} onChange={this.handleChangePassword} />
+                        <input onClick={(e) => this.login(e)} type="submit" class="fadeIn fourth" value="Log In" />
+                    </form>
+
+                    <div id="formFooter">
+                        <a class="underlineHover" onClick={() => this.changePage("/sign-up")} href="/sign-up">Sign Up?</a>
+                        <br />
+                        <a class="underlineHover" onClick={() => this.changePage("/forgot-password")} href="/forgot-password">Forgot Password?</a>
                     </div>
+
                 </div>
             </div>
         );
     }
 }
 
-export default LoginPage;
+export default withRouter(LoginPage);
