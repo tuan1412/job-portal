@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FormButton from './../components/form/FormButton';
 import TitlePage from '../components/layout/TitlePage';
 import ModalConfirm2 from '../components/modal/ModalConfirm2';
-import ConfirmModal from '../utils/confirm-modal';
+import ConfirmModal from '../services/confirm-modal';
 class NewJobsPage extends Component {
     list = [];
 
@@ -110,7 +110,9 @@ class NewJobsPage extends Component {
                                             <input type="checkbox" disabled checked={item.checked} name="switch13" id="switch13" />
                                             <span><label for="switch13"></label></span>
                                         </div>
+
                                     </td>
+                                    {/* <td><FormButton name={"abcd: " + index} ></FormButton></td> */}
                                 </tr>;
                             })
                         }
