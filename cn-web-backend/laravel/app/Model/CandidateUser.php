@@ -8,14 +8,12 @@ class CandidateUser extends Model
 {
     protected $fillable = [
         'id',
-        'username',
-        'password',
+        'user_id',
         'full_name',
         'email',
         'mobile',
         'birthday',
         'description',
-        'role',
         'path_avatar',
     ];
 

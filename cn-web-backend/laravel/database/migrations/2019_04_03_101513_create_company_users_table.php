@@ -15,15 +15,14 @@ class CreateCompanyUsersTable extends Migration
     {
         Schema::create('company_users', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('user_id');
             $table->unsignedInteger('company_id');
-            $table->string('username');
-            $table->string('password');
             $table->string('fullname');
             $table->string('email');
             $table->boolean('gender');
-            $table->integer('role');
 
             $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });
