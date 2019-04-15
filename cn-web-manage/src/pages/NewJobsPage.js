@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FormButton from './../components/form/FormButton';
 import TitlePage from '../components/layout/TitlePage';
 import ModalConfirm2 from '../components/modal/ModalConfirm2';
-import ConfirmModal from '../utils/confirm-modal';
+import ConfirmModal from '../services/confirm-modal';
 class NewJobsPage extends Component {
     list = [];
 
@@ -75,7 +75,7 @@ class NewJobsPage extends Component {
     preGotoDetail(index) {
         this.confirmModal.show(123);
         console.log(index);
-        
+
     }
 
     callbackDetail(data) {
@@ -86,32 +86,14 @@ class NewJobsPage extends Component {
         return (
             <>
                 <TitlePage data={["New-Jobs"]}></TitlePage>
-                <form><div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputCity">City</label>
-                        <input type="text" class="form-control" id="inputCity" />
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="inputState">State</label>
-                        <select id="inputState" class="form-control">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="inputZip">Zip</label>
-                        <input type="text" class="form-control" id="inputZip" />
-                    </div>
-                </div></form>
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Company</th>
                             <th scope="col">Address</th>
-                            <th scope="col">Select</th>
                             <th scope="col"></th>
-                            <th scope="col"></th>
+                            <th scope="col" style={{ width: '10%' }}>Select</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -128,7 +110,9 @@ class NewJobsPage extends Component {
                                             <input type="checkbox" disabled checked={item.checked} name="switch13" id="switch13" />
                                             <span><label for="switch13"></label></span>
                                         </div>
+
                                     </td>
+                                    {/* <td><FormButton name={"abcd: " + index} ></FormButton></td> */}
                                 </tr>;
                             })
                         }
@@ -138,9 +122,8 @@ class NewJobsPage extends Component {
                             <th scope="col"></th>
                             <th scope="col"></th>
                             <th scope="col"></th>
+                            <th scope="col"></th>
                             <th scope="col" onClick={() => this.selectAll()}>Select All</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
                         </tr>
                     </tfoot>
                 </table>

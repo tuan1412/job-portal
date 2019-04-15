@@ -6,6 +6,10 @@ class CompaniesPage extends Component {
         super(props);
         this.state = {};
     }
+    changePage(page) {
+        console.log("next-page: ", page);
+        this.props.history.push(page);
+    }
     render() {
         return (
             <>
@@ -65,7 +69,7 @@ class CompaniesPage extends Component {
                                     </div>
                                     <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12">
                                         <div class="float-xl-right float-none mt-xl-0 mt-4">
-                                            <a href="#" class="btn btn-secondary">Go To Detail</a>
+                                            <a onClick={()=>{this.changePage("/app/company/123")}} href="#" class="btn btn-secondary">Go To Detail</a>
                                         </div>
                                     </div>
                                 </div>
