@@ -27,31 +27,15 @@ Route::group([
     Route::post('company_user/signup', 'AuthController@signupCompanyUser');
 });
 
-// Route::group([
-//     'namespace'  => 'Admin',
-//     'middleware' => 'role:admin',
-//     'prefix'     => 'admin',
-// ], function () {
-//     Route::resourse('users', 'Admin\UserController');
-// }
-
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::group([
-        'namespace'  => 'CandidateUser',
-        'middleware' => 'role:candidate_user',
-        'prefix'     => 'candidate_user',
+        'namespace'  => 'Admin',
+        'middleware' => 'role:admin',
+        'prefix'     => 'admin',
     ], function () {
-        Route::get('find_job', 'JobController@index');
-        Route::get('find_job_advance', 'JobController@indexAdvance');
-    
-        Route::get('get_all_cv', 'CVController@getAll');
-        Route::get('get_cv/{id}', 'CVController@index');
-        Route::post('create_cv', 'CVController@create');
-        Route::post('update_cv/{id}', 'CVController@update');
-        Route::delete('delete_cv/{id}', 'CVController@delete');
-        Route::post('apply_cv', 'CVController@apply');
+        Route::get('get_jobs/{company_id}', 'JobController@getJobsByCompany');
     });
-    
+
     Route::group([
         'namespace'  => 'CompanyUser',
         'middleware' => 'role:company_user',
@@ -69,4 +53,21 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     
         Route::get('get_cv/{company_id}', 'CVController@index');
     });
+
+    Route::group([
+        'namespace'  => 'CandidateUser',
+        'middleware' => 'role:candidate_user',
+        'prefix'     => 'candidate_user',
+    ], function () {
+        Route::get('find_job', 'JobController@index');
+        Route::get('find_job_advance', 'JobController@indexAdvance');
+    
+        Route::get('get_all_cv', 'CVController@getAll');
+        Route::get('get_cv/{id}', 'CVController@index');
+        Route::post('create_cv', 'CVController@create');
+        Route::post('update_cv/{id}', 'CVController@update');
+        Route::delete('delete_cv/{id}', 'CVController@delete');
+        Route::post('apply_cv', 'CVController@apply');
+    });
 });
+
