@@ -66,3 +66,10 @@ Route::group([
 
     Route::get('get_cv/{company_id}', 'CVController@index');
 });
+
+Route::group([
+    'namespace'  => 'Admin',
+    'prefix'     => 'admin',
+], function () {
+    Route::get('get_jobs/{company_id}', 'JobController@getJobsByCompany');
+});
