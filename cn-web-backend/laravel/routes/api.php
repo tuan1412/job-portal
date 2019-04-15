@@ -34,6 +34,14 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         'prefix'     => 'admin',
     ], function () {
         Route::get('get_jobs/{company_id}', 'JobController@getJobsByCompany');
+        Route::get('jobs', 'JobController@index');
+        Route::post('accept_job', 'JobController@accept');
+        Route::post('reject_job', 'JobController@reject');
+
+        Route::post('ban_user', 'UserController@ban');
+        Route::get('users', 'UserController@index');
+
+        Route::get('companies', 'CompanyController@index');       
     });
 
     Route::group([
