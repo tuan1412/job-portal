@@ -13,14 +13,42 @@ class CandidateUsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('candidate_users')->insert([
-            'id' => 1,
-            'user_id' => 1,
-            'full_name' => 'Ha The Dang',
-            'email' => 'dangars151@gmail.com',
-            'mobile' => '12345678',
-            'birthday' => '1997-01-15',
-            'description' => 'test',
-            'path_avatar' => 'default',
+            [
+                'user_id' => 7,
+                'full_name' => 'Ha The Dang',
+                'email' => 'dangars151@gmail.com',
+                'mobile' => '12345678',
+                'birthday' => '1997-01-15',
+                'description' => 'test',
+                'path_avatar' => 'default',
+            ],
+            [
+                'user_id' => 8,
+                'full_name' => 'Ha The Dang',
+                'email' => 'dangars151@gmail.com',
+                'mobile' => '12345678',
+                'birthday' => '1997-01-15',
+                'description' => 'test',
+                'path_avatar' => 'default',
+            ],
+            [
+                'user_id' => 9,
+                'full_name' => 'Ha The Dang',
+                'email' => 'dangars151@gmail.com',
+                'mobile' => '12345678',
+                'birthday' => '1997-01-15',
+                'description' => 'test',
+                'path_avatar' => 'default',
+            ],
+            [
+                'user_id' => 10,
+                'full_name' => 'Ha The Dang',
+                'email' => 'dangars151@gmail.com',
+                'mobile' => '12345678',
+                'birthday' => '1997-01-15',
+                'description' => 'test',
+                'path_avatar' => 'default',
+            ]
         ]);
     }
 }

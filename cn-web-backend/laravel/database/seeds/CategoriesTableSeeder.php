@@ -13,8 +13,14 @@ class CategoriesTableSeeder extends Seeder
     public function run()
     {
         DB::table('categories')->insert([
-            'id' => 3,
-            'name' => 'Lap trinh vien',
+            [ 'name' => 'Lap trinh vien' ],
+            [ 'name' => 'Tester' ],
+            [ 'name' => 'Lap trinh vien 1' ],
+            [ 'name' => 'Lap trinh vien 2' ],
+            [ 'name' => 'Lap trinh vien 3' ],
+            [ 'name' => 'Tester 1' ],
+            [ 'name' => 'Tester 2' ],
+            [ 'name' => 'Tester 3' ],
         ]);
     }
 }
