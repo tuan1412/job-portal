@@ -11,9 +11,17 @@ use App\Model\CompanyUser;
 use App\Model\Company;
 use App\Model\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Services\UploadFileService;
 
 class AuthController extends Controller
 {
+    private $uploadFileService;
+
+    public function __construct(UploadFileService $uploadFileService)
+    {
+        $this->uploadFileService = $uploadFileService;
+    }
+
     public function login(Request $request)
     {
         $rules = [
@@ -73,7 +81,7 @@ class AuthController extends Controller
             'mobile'      => $request->mobile,
             'birthday'    => $request->birthday,
             'description' => $request->description,
-            'path_avatar' => 'default',
+            'path_avatar' => $this->uploadFileService->store($request->avatar),
         ]);
 
         return response()->json([
