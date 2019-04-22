@@ -1,11 +1,15 @@
+/* eslint-disable no-undef */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react'
 import Button from '../../components/formcontrols/Button';
 import JobItem from '../../components/JobItem';
 import Pagination from '../../components/Pagination';
+import Modal from '../../components/modal';
+import DetailJob from '../../components/DetailJob';
 
 export default class JobListSection extends Component {
     state = {
+        showDetailJob: false,
         jobs: [
             { title: 'Frontend Development', type: 'Partime', company: 'Facebook, Inc.', location: 'New York City, USA' },
             { title: 'Full Stack Developer', type: 'Full Time', company: 'Google, Inc.', location: 'New York City, USA' },
@@ -31,10 +35,24 @@ export default class JobListSection extends Component {
         )
     }
 
+    onClickJob = () => {
+        this.setState({
+            showDetailJob: true
+        });
+        $('[data-aos="fade"]').removeClass('aos-init aos-animate');
+    }
+
+    hideJobDetail = () => {
+        this.setState({
+            showDetailJob: false
+        })
+        $('[data-aos="fade"]').addClass('aos-init aos-animate');
+    }
+
     renderListJob = () => {
         return this.state.jobs.map((job, index) => {
             return (
-                <JobItem key={index} {...job} />
+                <JobItem key={index} {...job} showJobDetail={this.onClickJob} />
             )
         });
     }
@@ -42,6 +60,9 @@ export default class JobListSection extends Component {
     render() {
         return (
             <div className="site-section bg-light">
+                <Modal open={this.state.showDetailJob} onClose={this.hideJobDetail}>
+                    <DetailJob />
+                </Modal>
                 <div className="container">
                     {this.renderHeader()}
                     {this.renderListJob()}

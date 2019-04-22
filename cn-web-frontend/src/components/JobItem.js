@@ -11,7 +11,7 @@ export default class JobItem extends Component {
         'Temporary': 'bg-danger'
     }
     render() {
-        const { title, type, location, company } = this.props;
+        const { title, type, location, company, showJobDetail } = this.props;
         return (
             <div className="row aos-init aos-animate" data-aos="fade">
                 <div className="col-md-12">
@@ -20,7 +20,7 @@ export default class JobItem extends Component {
 
                         <div className="mb-4 mb-md-0 mr-5">
                             <div className="job-post-item-header d-flex align-items-center">
-                                <h2 className="mr-3 text-black h4">{title}</h2>
+                                <h2 className="mr-3 text-black h4" onClick={showJobDetail}>{title}</h2>
                                 <div className="badge-wrap">
                                     <span className={`${this.mapColorType[type]} text-white badge py-2 px-4`}>{type}</span>
                                 </div>
