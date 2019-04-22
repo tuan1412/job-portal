@@ -55,4 +55,9 @@ class JobController extends Controller
 
         return $query->orderBy('jobs.created_at', 'desc')->paginate(5);
     }
+
+    public function getListCategories()
+    {
+        return DB::table('categories')->get(['id', 'name']);
+    }
 }
