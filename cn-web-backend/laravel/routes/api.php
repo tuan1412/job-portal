@@ -29,6 +29,7 @@ Route::group([
 
 Route::post('find_job', 'CandidateUser\JobController@index');
 Route::post('find_job_advance', 'CandidateUser\JobController@indexAdvance');
+Route::get('get_list_categories', 'CandidateUser\JobController@getListCategories');
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::group([
