@@ -113,7 +113,7 @@ class AuthController extends Controller
                 'description' => $request->company_description,
                 'email'       => $request->company_email,
                 'website'     => $request->company_website,
-                'path_avatar' => 'default',
+                'path_avatar' => $this->uploadFileService->store($request->company_avatar),
             ]);
 
             $user = User::create([

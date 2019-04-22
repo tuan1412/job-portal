@@ -7,9 +7,17 @@ use App\Http\Controllers\Controller;
 use App\Model\CV;
 use Illuminate\Support\Facades\DB;
 use App\Model\UserCompany;
+use App\Services\UploadFileService;
 
 class CVController extends Controller
 {
+    private $uploadFileService;
+
+    public function __construct(UploadFileService $uploadFileService)
+    {
+        $this->uploadFileService = $uploadFileService;
+    }
+
     public function getAll(Request $request)
     {
         return DB::table('cvs')
@@ -29,7 +37,7 @@ class CVController extends Controller
         CV::create([
             'user_id' => $request->user_id,
             'name' => $request->name,
-            'path' => 'default',
+            'path' => $this->uploadFileService->store($request->cv),
             'status' => 0,
         ]);
 
@@ -44,7 +52,7 @@ class CVController extends Controller
         CV::where('id', $request->id)
             ->update([
                 'name' => $request->name,
-                'path' => 'default',
+                'path' => $this->uploadFileService->store($request->cv),
                 //'status' => $request->status,
         ]);
 
