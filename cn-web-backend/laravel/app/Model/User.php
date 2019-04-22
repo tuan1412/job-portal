@@ -4,15 +4,12 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CompanyUser extends Model
+class User extends Model
 {
     protected $fillable = [
-        'id',
-        'user_id',
-        'company_id',
-        'fullname',
-        'email',
-        'gender',
+        'username',
+        'password',
+        'role',
     ];
 
     protected $hidden = [

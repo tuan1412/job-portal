@@ -13,13 +13,34 @@ class CompanyUsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('company_users')->insert([
-            'company_id' => '1',
-            'username' => 'test',
-            'password' => bcrypt('123456'),
-            'email' => 'abc@gmail.com',
-            'fullname' => 'test',
-            'gender' => 0,
-            'role' => 2,
+            [
+                'company_id' => 1,
+                'user_id' => 3,
+                'email' => 'abc@gmail.com',
+                'fullname' => 'test',
+                'gender' => 0,
+            ],
+            [
+                'company_id' => 1,
+                'user_id' => 4,
+                'email' => 'abc@gmail.com',
+                'fullname' => 'test',
+                'gender' => 0,
+            ],
+            [
+                'company_id' => 1,
+                'user_id' => 5,
+                'email' => 'abc@gmail.com',
+                'fullname' => 'test',
+                'gender' => 0,
+            ],
+            [
+                'company_id' => 1,
+                'user_id' => 6,
+                'email' => 'abc@gmail.com',
+                'fullname' => 'test',
+                'gender' => 0,
+            ]
         ]);
     }
 }

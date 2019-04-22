@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class CheckRole
 {
@@ -13,8 +14,16 @@ class CheckRole
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $role)
     {
-        return $next($request);
+        $user = Auth::user();
+        
+        if( $user->role == 'admin' || $user->role == 'company_user' || $user->role == 'candidate_user' ){
+            return $next($request);
+        }
+
+        return response()->json([
+            'message' => 'You do not have this right',
+        ], 403);
     }
 }

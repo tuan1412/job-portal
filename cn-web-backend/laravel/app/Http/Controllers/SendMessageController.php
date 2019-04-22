@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Pusher\Pusher;
+use App\Services\PusherService;
 
 class SendMessageController extends Controller
 {
@@ -22,17 +22,7 @@ class SendMessageController extends Controller
         $data['title'] = $request->input('title');
         $data['content'] = $request->input('content');
 
-        $options = array(
-            'cluster' => 'ap1',
-            'encrypted' => true
-        );
-
-        $pusher = new Pusher(
-            env('PUSHER_APP_KEY'),
-            env('PUSHER_APP_SECRET'),
-            env('PUSHER_APP_ID'),
-            $options
-        );
+        $pusher = PusherService::createPusher();
 
         $pusher->trigger('Notify', 'send-message', $data);
 

@@ -15,15 +15,15 @@ class CreateCandidateUsersTable extends Migration
     {
         Schema::create('candidate_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('username');
-            $table->string('password');
+            $table->unsignedInteger('user_id');
             $table->string('full_name');
             $table->string('email');
             $table->string('mobile');
             $table->date('birthday')->nullable();
             $table->longText('description');
-            $table->integer('role');
             $table->string('path_avatar')->nullable();
+
+            $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });

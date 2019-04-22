@@ -9,89 +9,79 @@ use Validator;
 use App\Model\CandidateUser;
 use App\Model\CompanyUser;
 use App\Model\Company;
+use App\Model\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Services\UploadFileService;
 
 class AuthController extends Controller
 {
-    public function loginCandidateUser(Request $request)
+    private $uploadFileService;
+
+    public function __construct(UploadFileService $uploadFileService)
     {
-        $rules = [
-            'email'    => 'required|email',
-            'password' => 'required|min:6',
-        ];
-
-        $input = $request->only('email', 'password');
-
-        $validator = Validator::make($input, $rules);
-        if ($validator->fails()) {
-            return JsonReturn::error($validator->messages());
-        }
-
-        $credentials = [
-            'email'    => $request->email,
-            'password' => $request->password,
-        ];
-
-        if (!$token = auth()->attempt($credentials)) {
-            return abort(400, trans('http.400'));
-        }
-
-        $user = CandidateUser::where([
-            'email' => $request->email, 
-            'password' => $request->password
-        ])->first();
-        
-        return response()->json([
-            'user' => $user,
-            'access_token' => $userInfo['token'],
-        ], 200);
+        $this->uploadFileService = $uploadFileService;
     }
 
-    public function loginCompanyUser(Request $request)
+    public function login(Request $request)
     {
         $rules = [
-            'email'    => 'required|email',
-            'password' => 'required|min:6',
+            'username'  => 'required',
+            'password'  => 'required',
         ];
 
-        $input = $request->only('email', 'password');
+        $input = $request->only('username', 'password');
 
         $validator = Validator::make($input, $rules);
         if ($validator->fails()) {
-            return JsonReturn::error($validator->messages());
+            return response()->json([
+                'message' => 'Username and password required',
+                'status'  => 0,
+            ], 400);
         }
 
         $credentials = [
-            'email'    => $request->email,
-            'password' => $request->password,
+            'username'  => $request->username,
+            'password'  => $request->password,
         ];
-
-        if (!$token = auth()->attempt($credentials)) {
-            return abort(400, trans('http.400'));
-        }
-
-        $user = CompanyUser::where([
-            'email' => $request->email, 
-            'password' => $request->password
-        ])->first();
         
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return response()->json([
+                'message' => 'Bad request',
+                'status'  => 0,
+            ], 400);
+        }
+        
+        $user = User::where('username', $request->username)->first();
+
         return response()->json([
-            'user' => $user,
-            'access_token' => $userInfo['token'],
+            'access_token' => $token,
+            'user'         => $user,
         ], 200);
     }
 
     public function signupCandidateUser(Request $request)
     {
-        $user = CandidateUser::create([
+        if (User::where('username', $request->username)->first()) {
+            return response()->json([
+                'message' => 'Username existed',
+                'status'  => 0,
+            ], 400);
+        }
+
+        $user = User::create([
             'username' => $request->username,
             'password' => \bcrypt($request->password),
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'birthday' => $request->birthday,
+            'role'     => 'candidate_user',
+        ]);
+
+        CandidateUser::create([
+            'user_id'     => $user->id,
+            'full_name'   => $request->full_name,
+            'email'       => $request->email,
+            'mobile'      => $request->mobile,
+            'birthday'    => $request->birthday,
             'description' => $request->description,
-            'role' => 4,
-            'path_avatar' => 'default',
+            'path_avatar' => $this->uploadFileService->store($request->avatar),
         ]);
 
         return response()->json([
@@ -110,6 +100,13 @@ class AuthController extends Controller
                 'status'  => 0,
             ], 409);
         } else {
+            if (User::where('username', $request->username)->first()) {
+                return response()->json([
+                    'message' => 'Username existed',
+                    'status'  => 0,
+                ], 400);
+            }
+
             $company = Company::create([
                 'name'        => $request->company_name,
                 'title'       => $request->company_title,
@@ -118,14 +115,19 @@ class AuthController extends Controller
                 'website'     => $request->company_website,
                 'path_avatar' => 'default',
             ]);
-            $user = CompanyUser::create([
+
+            $user = User::create([
+                'username' => $request->username,
+                'password' => \bcrypt($request->password),
+                'role'     => 'company_user',
+            ]);
+
+            CompanyUser::create([
                 'company_id'  => $company->id,
-                'username'    => $request->username,
-                'password'    => \bcrypt($request->password),
+                'user_id'     => $user->id,
                 'fullname'    => $request->fullname,
                 'email'       => $request->email,
                 'gender'      => $request->gender,
-                'role'        => 2,
             ]);
         }
 
