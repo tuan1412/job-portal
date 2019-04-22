@@ -14,7 +14,7 @@ class JobController extends Controller
         // if (!Company::where('id', $request->company_id)->first()) {
         //     return 201; 
         // }
-        return Job::where('company_id', $request->company_id)->paginate(10);
+        return Job::where('company_id', $request->company_id)->paginate(5);
     }
 
     public function index(Request $request) {

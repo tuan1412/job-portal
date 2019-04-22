@@ -12,7 +12,8 @@ class JobController extends Controller
     {
         $query = DB::table('jobs')
                     ->join('categories', 'categories.id', '=', 'jobs.category_id')
-                    ->join('companies', 'companies.id', '=', 'jobs.company_id');
+                    ->join('companies', 'companies.id', '=', 'jobs.company_id')
+                    ->where('status', 1);
         
         if ($request->has('title')) {
             $query->where('jobs.title', 'like', '%'.$request->title.'%');
@@ -35,7 +36,8 @@ class JobController extends Controller
     {
         $query = DB::table('jobs')
                     ->join('categories', 'categories.id', '=', 'jobs.category_id')
-                    ->join('companies', 'companies.id', '=', 'jobs.company_id');
+                    ->join('companies', 'companies.id', '=', 'jobs.company_id')
+                    ->where('status', 1);
         
         if ($request->has('from_salary')) {
             $query->where('from_salary', '>=', $request->from_salary);

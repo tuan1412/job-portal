@@ -5,6 +5,7 @@ namespace App\Http\Controllers\CompanyUser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\CompanyUser;
+use App\Model\User;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -12,20 +13,33 @@ class UserController extends Controller
     public function index(Request $request)
     {
         return DB::table('company_users')
-                    ->where(['company_id' => $request->company_id, 'role' => 3])
-                    ->get(['id', 'username', 'fullname', 'email', 'gender']);
+                    ->join('users', 'users.id', '=', 'company_users.user_id')
+                    ->where('company_id', $request->company_id)
+                    ->select('users.id', 'username','fullname', 'email', 'gender')
+                    ->paginate(5);
     }
 
     public function create(Request $request)
     {
-        CompanyUser::create([
+        if (User::where('username', $request->username)->first()) {
+            return response()->json([
+                'message' => 'Username existed',
+                'status'  => 0,
+            ], 400);
+        }
+
+        $user = User::create([
             'username' => $request->username,
-            'password' => \bcrypt('123456'),
-            'fullname' => $request->fullname,
-            'email' => $request->email,
-            'gender' => $request->gender,
-            'company_id' => $request->company_id,
-            'role' => 3,
+            'password' => \bcrypt($request->password),
+            'role'     => 'company_user',
+        ]);
+
+        CompanyUser::create([
+            'company_id'  => $request->company_id,
+            'user_id'     => $user->id,
+            'fullname'    => $request->fullname,
+            'email'       => $request->email,
+            'gender'      => $request->gender,
         ]);
 
         return response()->json([
@@ -36,13 +50,15 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        CompanyUser::where('id', $request->user_id)
-            ->update([
-                'username' => $request->username,
-                'fullname' => $request->fullname,
-                'email' => $request->email,
-                'gender' => $request->gender,
-            ]);
+       $user = User::find($request->user_id);
+       $user->username = $request->username;
+       $user->save();
+
+       $companyUser = CompanyUser::where('user_id', $user->id)->first();
+       $companyUser->fullname = $request->fullname;
+       $companyUser->email = $request->email;
+       $companyUser->gender = $request->gender;
+       $companyUser->save();
 
         return response()->json([
             'message' => 'Update user successfully',
@@ -52,7 +68,9 @@ class UserController extends Controller
 
     public function delete(Request $request)
     {
-        CompanyUser::where('id', $request->user_id)->delete();
+        $user = User::find($request->user_id);
+        CompanyUser::where('user_id', $request->user_id)->delete();
+        $user->delete();
 
         return response()->json([
             'message' => 'Delete user successfully',
