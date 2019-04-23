@@ -28,8 +28,8 @@ class JobController extends Controller
         }
 
         $query->select('jobs.id', 'jobs.title as title_job', 'address', 'from_salary', 'to_salary', 'expire_date', 'status', 'jobs.description', 'categories.name as category_name', 'companies.title as title_company');
-
-        return $query->orderBy('jobs.created_at', 'desc')->paginate(5);
+        
+        return $query->orderBy('jobs.created_at', 'desc')->paginate($request->per_page);
     }
 
     public function indexAdvance(Request $request)
@@ -53,7 +53,7 @@ class JobController extends Controller
 
         $query->select('jobs.id', 'jobs.title as title_job', 'address', 'from_salary', 'to_salary', 'expire_date', 'status', 'jobs.description', 'categories.name as category_name', 'companies.title as title_company');
 
-        return $query->orderBy('jobs.created_at', 'desc')->paginate(5);
+        return $query->orderBy('jobs.created_at', 'desc')->paginate($request->per_page);
     }
 
     public function getListCategories()
