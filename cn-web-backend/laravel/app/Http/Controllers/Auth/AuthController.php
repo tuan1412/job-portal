@@ -12,6 +12,7 @@ use App\Model\Company;
 use App\Model\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Services\UploadFileService;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -67,28 +68,34 @@ class AuthController extends Controller
                 'status'  => 0,
             ], 400);
         }
+        DB::beginTransaction();
+        try {
+            $user = User::create([
+                'username' => $request->username,
+                'password' => \bcrypt($request->password),
+                'role'     => 'candidate_user',
+            ]);
 
-        $user = User::create([
-            'username' => $request->username,
-            'password' => \bcrypt($request->password),
-            'role'     => 'candidate_user',
-        ]);
+            if ($request->avatar) {
+                $pathAvatar = $this->uploadFileService->store($request->avatar);
+            } else {
+                $pathAvatar = '';
+            }
 
-        if ($request->avatar) {
-            $pathAvatar = $this->uploadFileService->store($request->avatar);
-        } else {
-            $pathAvatar = 'no_image';
+            CandidateUser::create([
+                'user_id'     => $user->id,
+                'full_name'   => $request->full_name,
+                'email'       => $request->email,
+                'mobile'      => $request->mobile,
+                'birthday'    => $request->birthday,
+                'description' => $request->description,
+                'path_avatar' => $pathAvatar,
+            ]);
+            DB::commit();
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return $e;
         }
-
-        CandidateUser::create([
-            'user_id'     => $user->id,
-            'full_name'   => $request->full_name,
-            'email'       => $request->email,
-            'mobile'      => $request->mobile,
-            'birthday'    => $request->birthday,
-            'description' => $request->description,
-            'path_avatar' => $pathAvatar,
-        ]);
 
         return response()->json([
             'message' => 'Signup successfully',
@@ -116,30 +123,37 @@ class AuthController extends Controller
             if ($request->company_avatar) {
                 $pathAvatar = $this->uploadFileService->store($request->company_avatar);
             } else {
-                $pathAvatar = 'no_image';
+                $pathAvatar = '';
             }
-            $company = Company::create([
-                'name'        => $request->company_name,
-                'title'       => $request->company_title,
-                'description' => $request->company_description,
-                'email'       => $request->company_email,
-                'website'     => $request->company_website,
-                'path_avatar' => $pathAvatar,
-            ]);
+            DB::beginTransaction();
+            try {
+                $company = Company::create([
+                    'name'        => $request->company_name,
+                    'title'       => $request->company_title,
+                    'description' => $request->company_description,
+                    'email'       => $request->company_email,
+                    'website'     => $request->company_website,
+                    'path_avatar' => $pathAvatar,
+                ]);
 
-            $user = User::create([
-                'username' => $request->username,
-                'password' => \bcrypt($request->password),
-                'role'     => 'company_user',
-            ]);
+                $user = User::create([
+                    'username' => $request->username,
+                    'password' => \bcrypt($request->password),
+                    'role'     => 'company_user',
+                ]);
 
-            CompanyUser::create([
-                'company_id'  => $company->id,
-                'user_id'     => $user->id,
-                'fullname'    => $request->fullname,
-                'email'       => $request->email,
-                'gender'      => $request->gender,
-            ]);
+                CompanyUser::create([
+                    'company_id'  => $company->id,
+                    'user_id'     => $user->id,
+                    'fullname'    => $request->fullname,
+                    'email'       => $request->email,
+                    'gender'      => $request->gender,
+                ]);
+                DB::commit();
+            } catch(\Exception $e) {
+                DB::rollBack();
+                return $e;
+            }
         }
 
         return response()->json([
