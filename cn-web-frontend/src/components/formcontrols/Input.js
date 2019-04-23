@@ -4,26 +4,20 @@ import classnames from 'classnames';
 
 export default class Input extends Component {
     static defaultProps = {
-        defaultValue: '',
+        value: '',
         placeholder: '',
         className: '',
         type: 'text',
         blockStyle: false,
-        onChange: function() {}
-    }
-
-    state = {
-        value: this.props.defaultValue
+        onChange: function () { }
     }
 
     onChange = (event) => {
-        this.setState({
-            value: event.target.value
-        }, this.props.onChange.bind(null, this.state.value));
+        this.props.onChange(event);
     }
 
     render() {
-        const { className, placeholder, type, blockStyle} = this.props;
+        const { className, placeholder, type, blockStyle, value, ...rest } = this.props;
         const cls = classnames({
             'form-control': true,
             'form-control-block': blockStyle,
@@ -31,10 +25,12 @@ export default class Input extends Component {
         });
         return (
             <input
-                type={type} 
+                type={type}
                 className={cls}
-                placeholder={placeholder} 
+                placeholder={placeholder}
                 onChange={this.onChange}
+                value={value}
+                {...rest}
             />
         )
     }

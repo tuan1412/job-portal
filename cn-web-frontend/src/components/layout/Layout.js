@@ -6,7 +6,7 @@ import Footer from './Footer';
 import Banner from './Banner';
 
 export default class Layout extends Component {
-    whitePages = ['', 'login'];
+    whitePages = ['', 'login', 'list-job'];
 
     formatUrl = (s) => {
         if (typeof s !== 'string') return '';
