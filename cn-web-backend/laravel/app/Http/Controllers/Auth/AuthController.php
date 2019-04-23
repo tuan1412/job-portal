@@ -76,7 +76,7 @@ class AuthController extends Controller
                 'role'     => 'candidate_user',
             ]);
 
-            if ($request->hasFile('avatar') {
+            if ($request->hasFile('avatar')) {
                 $pathAvatar = $this->uploadFileService->store($request->avatar);
             } else {
                 $pathAvatar = '';
@@ -120,7 +120,7 @@ class AuthController extends Controller
                 ], 400);
             }
 
-            if ($request->hasFile('company_avatar') {
+            if ($request->hasFile('company_avatar')) {
                 $pathAvatar = $this->uploadFileService->store($request->company_avatar);
             } else {
                 $pathAvatar = '';
