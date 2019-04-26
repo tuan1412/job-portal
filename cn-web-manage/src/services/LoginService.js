@@ -5,11 +5,12 @@ class LoginService {
     }
     async login(params) {
         try {
-            let data = await this.core_api.getPost("api/auth/login", params);
-            console.log('login response: ', data);
+            let data = await this.core_api.post("auth/login", params);
+            console.log('login response', data);
             return data;
         } catch (error) {
-            console.log('login error: ', error);
+            console.log('login error', error);
+            throw new Error(error);
         }
     }
 }

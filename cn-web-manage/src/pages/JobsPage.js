@@ -1,13 +1,120 @@
 import React, { Component } from 'react';
-
+import TitlePage from '../components/layout/TitlePage';
+import ModalConfirm2 from '../components/modal/ModalConfirm2';
+import ConfirmModal from '../services/confirm-modal';
+import JobService from '../services/JobService';
+import { Redirect } from "react-router-dom";
 class JobsPage extends Component {
+    list = [];
+    id_current_job;
+    changePage = false;
     constructor(props) {
         super(props);
+        console.log("Goto JobsPage")
         this.state = {};
+        this.service = new JobService();
+        this.confirmModal = new ConfirmModal();
+        this.page = 1;
+        this.total = 0;
+        this.getJobs();
     }
+
+    async getJobs() {
+        try {
+            let params = {
+                page: this.page
+            }
+            let data = await this.service.getJobs(params);
+            this.list = data.data;
+            this.page = data.current_page;
+            this.total = data.total;
+            console.log("getJobs: " + this.page, data);
+            this.forceUpdate();
+        } catch (error) {
+            console.log()
+        }
+    }
+
+    preGotoDetail(id) {
+        this.id_current_job = id;
+        console.log('id : ', this.id_current_job);
+        this.confirmModal.show(1);
+    }
+
+    callbackDetail(data) {
+        console.log(data);
+    }
+
+    redirect() {
+        if (this.changePage) {
+            return <Redirect to={'/app/job/' + this.id_current_job} />
+        }
+    }
+
     render() {
         return (
-            <></>
+
+            <> {this.redirect()}
+                <TitlePage data={["Jobs"]}></TitlePage>
+                <h1>Total : {this.total}</h1>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Title Job</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Company</th>
+                            <th scope="col">Salary</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            this.list.map((item, index) => {
+                                let i = index;
+                                return <tr key={index} onClick={() => { this.preGotoDetail(item.id) }}>
+                                    <th scope="row">{item.id}</th>
+                                    <td>{item.title_job}</td>
+                                    <td>{item.address}</td>
+                                    <td>{item.name_company}</td>
+                                    <td>{item.from_salary}$ - {item.to_salary}$</td>
+                                    {(() => {
+                                        switch (item.status) {
+                                            case 0:
+                                                return <td>New</td>;
+                                            case 1:
+                                                return <td>Accepted</td>;
+                                            case 2:
+                                                return <td>Rejected</td>;
+                                            default:
+                                                return null;
+                                        }
+                                    })()}
+
+                                    {/* <td><FormButton name={"abcd: " + index} ></FormButton></td> */}
+                                </tr>;
+                            })
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Title Job</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Company</th>
+                            <th scope="col">Salary</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <ModalConfirm2 id="1" callback={(res) => {
+                    if (res == 'submit') {
+                        this.changePage = true;
+                        this.forceUpdate();
+                        // return <Redirect from='/app/jobs' to='/login' />
+                    }
+                }}></ModalConfirm2>
+            </>
         );
     }
 }
