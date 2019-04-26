@@ -43,7 +43,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('reject_job', 'JobController@reject');
 
         Route::post('ban_user', 'UserController@ban');
-        Route::post('users', 'UserController@index');
+        Route::post('company_users', 'UserController@indexCompanyUsers');
+        Route::post('candidate_users', 'UserController@indexCandidateUsers');
 
         Route::post('companies', 'CompanyController@index');       
     });

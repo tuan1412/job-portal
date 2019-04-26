@@ -9,12 +9,41 @@ use App\Model\User;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    public function indexCompanyUsers(Request $request)
     {
-        return DB::table('users')
-                    ->whereIn('role', ['candidate_user', 'company_user'])
-                    ->select('id', 'username', 'role')
-                    ->paginate(10);
+        $query = DB::table('company_users')
+                    ->join('users', 'users.id', '=', 'company_users.user_id');
+        if ($request->has('fullname')) {
+            $query->where('fullname', 'like', '%'.$request->fullname.'%');
+        }
+        if ($request->has('email')) {
+            $query->where('email', 'like', '%'.$request->email.'%');
+        }
+        if ($request->has('company_id')) {
+            $query->where('company_id', $request->company_id);
+        }
+        if ($request->has('username')) {
+            $query->where('username', 'like', '%'.$request->username.'%');
+        }
+        $query->select('users.id', 'username', 'company_id', 'fullname', 'email', 'gender');
+        return $query->paginate($request->per_page);
+    }
+
+    public function indexCandidateUsers(Request $request)
+    {
+        $query = DB::table('candidate_users')
+                    ->join('users', 'users.id', '=', 'candidate_users.user_id');
+        if ($request->has('username')) {
+            $query->where('username', 'like', '%'.$request->username.'%');
+        }
+        if ($request->has('full_name')) {
+            $query->where('full_name', 'like', '%'.$request->full_name.'%');
+        }
+        if ($request->has('email')) {
+            $query->where('email', 'like', '%'.$request->email.'%');
+        }
+        $query->select('users.id', 'username', 'full_name', 'email', 'mobile', 'birthday', 'description');
+        return $query->paginate($request->per_page);
     }
 
     public function ban(Request $request)
