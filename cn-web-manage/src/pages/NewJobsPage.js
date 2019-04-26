@@ -141,7 +141,7 @@ class NewJobsPage extends Component {
                         {
                             this.list.map((item, index) => {
                                 let i = index;
-                                return <tr key={index} onClick={() => { this.preGotoDetail(item.id) }}>
+                                return <tr key={index} onClick={() => { this.selectRow(index) }}>
                                     <th scope="row">{item.id}</th>
                                     <td>{item.title_job}</td>
                                     <td>{item.address}</td>
