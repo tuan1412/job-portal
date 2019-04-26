@@ -25,6 +25,17 @@ class JobService {
             throw new Error(error);
         }
     }
+
+    async acceptJob(params){
+        try {
+            let data = await this.core_api.post("admin/accept_job", params);
+            console.log('acceptJob response: ', data);
+            return data;
+        } catch (error) {
+            console.log('acceptJob error: ', error);
+            throw new Error(error);
+        }
+    }
 }
 
 export default JobService;

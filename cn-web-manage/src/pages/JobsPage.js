@@ -38,10 +38,6 @@ class JobsPage extends Component {
         }
     }
 
-    search() {
-
-    }
-
     preGotoDetail(id) {
         this.id_current_job = id;
         console.log('id : ', this.id_current_job);
