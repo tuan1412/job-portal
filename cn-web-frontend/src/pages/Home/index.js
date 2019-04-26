@@ -1,16 +1,27 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import CoverSite from './CoverSite';
 import JobListSection from './JobListSection';
-import Layout from '../../components/layout/Layout';
 import Loadable from '../../components/lazyload';
+import client from '../../core/api';
 
 export default class Home extends Component {
+    
+    searchJob = ({ title, location, category }) => {
+        client({
+            method: 'post',
+            url: '/api/find_job',
+            data: { title, location, category, page: 1 }
+        }).then((res) => {
+            console.log(res);
+        })
+    }
+
     render() {
         return (
-            <Layout>
-                <CoverSite />
+            <Fragment>
+                <CoverSite callback={this.searchJob}/>
                 <JobListSection />
-            </Layout>
+            </Fragment>
         )
     }
 }

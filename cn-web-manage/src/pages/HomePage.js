@@ -4,7 +4,7 @@ import HomeService from '../services/HomeSerivce';
 class HomePage extends Component {
   constructor(props) {
     super(props);
-    this.service = new HomeService();
+    // this.service = new HomeService();
     // this.service.getWorks();
   }
 

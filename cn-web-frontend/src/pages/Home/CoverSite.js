@@ -21,7 +21,7 @@ export default class SiteCover extends Component {
                             <div className="job-search">
                                 <div className="tab-content bg-white p-4 rounded" id="pills-tabContent">
                                     <div className="tab-pane fade show active" id="pills-job" role="tabpanel" aria-labelledby="pills-job-tab">
-                                        <FormSearchJob />
+                                        <FormSearchJob callback={this.props.callback}/>
                                     </div>
                                 </div>
                             </div>

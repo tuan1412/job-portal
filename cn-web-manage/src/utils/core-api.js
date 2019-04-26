@@ -6,15 +6,25 @@ class CoreAPI {
         this.config = CONFIG;
     }
 
-    post(url) {
-        const options = {
-            method: 'POST',
-            // headers: { 'content-type': 'application/x-www-form-urlencoded' },
-            // data: qs.stringify(data),
-            url: this.config.url_server + url,
-        };
-        console.log('core',options);
-        return axios(options);
+    async getPost(url, params) {
+        try {
+            let data = await this.post(url, params);
+            return data.data;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    post(url, params) {
+        return new Promise((resolve, reject) => {
+            const options = {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                data: params,
+                url: this.config.url_server + url,
+            };
+            resolve(axios(options));
+        })
     }
 
     get(url) {
@@ -24,7 +34,7 @@ class CoreAPI {
             // data: qs.stringify(data),
             url: this.config.url_server + url,
         };
-        console.log('core',options);
+        console.log('core', options);
         return axios(options);
     }
 }

@@ -5,19 +5,59 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import GoogleLogin from 'react-google-login';
 import Modal from '../../components/modal';
 import SignUp from '../../components/signup';
+import client from '../../core/api';
+import { notificationSystem } from '../../App';
 
 export default class FormLogin extends Component {
     state = {
+        username: '',
+        password: '',
         openSignUp: false,
+    }
+
+    onChange = (ev) => {
+        const { name, value } = ev.target;
+        this.setState({
+            [name]: value
+        });
+    }
+
+    onSubmit = (ev) => {
+        ev.preventDefault();
+        const { username, password } = this.state;
+        client({
+            method: 'post',
+            url: '/api/auth/login',
+            data: { username, password }
+        }).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     openSignUp = () => {
         this.setState({ openSignUp: true })
     }
 
-    closeSignUp = () => {
-        this.setState({ openSignUp: false });
-    };
+    closeSignUp = (callback) => {
+        this.setState({
+            openSignUp: false
+        }, () => callback());
+    }
+
+    signup = (res) => {
+        this.closeSignUp(() => {
+            if (res.status) {
+                notificationSystem.current.addNotification({
+                    message: 'Đăng kí thành công',
+                    level: 'success',
+                    position: 'tc',
+                    autoDismiss: '2'
+                });
+            }
+        });
+    }
 
     createFbBtn = (renderProps) => {
         return (
@@ -38,23 +78,36 @@ export default class FormLogin extends Component {
         )
     }
     render() {
-        const { openSignUp } = this.state;
+        const { openSignUp, username, password } = this.state;
         return (
             <section className="login-wrapper bg-light">
                 <Modal
-                    open={openSignUp} 
+                    open={openSignUp}
                     onClose={this.closeSignUp}
                 >
-                    <SignUp />
+                    <SignUp callback={this.signup} />
                 </Modal>
                 <div className="container">
                     <div className="col-md-6 col-sm-8 offset-md-3 offset-md-2">
-                        <form>
+                        <form onSubmit={this.onSubmit}>
                             <h1 className="mb-2">
                                 <span className="text-black h2 mb-0">Job<strong>start</strong></span>
                             </h1>
-                            <Input className='input-login' placeholder='Username' />
-                            <Input className='input-login' type='password' placeholder='Password' />
+                            <Input
+                                className='input-login'
+                                placeholder='Username'
+                                onChange={this.onChange}
+                                name='username'
+                                value={username}
+                            />
+                            <Input
+                                className='input-login'
+                                type='password'
+                                placeholder='Password'
+                                onChange={this.onChange}
+                                name='password'
+                                value={password}
+                            />
                             <label><span>Forget Password?</span></label>
                             <Button blockStyle={true}>Login</Button>
                             <div className="mt-2">Have't Any Account <span className="link-sign-up" onClick={this.openSignUp}>Create An Account</span></div>
