@@ -1,3 +1,3 @@
 export const CONFIG = {
-    "url_server": "http://localhost:8000/"
+    "url_server": "http://localhost:8000"
 }

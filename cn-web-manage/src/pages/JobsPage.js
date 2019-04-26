@@ -22,7 +22,10 @@ class JobsPage extends Component {
     async getJobs() {
         try {
             let params = {
-                page: this.page
+                page: this.page,
+                per_page: 20,
+                // title: 'default',
+                // status: 0
             }
             let data = await this.service.getJobs(params);
             this.list = data.data;

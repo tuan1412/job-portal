@@ -5,12 +5,11 @@ class AppService {
     }
     async checkApi() {
         try {
-            let data = await this.core_api.post("admin/jobs");
-            console.log('checkApi success', data);
+            let data = await this.core_api.post("admin/companies");
             return data;
         } catch (error) {
-            console.log('checkApi error: ', error);
-            throw new Error(error);
+            console.log(error);
+            throw new Error({error:error});
         }
     }
 }

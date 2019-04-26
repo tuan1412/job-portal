@@ -15,7 +15,7 @@ class JobDetailPage extends Component {
 
     async getDetailJobs() {
         let params = {
-            page: this.page
+            page: this.page,
         }
         try {
             this.job_info = await this.service.getDetail(params, this.job_id);

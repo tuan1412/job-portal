@@ -24,19 +24,29 @@ class AppPage extends Component {
         super(props);
         this.url = props.match.url;
         this.service = new AppService();
+        this.check_api = true;
+        this.checkApi();
     }
+
+    async checkApi() {
+        try {
+            await this.service.checkApi();
+            this.check_api = true;
+        } catch (error) {
+            this.check_api = false;
+        }
+        this.forceUpdate();
+    }
+
     redirect() {
         let access_token = localStorage.getItem('access_token');
         if (!access_token) {
             return <Redirect exact to='/login' />
-        } else {
-            try {
-                this.service.checkApi();
-            } catch (error) {
-                return <Redirect exact to='/login' />
-            }
+        } else if (this.check_api == false) {
+            return <Redirect exact to='/login' />
         }
     }
+    
     render() {
         return (
             <>
