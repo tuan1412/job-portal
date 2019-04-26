@@ -5,7 +5,7 @@ class HomeService {
     }
     async getWorks() {
         try {
-            let data = await this.core_api.get('');
+            let data = await this.core_api.getPost("api/auth/login");
             console.log('trongnv', data);
             return data;
         } catch (error) {

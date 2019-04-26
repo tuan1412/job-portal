@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { withRouter } from 'react-router';
-
+import LoginService from '../services/LoginService';
 class LoginPage extends Component {
     account = {
         username: "",
@@ -9,6 +9,7 @@ class LoginPage extends Component {
     }
     constructor(props) {
         super(props);
+        this.service = new LoginService();
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
         this.login = this.login.bind(this);
@@ -28,9 +29,20 @@ class LoginPage extends Component {
         this.forceUpdate();
     }
 
-    login(event) {
+    async login(event) {
         console.log('account-login', this.account);
         event.preventDefault();
+        try {
+            let data = await this.service.login(this.account);
+            if (data.hasOwnProperty('access_token')) {
+                localStorage.setItem("access_token", data.access_token);
+                this.changePage("/");
+            }else {
+                alert("login fail") ;
+            }
+        } catch (error) {
+
+        }
 
     }
 
@@ -45,6 +57,7 @@ class LoginPage extends Component {
                     <form>
                         <input type="text" id="login" class="fadeIn second" name="login" placeholder="Username" value={this.account.username} onChange={this.handleChangeUsername} />
                         <input type="text" id="password" class="fadeIn third" name="login" placeholder="Password" value={this.account.password} onChange={this.handleChangePassword} />
+                        
                         <input onClick={(e) => this.login(e)} type="submit" class="fadeIn fourth" value="Log In" />
                     </form>
 

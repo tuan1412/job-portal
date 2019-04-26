@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
     BrowserRouter as Router,
     Route,
-    Switch
+    Switch,
+    Redirect
 } from "react-router-dom";
 
 import Header from '../components/layout/Header';
@@ -21,8 +22,13 @@ class AppPage extends Component {
     constructor(props) {
         super(props);
         this.url = props.match.url;
+
     }
     render() {
+        let access_token = localStorage.getItem('access_token');
+        if (!access_token) {
+            return <Redirect exact to='/login' />
+        }
         return (
             <>
                 <div class="dashboard-main-wrapper">
