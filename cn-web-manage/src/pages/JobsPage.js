@@ -8,6 +8,7 @@ class JobsPage extends Component {
     list = [];
     id_current_job;
     changePage = false;
+    optionsState = -1;
     constructor(props) {
         super(props);
         console.log("Goto JobsPage")
@@ -16,18 +17,17 @@ class JobsPage extends Component {
         this.confirmModal = new ConfirmModal();
         this.page = 1;
         this.total = 0;
+        this.paramsSearch = {
+            page: this.page,
+            per_page: 20
+        };
+        this.selectSearch = this.selectSearch.bind(this);
         this.getJobs();
     }
 
     async getJobs() {
         try {
-            let params = {
-                page: this.page,
-                per_page: 20,
-                // title: 'default',
-                // status: 0
-            }
-            let data = await this.service.getJobs(params);
+            let data = await this.service.getJobs(this.paramsSearch);
             this.list = data.data;
             this.page = data.current_page;
             this.total = data.total;
@@ -38,14 +38,33 @@ class JobsPage extends Component {
         }
     }
 
+    search() {
+
+    }
+
     preGotoDetail(id) {
         this.id_current_job = id;
         console.log('id : ', this.id_current_job);
         this.confirmModal.show(1);
     }
-
-    callbackDetail(data) {
+    selectSearch(e) {
+        let data = e.target.value;
         console.log(data);
+        this.optionsState = data;
+        if (data == -1) {
+            delete this.paramsSearch.status;
+        } else {
+            this.paramsSearch['status'] = data;
+        }
+        this.getJobs();
+    }
+    inputSearch(e) {
+        if (e.target.value == "") {
+            delete this.paramsSearch.title;
+        } else {
+            this.paramsSearch['title'] = e.target.value;
+        }
+        this.getJobs();
     }
 
     redirect() {
@@ -59,6 +78,21 @@ class JobsPage extends Component {
 
             <> {this.redirect()}
                 <TitlePage data={["Jobs"]}></TitlePage>
+                <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Title</label>
+                        <input onChange={(e) => this.inputSearch(e)} type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleSelect1">Status</label>
+                        <select value={this.optionsState} onChange={this.selectSearch} class="form-control" id="exampleSelect1">
+                            <option value="-1" >Default</option>
+                            <option value="0" >New</option>
+                            <option value="1" >Accepted</option>
+                            <option value="2" >Rejected</option>
+                        </select>
+                    </div>
+                </form>
                 <h1>Total : {this.total}</h1>
                 <table class="table table-hover">
                     <thead>
