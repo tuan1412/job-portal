@@ -36,6 +36,17 @@ class JobService {
             throw new Error(error);
         }
     }
+
+    async rejectJob(params){
+        try {
+            let data = await this.core_api.post("admin/reject_job", params);
+            console.log('rejectJob response: ', data);
+            return data;
+        } catch (error) {
+            console.log('rejectJob error: ', error);
+            throw new Error(error);
+        }
+    }
 }
 
 export default JobService;

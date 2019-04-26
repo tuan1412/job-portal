@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import TitlePage from '../components/layout/TitlePage';
-import ModalConfirm2 from '../components/modal/ModalConfirm2';
 import ConfirmModal from '../services/confirm-modal';
 import JobService from '../services/JobService';
 import { Redirect } from "react-router-dom";
@@ -9,12 +8,13 @@ class JobsPage extends Component {
     id_current_job;
     changePage = false;
     optionsState = -1;
+    optionsStateDetail = -1;
+    check_disable_button = true;
     constructor(props) {
         super(props);
         console.log("Goto JobsPage")
         this.state = {};
         this.service = new JobService();
-        this.confirmModal = new ConfirmModal();
         this.page = 1;
         this.total = 0;
         this.paramsSearch = {
@@ -22,6 +22,7 @@ class JobsPage extends Component {
             per_page: 20
         };
         this.selectSearch = this.selectSearch.bind(this);
+        this.changeStatusJob = this.changeStatusJob.bind(this);
         this.getJobs();
     }
 
@@ -38,10 +39,42 @@ class JobsPage extends Component {
         }
     }
 
-    preGotoDetail(id) {
+    async rejectJob() {
+        try {
+            await this.service.rejectJob({ job_id: this.id_current_job });
+            this.getJobs();
+        } catch (error) {
+
+        }
+    }
+
+    callbackDetail(data) {
+        if (data == 'submit') {
+            if (this.optionsStateDetail == 2) {
+                this.rejectJob();
+            }
+        }
+        this.check_disable_button = true;
+        this.optionsStateDetail = -1;
+    }
+
+    changeStatusJob(e) {
+        let data = e.target.value;
+        this.optionsStateDetail = data;
+        console.log(data);
+        this.check_disable_button = !this.check_disable_button;
+        this.forceUpdate();
+    }
+
+    preGotoDetail(id, index) {
         this.id_current_job = id;
         console.log('id : ', this.id_current_job);
-        this.confirmModal.show(1);
+        this.optionsStateDetail = this.list[index].status;
+        if (this.optionsStateDetail == 0) {
+            this.optionsStateDetail = 2;
+        }
+        this.forceUpdate();
+        document.getElementById("btn-modal-confirm").click()
     }
     selectSearch(e) {
         let data = e.target.value;
@@ -104,7 +137,7 @@ class JobsPage extends Component {
                     <tbody>
                         {
                             this.list.map((item, index) => {
-                                return <tr key={index} onClick={() => { this.preGotoDetail(item.id) }}>
+                                return <tr key={index} onClick={() => { this.preGotoDetail(item.id, index) }}>
                                     <th scope="row">{item.id}</th>
                                     <td>{item.title_job}</td>
                                     <td>{item.address}</td>
@@ -139,13 +172,40 @@ class JobsPage extends Component {
                         </tr>
                     </tfoot>
                 </table>
-                <ModalConfirm2 id="1" callback={(res) => {
+                {/* <ModalConfirm2 id="1" callback={(res) => {
                     if (res == 'submit') {
                         this.changePage = true;
                         this.forceUpdate();
                         // return <Redirect from='/app/jobs' to='/login' />
                     }
-                }}></ModalConfirm2>
+                }}></ModalConfirm2> */}
+
+
+                <div class="modal fade" id="_detail" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Change status job: {this.id_current_job}</h5>
+                            </div>
+                            <div class="modal-body">
+                                <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
+                                    <div class="form-group">
+                                        <label for="exampleSelect1">Status</label>
+                                        <select value={this.optionsStateDetail} onChange={this.changeStatusJob} class="form-control" id="exampleSelect1">
+                                            <option value="1" >Accepted</option>
+                                            <option value="2" >Rejected</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" onClick={() => { this.callbackDetail("cancel") }} class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button disabled={this.check_disable_button} type="button" onClick={() => { this.callbackDetail("submit") }} class="btn btn-info" data-dismiss="modal">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button style={{ "display": "none" }} id={"btn-modal-confirm"} type="button" class="btn btn-info" data-toggle="modal" data-target="#_detail"></button>
             </>
         );
     }
