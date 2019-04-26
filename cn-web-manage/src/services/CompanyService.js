@@ -3,13 +3,13 @@ class CompanySerivce {
     constructor() {
         this.core_api = new CoreAPI();
     }
-    async checkApi() {
+    async getCompanies(params) {
         try {
-            let data = await this.core_api.post("admin/jobs");
-            console.log('checkApi success', data);
+            let data = await this.core_api.post("admin/companies", params);
+            console.log('getCompanies success', data);
             return data;
         } catch (error) {
-            console.log('checkApi error: ', error);
+            console.log('getCompanies error: ', error);
             throw new Error(error);
         }
     }

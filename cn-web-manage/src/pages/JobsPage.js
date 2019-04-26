@@ -108,7 +108,6 @@ class JobsPage extends Component {
                     <tbody>
                         {
                             this.list.map((item, index) => {
-                                let i = index;
                                 return <tr key={index} onClick={() => { this.preGotoDetail(item.id) }}>
                                     <th scope="row">{item.id}</th>
                                     <td>{item.title_job}</td>
