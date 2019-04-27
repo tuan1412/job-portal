@@ -17,20 +17,40 @@ import UsersPage from './UsersPage';
 import UserDetailPage from './UserDetailPage';
 import HomePage from './HomePage';
 import ErrorPage from './ErrorPage';
+import AppService from '../services/AppService';
 class AppPage extends Component {
     url = "";
     constructor(props) {
         super(props);
         this.url = props.match.url;
-
+        this.service = new AppService();
+        this.check_api = true;
+        this.checkApi();
     }
-    render() {
+
+    async checkApi() {
+        try {
+            await this.service.checkApi();
+            this.check_api = true;
+        } catch (error) {
+            this.check_api = false;
+        }
+        this.forceUpdate();
+    }
+
+    redirect() {
         let access_token = localStorage.getItem('access_token');
         if (!access_token) {
             return <Redirect exact to='/login' />
+        } else if (this.check_api == false) {
+            return <Redirect exact to='/login' />
         }
+    }
+    
+    render() {
         return (
             <>
+                {this.redirect()}
                 <div class="dashboard-main-wrapper">
                     <Header></Header>
                     <LeftMenu></LeftMenu>

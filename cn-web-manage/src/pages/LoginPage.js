@@ -9,10 +9,12 @@ class LoginPage extends Component {
     }
     constructor(props) {
         super(props);
+        console.log("Goto LoginPage")
         this.service = new LoginService();
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
         this.login = this.login.bind(this);
+        localStorage.clear();
     }
 
     changePage(page) {

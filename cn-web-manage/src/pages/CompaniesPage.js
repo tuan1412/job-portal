@@ -1,18 +1,50 @@
 import React, { Component } from 'react';
 import TitlePage from '../components/layout/TitlePage';
-
+import CompanySerivce from '../services/CompanyService';
+import { Redirect } from "react-router-dom";
 class CompaniesPage extends Component {
+    changePage = false;
+    list_company = [ ];
+    current_id_company;
     constructor(props) {
         super(props);
         this.state = {};
+        console.log("Goto CompaniesPage")
+        this.service = new CompanySerivce();
+        this.paramsSearch = {
+            page: this.page,
+            // per_page: 20
+        };
+        this.getCompanies();
     }
-    changePage(page) {
-        console.log("next-page: ", page);
-        this.props.history.push(page);
+    async getCompanies() {
+        try {
+            let data = await this.service.getCompanies(this.paramsSearch);
+            this.list_company = data.data;
+        } catch (error) {
+
+        }
+        this.forceUpdate();
     }
+
+    inputSearch(e) {
+        if (e.target.value == "") {
+            delete this.paramsSearch.title;
+        } else {
+            this.paramsSearch['title'] = e.target.value;
+        }
+        this.getJobs();
+    }
+
+    redirect() {
+        if (this.changePage)
+            return <Redirect exact to={'/app/company/' + this.current_id_company} />
+    }
+
     render() {
         return (
             <>
+                {this.redirect()}
                 <TitlePage data={["Companies"]}></TitlePage>
                 <div class="row">
 
@@ -21,7 +53,7 @@ class CompaniesPage extends Component {
                         <div class="card">
                             <div class="card-body">
                                 <form>
-                                    <input class="form-control form-control-lg" type="search" placeholder="Search"
+                                    <input onChange={(e) => this.inputSearch(e)} class="form-control form-control-lg" type="search" placeholder="Search"
                                         aria-label="Search" />
                                 </form>
                             </div>
@@ -29,52 +61,48 @@ class CompaniesPage extends Component {
                     </div>
 
                     <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
-
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12">
-                                        <div class="user-avatar float-xl-left pr-4 float-none">
-                                            <img src="/assets/images/avatar-1.jpg" alt="User Avatar"
-                                                class="rounded-circle user-avatar-xl" />
-                                        </div>
-                                        <div class="pl-xl-3">
-                                            <div class="m-b-0">
-                                                <div class="user-avatar-name d-inline-block">
-                                                    <h2 class="font-24 m-b-10">Henry Barbara</h2>
-                                                </div>
-                                                <div class="rating-star d-inline-block pl-xl-2 mb-2 mb-xl-0">
-                                                    <i class="fa fa-fw fa-star"></i>
-                                                    <i class="fa fa-fw fa-star"></i>
-                                                    <i class="fa fa-fw fa-star"></i>
-                                                    <i class="fa fa-fw fa-star"></i>
-                                                    <i class="fa fa-fw fa-star"></i>
-                                                    <p class="d-inline-block text-dark">14 Reviews </p>
-                                                </div>
+                        {
+                            this.list_company.map((item, index) => { 
+                                return <div class="card">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="user-avatar float-xl-left pr-4 float-none">
+                                                <img src="/assets/images/avatar-1.jpg" alt="User Avatar"
+                                                    class="rounded-circle user-avatar-xl" />
                                             </div>
-                                            <div class="user-avatar-address">
-                                                <p class="mb-2"><i
-                                                    class="fa fa-map-marker-alt mr-2  text-primary"></i>Salt
-                                            Lake City, UT <span class="m-l-10">Male<span class="m-l-20">29
-                                                    Year Old</span></span>
-                                                </p>
-                                                <div class="mt-3">
-                                                    <a href="#" class="mr-1 badge badge-light">Fitness</a><a
-                                                        href="#" class="mr-1 badge badge-light">Life Style</a><a
-                                                            href="#" class="mr-1 badge badge-light">Gym</a><a href="#"
-                                                                class="badge badge-light">Crossfit</a>
+                                            <div class="pl-xl-3">
+                                                <div class="m-b-0">
+                                                    <div class="user-avatar-name d-inline-block">
+                                                        <h2 class="font-24 m-b-10">{item.name}</h2>
+                                                    </div>
+                                                    <div class="rating-star d-inline-block pl-xl-2 mb-2 mb-xl-0">
+                                                        <i class="fa fa-fw fa-star"></i>
+                                                        <i class="fa fa-fw fa-star"></i>
+                                                        <i class="fa fa-fw fa-star"></i>
+                                                        <i class="fa fa-fw fa-star"></i>
+                                                        <i class="fa fa-fw fa-star"></i>
+                                                        <p class="d-inline-block text-dark">14 Reviews </p>
+                                                    </div>
+                                                </div>
+                                                <div class="user-avatar-address">
+                                                    <p class="mb-2">Email: {item.email}<br/>
+                                                 <span class="m-l-2">Description: {item.description}<span class="m-l-20">Website: {item.website}</span></span>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12">
-                                        <div class="float-xl-right float-none mt-xl-0 mt-4">
-                                            <a onClick={()=>{this.changePage("/app/company/123")}} href="#" class="btn btn-secondary">Go To Detail</a>
+                                        <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="float-xl-right float-none mt-xl-0 mt-4">
+                                                <a onClick={() => { this.changePage = true }} href="#" class="btn btn-secondary">Go To Detail</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            })
+                        }
+                        
 
 
                     </div>

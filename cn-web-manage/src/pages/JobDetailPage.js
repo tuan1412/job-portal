@@ -1,19 +1,39 @@
 import React, { Component } from 'react';
 import TitlePage from '../components/layout/TitlePage';
-
+import JobService from '../services/JobService';
 class JobDetailPage extends Component {
+    page = 1;
+    job_info;
     constructor(props) {
         super(props);
+        console.log('Goto JobDetailPage');
         this.state = {};
+        this.service = new JobService();
+        this.job_id = this.props.match.params.id;
+        this.getDetailJobs();
     }
+
+    async getDetailJobs() {
+        let params = {
+            page: this.page,
+        }
+        try {
+            this.job_info = await this.service.getDetail(params, this.job_id);
+            console.log('job_info', this.job_info);
+            this.forceUpdate();
+        } catch (error) {
+
+        }
+    }
+
     render() {
         return (
             <>
                 <TitlePage data={["Jobs", "Detail"]}></TitlePage>
-                <div class="row" style={{'font-size': "125%"}}>
+                <div class="row" style={{ 'font-size': "125%" }}>
                     <div class="offset-xl-2 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="row">
-                            
+
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 m-b-60">
                                 <div class="simple-card">
                                     <ul class="nav nav-tabs" id="myTab5" role="tablist">
