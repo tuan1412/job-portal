@@ -76,9 +76,9 @@ class LoginPage extends Component {
                     </form>
 
                     <div id="formFooter">
-                        <a class="underlineHover" onClick={() => this.changePage("/sign-up")} href="/sign-up">Sign Up?</a>
+                        <a class="underlineHover" onClick={() => this.changePage("/sign-up")}>Sign Up?</a>
                         <br />
-                        <a class="underlineHover" onClick={() => this.changePage("/forgot-password")} href="/forgot-password">Forgot Password?</a>
+                        <a class="underlineHover" onClick={() => this.changePage("/forgot-password")}>Forgot Password?</a>
                     </div>
 
                 </div>

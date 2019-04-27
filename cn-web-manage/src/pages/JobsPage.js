@@ -5,7 +5,6 @@ import JobService from '../services/JobService';
 import { Redirect } from "react-router-dom";
 class JobsPage extends Component {
     list = [];
-    changePage = false;
     optionsState = -1;
     optionsStateDetailChange = -1;
     check_disable_button = true;
@@ -96,16 +95,10 @@ class JobsPage extends Component {
         this.getJobs();
     }
 
-    redirect() {
-        if (this.changePage) {
-            return <Redirect to={'/app/job/' + this.job_current.id} />
-        }
-    }
-
     render() {
         return (
 
-            <> {this.redirect()}
+            <>
                 <TitlePage data={["Jobs"]}></TitlePage>
                 <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <div class="form-row">
@@ -174,13 +167,6 @@ class JobsPage extends Component {
                         </tr>
                     </tfoot>
                 </table>
-                {/* <ModalConfirm2 id="1" callback={(res) => {
-                    if (res == 'submit') {
-                        this.changePage = true;
-                        this.forceUpdate();
-                        // return <Redirect from='/app/jobs' to='/login' />
-                    }
-                }}></ModalConfirm2> */}
 
                 {
                     this.job_current ?
