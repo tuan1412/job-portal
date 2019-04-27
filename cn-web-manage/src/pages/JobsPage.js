@@ -8,7 +8,8 @@ class JobsPage extends Component {
     id_current_job;
     changePage = false;
     optionsState = -1;
-    optionsStateDetail = -1;
+    optionsStateDetailCurrent = -1;
+    optionsStateDetailChange = -1;
     check_disable_button = true;
     constructor(props) {
         super(props);
@@ -43,36 +44,39 @@ class JobsPage extends Component {
         try {
             await this.service.rejectJob({ job_id: this.id_current_job });
             this.getJobs();
+            alert("reject sucess job: " + this.id_current_job);
         } catch (error) {
-
+            alert("reject fail job: " + this.id_current_job);
         }
     }
 
     callbackDetail(data) {
         if (data == 'submit') {
-            if (this.optionsStateDetail == 2) {
+            if (this.optionsStateDetailChange == 2) {
                 this.rejectJob();
             }
         }
+
         this.check_disable_button = true;
-        this.optionsStateDetail = -1;
+        this.optionsStateDetailChange = -1;
+        this.optionsStateDetailCurrent = -1;
     }
 
     changeStatusJob(e) {
         let data = e.target.value;
-        this.optionsStateDetail = data;
-        console.log(data);
-        this.check_disable_button = !this.check_disable_button;
+        this.optionsStateDetailChange = data;
+        if (data != this.optionsStateDetailCurrent) {
+            this.check_disable_button = false;
+        } else {
+            this.check_disable_button = true;
+        }
         this.forceUpdate();
     }
 
     preGotoDetail(id, index) {
         this.id_current_job = id;
         console.log('id : ', this.id_current_job);
-        this.optionsStateDetail = this.list[index].status;
-        if (this.optionsStateDetail == 0) {
-            this.optionsStateDetail = 2;
-        }
+        this.optionsStateDetailCurrent = this.list[index].status;
         this.forceUpdate();
         document.getElementById("btn-modal-confirm").click()
     }
@@ -191,8 +195,13 @@ class JobsPage extends Component {
                                 <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                                     <div class="form-group">
                                         <label for="exampleSelect1">Status</label>
-                                        <select value={this.optionsStateDetail} onChange={this.changeStatusJob} class="form-control" id="exampleSelect1">
-                                            <option value="1" >Accepted</option>
+                                        <select value={this.optionsStateDetailChange} onChange={this.changeStatusJob} class="form-control" id="exampleSelect1">
+                                            {
+                                                this.optionsStateDetailCurrent == 0 ? <option value="0" >New</option> : <></>
+                                            }
+                                            {
+                                                this.optionsStateDetailCurrent != 2 ? <option value="1" >Accepted</option> : <></>
+                                            }
                                             <option value="2" >Rejected</option>
                                         </select>
                                     </div>
