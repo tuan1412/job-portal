@@ -19,7 +19,7 @@ class ModalConfirm2 extends Component {
         return (
             <>
                 <div class="modal fade" id="_detail" tabindex="-1" role="dialog" aria-labelledby={"modal-confirm-" + this.props.id} aria-hidden="true">
-                    <div class="modal-dialog" role="document">
+                    <div style={{paddingTop:150}} class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id={"modal-confirm-" + this.props.id}>You wanna go to detail</h5>

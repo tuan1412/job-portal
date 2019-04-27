@@ -26,9 +26,9 @@ class TitlePage extends Component {
                                     {
                                         this.props.data.map((item, index) => {
                                             if (index != this.props.data.length - 1)
-                                                return <li class="breadcrumb-item"><a onClick={() => this.changePage("/app/" + item.toLowerCase())} href="#" class="breadcrumb-link">{item}</a></li>
+                                                return <li key={index} class="breadcrumb-item"><a onClick={() => this.changePage("/app/" + item.toLowerCase())} href="#" class="breadcrumb-link">{item}</a></li>
                                             else
-                                                return <li class="breadcrumb-item active" aria-current="page">{item}    </li>
+                                                return <li key={index} class="breadcrumb-item active" aria-current="page">{item}    </li>
                                         })
                                     }
                                 </ol>
