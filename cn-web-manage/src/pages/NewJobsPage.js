@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import TitlePage from '../components/layout/TitlePage';
-import ModalConfirm2 from '../components/modal/ModalConfirm2';
 import ConfirmModal from '../services/confirm-modal';
-import { Redirect } from "react-router-dom";
 import JobService from '../services/JobService';
 import FormButton from '../components/form/FormButton'
 class NewJobsPage extends Component {
@@ -114,16 +112,9 @@ class NewJobsPage extends Component {
         this.forceUpdate();
     }
 
-    redirect() {
-        if (this.changePage) {
-            return <Redirect to={'/app/job/' + this.id_current_job} />
-        }
-    }
-
-
     render() {
         return (
-            <> {this.redirect()}
+            <>
                 <TitlePage data={["New-Jobs"]}></TitlePage>
                 <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <div class="form-group">
