@@ -8,6 +8,7 @@ use App\Model\CV;
 use Illuminate\Support\Facades\DB;
 use App\Model\UserCompany;
 use App\Services\UploadFileService;
+use Illuminate\Support\Facades\Auth;
 
 class CVController extends Controller
 {
@@ -75,8 +76,9 @@ class CVController extends Controller
     public function apply(Request $request)
     {
         UserCompany::create([
-            'user_id' => $request->user_id,
+            'user_id' => Auth::id(),
             'company_id' => $request->company_id,
+            'cv_id' => $request->id,
         ]);
 
         return response()->json([
