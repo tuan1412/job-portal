@@ -13,9 +13,11 @@ class JobController extends Controller
     public function index(Request $request)
     {
         return DB::table('jobs')
+                    ->join('categories', 'categories.id', '=', 'jobs.category_id')
+                    ->join('companies', 'companies.id', '=', 'jobs.company_id')
                     ->where(['company_id' => $request->company_id, 'status' => $request->status])
-                    ->select(['id', 'title', 'address', 'from_salary', 'to_salary', 'expire_date', 'description'])
-                    ->paginate(5);
+                    ->select('jobs.id', 'jobs.title as title_job', 'address', 'from_salary', 'to_salary', 'expire_date', 'status', 'jobs.description', 'categories.name as category_name', 'companies.title as title_company')
+                    ->paginate($request->per_page);
     }
 
     public function create(Request $request)
