@@ -51,7 +51,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::group([
         'namespace'  => 'CompanyUser',
-        'middleware' => 'role:company_user',
+        'middleware' => 'role:company_user,company_manager',
         'prefix'     => 'company_user',
     ], function () {
         Route::post('get_users', 'UserController@index');

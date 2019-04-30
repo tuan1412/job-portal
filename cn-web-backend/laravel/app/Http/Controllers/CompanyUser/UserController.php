@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\CompanyUser;
 use App\Model\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -21,6 +22,12 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
+        if (User::where('id', Auth::id())->first()->role != 'company_manager') {
+            return response()->json([
+                'message' => 'This user cannot create user',
+                'status'  => 0,
+            ], 400);
+        }
         if (User::where('username', $request->username)->first()) {
             return response()->json([
                 'message' => 'Username existed',
