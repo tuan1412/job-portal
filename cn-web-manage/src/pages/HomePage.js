@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import HomeService from '../services/HomeSerivce';
+import { Redirect } from "react-router-dom";
 
 class HomePage extends Component {
   constructor(props) {
@@ -8,9 +8,13 @@ class HomePage extends Component {
     // this.service.getWorks();
   }
 
+  redirect(){
+    return <Redirect exact to='/app/new-jobs' />
+  }
+
   render() {
     return (
-      <>
+      <>{this.redirect()}
         {/* <Header></Header>
         <LeftMenu></LeftMenu> */}
       </>

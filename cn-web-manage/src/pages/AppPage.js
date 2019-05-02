@@ -41,8 +41,10 @@ class AppPage extends Component {
     redirect() {
         let access_token = localStorage.getItem('access_token');
         if (!access_token) {
+            alert('access token not exist');
             return <Redirect exact to='/login' />
         } else if (this.check_api == false) {
+            alert('access token expried');
             return <Redirect exact to='/login' />
         }
     }
