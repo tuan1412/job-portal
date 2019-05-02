@@ -13,7 +13,7 @@ class CompaniesPage extends Component {
         this.service = new CompanySerivce();
         this.paramsSearch = {
             page: this.page,
-            // per_page: 20
+            per_page: 20
         };
         this.getCompanies();
     }
@@ -75,14 +75,6 @@ class CompaniesPage extends Component {
                                                 <div class="m-b-0">
                                                     <div class="user-avatar-name d-inline-block">
                                                         <h2 class="font-24 m-b-10">{item.name}</h2>
-                                                    </div>
-                                                    <div class="rating-star d-inline-block pl-xl-2 mb-2 mb-xl-0">
-                                                        <i class="fa fa-fw fa-star"></i>
-                                                        <i class="fa fa-fw fa-star"></i>
-                                                        <i class="fa fa-fw fa-star"></i>
-                                                        <i class="fa fa-fw fa-star"></i>
-                                                        <i class="fa fa-fw fa-star"></i>
-                                                        <p class="d-inline-block text-dark">14 Reviews </p>
                                                     </div>
                                                 </div>
                                                 <div class="user-avatar-address">

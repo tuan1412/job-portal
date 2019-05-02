@@ -18,7 +18,6 @@ class UsersPage extends Component {
             page: this.page,
             per_page: 20
         };
-        this.selectSearch = this.selectSearch.bind(this);
         this.changeStatusUser = this.changeStatusUser.bind(this);
         this.getUsers();
     }
@@ -48,7 +47,7 @@ class UsersPage extends Component {
 
     callbackDetail(data) {
         if (data == 'submit') {
-            if (this.optionsStateDetailChange == 2) {
+            if (this.optionsStateDetailChange == 1) {
                 this.banUser();
             }
         }
@@ -60,7 +59,7 @@ class UsersPage extends Component {
     changeStatusUser(e) {
         let data = e.target.value;
         this.optionsStateDetailChange = data;
-        if (data != this.user_current.status) {
+        if (data == 1) {
             this.check_disable_button = false;
         } else {
             this.check_disable_button = true;
@@ -73,18 +72,7 @@ class UsersPage extends Component {
         this.forceUpdate();
         document.getElementById("btn-modal-confirm").click()
     }
-    selectSearch(e) {
-        let data = e.target.value;
-        console.log(data);
-        this.optionsState = data;
-        if (data == -1) {
-            delete this.paramsSearch.status;
-        } else {
-            this.paramsSearch['status'] = data;
-        }
-        this.getUsers();
-    }
-    inputSearch(e,type) {
+    inputSearch(e, type) {
         if (e.target.value == "") {
             delete this.paramsSearch[type];
         } else {
@@ -100,25 +88,16 @@ class UsersPage extends Component {
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label for="title">Username</label>
-                            <input onChange={(e) => this.inputSearch(e,'username')} type="email" class="form-control" id="title" placeholder="Enter username" />
+                            <input onChange={(e) => this.inputSearch(e, 'username')} type="email" class="form-control" id="title" placeholder="Enter username" />
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="title">Fullname</label>
-                            <input onChange={(e) => this.inputSearch(e,'fullname')} type="email" class="form-control" id="title" placeholder="Enter fullname" />
+                            <label for="title">Full name</label>
+                            <input onChange={(e) => this.inputSearch(e, 'full_name')} type="email" class="form-control" id="title" placeholder="Enter full name" />
                         </div>
                         <div class="form-group col-md-4">
                             <label for="title">Email</label>
-                            <input onChange={(e) => this.inputSearch(e,'email')} type="email" class="form-control" id="title" placeholder="Enter email" />
+                            <input onChange={(e) => this.inputSearch(e, 'email')} type="email" class="form-control" id="title" placeholder="Enter email" />
                         </div>
-                        {/* <div class="form-group col-md-4">
-                            <label for="inputStatus">Status</label>
-                            <select value={this.optionsState} onChange={this.selectSearch} class="form-control" id="inputStatus">
-                                <option value="-1" >Default</option>
-                                <option value="0" >New</option>
-                                <option value="1" >Accepted</option>
-                                <option value="2" >Rejected</option>
-                            </select>
-                        </div> */}
                     </div>
                 </form>
                 <h1>Total : {this.total}</h1>
@@ -132,6 +111,7 @@ class UsersPage extends Component {
                             <th scope="col">Mobile</th>
                             <th scope="col">Username</th>
                             <th scope="col">Description</th>
+                            <th scope="col">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -145,19 +125,14 @@ class UsersPage extends Component {
                                     <td>{item.mobile}</td>
                                     <td>{item.username}</td>
                                     <td>{item.description}</td>
-                                    {/* <td>{item.from_salary}$ - {item.to_salary}$</td>
                                     {(() => {
-                                        switch (item.status) {
-                                            case 0:
-                                                return <td>New</td>;
-                                            case 1:
-                                                return <td>Accepted</td>;
-                                            case 2:
-                                                return <td>Rejected</td>;
+                                        switch (item.role) {
+                                            case 'inactive':
+                                                return <td>Inactive</td>;
                                             default:
-                                                return null;
+                                                return <td>Active</td>;
                                         }
-                                    })()} */}
+                                    })()}
 
                                     {/* <td><FormButton name={"abcd: " + index} ></FormButton></td> */}
                                 </tr>;
@@ -173,6 +148,7 @@ class UsersPage extends Component {
                             <th scope="col">Mobile</th>
                             <th scope="col">Username</th>
                             <th scope="col">Description</th>
+                            <th scope="col">Status</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -195,19 +171,16 @@ class UsersPage extends Component {
                                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Full name: </label>
                                                 <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.full_name}</label>
                                             </div>
-                                            {/* <div class="form-group row">
+                                            <div class="form-group row">
                                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Status: </label>
                                                 <label for="inputEmail3" class="col-sm-9 col-form-label">
                                                     <select class="col-sm-9 col-form-label" value={this.optionsStateDetailChange} onChange={this.changeStatusUser} class="form-control" id="exampleSelect1">
                                                         {
-                                                            this.user_current.status == 0 ? <option value="0" >New</option> : <></>
+                                                            this.user_current.role == 'inactive' ? <></> : <option value="0" >Active</option>
                                                         }
-                                                        {
-                                                            this.user_current.status != 2 ? <option value="1" >Accepted</option> : <></>
-                                                        }
-                                                        <option value="2" >Rejected</option>
+                                                        <option value="1" >Inactive</option>
                                                     </select></label>
-                                            </div> */}
+                                            </div>
                                             <div class="form-group row">
                                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Email: </label>
                                                 <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.email}</label>
