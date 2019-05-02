@@ -12,6 +12,7 @@ class UserCompany extends Model
         'id',
         'user_id',
         'company_id',
+        'cv_id',
     ];
 
     protected $hidden = [

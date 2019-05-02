@@ -53,7 +53,12 @@ class AuthController extends Controller
         }
         
         $user = User::where('username', $request->username)->first();
-
+        
+        if ($user->role == 'company_user' || $user->role == 'company_manager') {
+            $user->company_id = CompanyUser::where('user_id', $user->id)
+                                            ->first()->company_id;
+        }
+        
         return response()->json([
             'access_token' => $token,
             'user'         => $user,
@@ -139,7 +144,7 @@ class AuthController extends Controller
                 $user = User::create([
                     'username' => $request->username,
                     'password' => \bcrypt($request->password),
-                    'role'     => 'company_user',
+                    'role'     => 'company_manager',
                 ]);
 
                 CompanyUser::create([
