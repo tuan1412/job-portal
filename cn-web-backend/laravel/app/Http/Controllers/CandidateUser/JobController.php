@@ -39,6 +39,18 @@ class JobController extends Controller
                     ->join('companies', 'companies.id', '=', 'jobs.company_id')
                     ->where('status', 1);
         
+        if ($request->has('title')) {
+            $query->where('jobs.title', 'like', '%'.$request->title.'%');
+        }
+
+        if ($request->has('category')) {
+            $query->where('categories.name', 'like', '%'.$request->category.'%');
+        }
+
+        if ($request->has('address')) {
+            $query->where('jobs.address', 'like', '%'.$request->address.'%');
+        }
+        
         if ($request->has('from_salary')) {
             $query->where('from_salary', '>=', $request->from_salary);
         }
