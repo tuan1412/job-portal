@@ -11,10 +11,21 @@ use Illuminate\Support\Facades\DB;
 class JobController extends Controller
 {
     public function getJobsByCompany(Request $request) {
-        // if (!Company::where('id', $request->company_id)->first()) {
-        //     return 201; 
-        // }
-        return Job::where('company_id', $request->company_id)->paginate(5);
+        $query = DB::table('jobs')
+                    ->join('categories', 'categories.id', '=', 'jobs.category_id')
+                    ->join('companies', 'companies.id', '=', 'jobs.company_id')
+                    ->where('company_id', $request->company_id);
+
+        if ($request->has('title')) {
+            $query->where('jobs.title', 'like', '%'.$request->title.'%');
+        }
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $query->select('jobs.id', 'jobs.title as title_job', 'address', 'from_salary', 'to_salary', 'expire_date', 'status', 'jobs.description', 'categories.name as category_name', 'companies.name as name_company');
+
+        return $query->orderBy('jobs.created_at', 'desc')->paginate($request->per_page);
     }
 
     public function index(Request $request) {
