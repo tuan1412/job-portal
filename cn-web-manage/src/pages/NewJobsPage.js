@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import TitlePage from '../components/layout/TitlePage';
-import ModalConfirm2 from '../components/modal/ModalConfirm2';
 import ConfirmModal from '../services/confirm-modal';
-import { Redirect } from "react-router-dom";
 import JobService from '../services/JobService';
 import FormButton from '../components/form/FormButton'
 class NewJobsPage extends Component {
     list = [];
-
+    job_current;
     constructor(props) {
         super(props);
         this.confirmModal = new ConfirmModal();
@@ -108,16 +106,15 @@ class NewJobsPage extends Component {
         }
     }
 
-    redirect() {
-        if (this.changePage) {
-            return <Redirect to={'/app/job/' + this.id_current_job} />
-        }
+    selectItem(item,index){
+        this.job_current = item;
+        document.getElementById("btn-modal-confirm").click()
+        this.forceUpdate();
     }
-
 
     render() {
         return (
-            <> {this.redirect()}
+            <>
                 <TitlePage data={["New-Jobs"]}></TitlePage>
                 <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <div class="form-group">
@@ -141,7 +138,7 @@ class NewJobsPage extends Component {
                         {
                             this.list.map((item, index) => {
                                 let i = index;
-                                return <tr key={index} onClick={() => { this.selectRow(index) }}>
+                                return <tr key={index} onClick={() => { this.selectItem(item, index) }}>
                                     <th scope="row">{item.id}</th>
                                     <td>{item.title_job}</td>
                                     <td>{item.address}</td>
@@ -169,12 +166,63 @@ class NewJobsPage extends Component {
                         </tr>
                     </tfoot>
                 </table>
-                <ModalConfirm2 id="1" callback={(data) => {
-                    if (data == 'submit') {
-                        this.changePage = true;
-                        this.forceUpdate()
-                    }
-                }}></ModalConfirm2>
+                {
+                    this.job_current ?
+                        <div class="modal fade" id="_detail" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Change status job: {this.job_current.id}</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-3 col-form-label">ID: </label>
+                                                <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.id}</label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-3 col-form-label">Job: </label>
+                                                <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.title_job}</label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-3 col-form-label">Status: </label>
+                                                <label for="inputEmail3" class="col-sm-9 col-form-label">New</label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-3 col-form-label">Category: </label>
+                                                <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.category_name}</label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-3 col-form-label">Address: </label>
+                                                <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.address}</label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-3 col-form-label">Company: </label>
+                                                <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.name_company}</label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-3 col-form-label">Salary: </label>
+                                                <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.from_salary}$ - {this.job_current.to_salary}$</label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-3 col-form-label">Expire Date: </label>
+                                                <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.expire_date}</label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-3 col-form-label">Description: </label>
+                                                <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.description}</label>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" onClick={() => { }} class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        {/* <button disabled={this.check_disable_button} type="button" onClick={() => { this.callbackDetail("submit") }} class="btn btn-success" data-dismiss="modal">Submit</button> */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> : <></>
+                }
+                <button style={{ "display": "none" }} id={"btn-modal-confirm"} type="button" class="btn btn-info" data-toggle="modal" data-target="#_detail"></button>
             </>
         );
     }

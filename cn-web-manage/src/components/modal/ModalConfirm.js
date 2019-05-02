@@ -23,7 +23,7 @@ class ModalConfirm extends Component {
                     {this.props.name}
                 </button> */}
                 <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
+                    <div style={{paddingTop:150}} class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="confirmModalLabel">{this.props.data.title}</h5>

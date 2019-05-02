@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-
+import { Redirect } from "react-router-dom";
 class ForgotPasswordPage extends Component {
   username = "";
+  redirect_to = "";
   constructor(props) {
     super(props);
     this.changePage = this.changePage.bind(this);
@@ -10,8 +11,10 @@ class ForgotPasswordPage extends Component {
 
   changePage(page) {
     console.log("next-page: ", page);
-    this.props.history.push(page);
+    this.redirect_to = page;
+    this.forceUpdate();
   }
+
 
   handleChangeUsername(event) {
     this.username = event.target.value;
@@ -21,10 +24,14 @@ class ForgotPasswordPage extends Component {
   submit(event) {
     event.preventDefault();
   }
-
+  redirect() {
+    if (!!this.redirect_to) {
+      return <Redirect to={this.redirect_to} />
+    }
+  }
   render() {
     return (
-      <div class="wrapper fadeInDown">
+      <div class="wrapper fadeInDown">{this.redirect()}
         <div id="formContent">
           <div class="fadeIn first">
             <img onClick={(e) => this.changePage("/")} src="/assets/images/login.png" id="icon" alt="User Icon" />

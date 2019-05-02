@@ -63,7 +63,7 @@ class CompaniesPage extends Component {
                     <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
                         {
                             this.list_company.map((item, index) => { 
-                                return <div class="card">
+                                return <div key={index} class="card">
                                 <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12">
