@@ -12,8 +12,8 @@ class UserController extends Controller
     public function indexCompanyUsers(Request $request)
     {
         $query = DB::table('company_users')
-                    ->join('users', 'users.id', '=', 'company_users.user_id')
-                    ->where('role', 'company_user');
+                    ->join('users', 'users.id', '=', 'company_users.user_id');
+
         if ($request->has('fullname')) {
             $query->where('fullname', 'like', '%'.$request->fullname.'%');
         }
@@ -26,15 +26,16 @@ class UserController extends Controller
         if ($request->has('username')) {
             $query->where('username', 'like', '%'.$request->username.'%');
         }
-        $query->select('users.id', 'username', 'company_id', 'fullname', 'email', 'gender');
+        $query->select('users.id', 'username', 'company_id', 'fullname', 'email', 'gender', 'role');
+
         return $query->paginate($request->per_page);
     }
 
     public function indexCandidateUsers(Request $request)
     {
         $query = DB::table('candidate_users')
-                    ->join('users', 'users.id', '=', 'candidate_users.user_id')
-                    ->where('role', 'candidate_user');
+                    ->join('users', 'users.id', '=', 'candidate_users.user_id');
+                    
         if ($request->has('username')) {
             $query->where('username', 'like', '%'.$request->username.'%');
         }
@@ -44,7 +45,8 @@ class UserController extends Controller
         if ($request->has('email')) {
             $query->where('email', 'like', '%'.$request->email.'%');
         }
-        $query->select('users.id', 'username', 'full_name', 'email', 'mobile', 'birthday', 'description');
+        $query->select('users.id', 'username', 'full_name', 'email', 'mobile', 'birthday', 'description', 'role');
+
         return $query->paginate($request->per_page);
     }
 
