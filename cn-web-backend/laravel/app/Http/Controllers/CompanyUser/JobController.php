@@ -38,6 +38,7 @@ class JobController extends Controller
             'status' => 0,
         ]);
 
+
         return response()->json([
             'message' => 'Create job successfully',
             'status'  => 1,
