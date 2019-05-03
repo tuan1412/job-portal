@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import TitlePage from '../components/layout/TitlePage';
 import ConfirmModal from '../services/confirm-modal';
 import JobService from '../services/JobService';
-import FormButton from '../components/form/FormButton'
+import FormButton from '../components/form/FormButton';
+import Pagination from '../components/Pagination';
 class NewJobsPage extends Component {
     list = [];
     job_current;
@@ -105,7 +106,7 @@ class NewJobsPage extends Component {
         }
     }
 
-    selectItem(item,index){
+    selectItem(item, index) {
         this.job_current = item;
         document.getElementById("btn-modal-confirm").click()
         this.forceUpdate();
@@ -222,6 +223,7 @@ class NewJobsPage extends Component {
                         </div> : <></>
                 }
                 <button style={{ "display": "none" }} id={"btn-modal-confirm"} type="button" class="btn btn-info" data-toggle="modal" data-target="#_detail"></button>
+                <Pagination callback={(page) => {  }} number_page="" current_page=""></Pagination>
             </>
         );
     }
