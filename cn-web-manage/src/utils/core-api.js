@@ -28,14 +28,24 @@ class CoreAPI {
     }
 
     get(url) {
-        const options = {
-            method: 'GET',
-            // headers: { 'content-type': 'application/x-www-form-urlencoded' },
-            // data: qs.stringify(data),
-            url: this.config.url_server + url,
-        };
-        console.log('core', options);
-        return axios(options);
+        let headers = {};
+        let access_token = localStorage.getItem("access_token");
+        if (!!access_token) {
+            headers['Authorization'] = 'Bearer ' + access_token
+        }
+        return new Promise((resolve, reject) => {
+            const options = {
+                method: 'GET',
+                headers: headers,
+                url: this.config.url_server + "/" + url,
+            };
+            axios(options).then(res => {
+                console.log('data_trongnv',res);
+                resolve(res.data);
+            }, err => {console.log('data_trongnv',err);
+                reject(err.response.data);
+            });
+        })
     }
 }
 

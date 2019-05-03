@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import TitlePage from '../components/layout/TitlePage';
 import CompanySerivce from '../services/CompanyService';
 import { Redirect } from "react-router-dom";
+import Pagination from '../components/Pagination';
 class CompaniesPage extends Component {
     changePage = false;
-    list_company = [ ];
+    list_company = [];
     current_id_company;
+    page = 0;
+    last_page;
     constructor(props) {
         super(props);
         this.state = {};
@@ -13,7 +16,7 @@ class CompaniesPage extends Component {
         this.service = new CompanySerivce();
         this.paramsSearch = {
             page: this.page,
-            // per_page: 20
+            per_page: 20
         };
         this.getCompanies();
     }
@@ -21,19 +24,26 @@ class CompaniesPage extends Component {
         try {
             let data = await this.service.getCompanies(this.paramsSearch);
             this.list_company = data.data;
+            this.last_page = data.last_page;
+            this.total = data.total;
         } catch (error) {
 
         }
         this.forceUpdate();
     }
 
-    inputSearch(e) {
+    inputSearch(e, type) {
         if (e.target.value == "") {
-            delete this.paramsSearch.title;
+            delete this.paramsSearch[type];
         } else {
-            this.paramsSearch['title'] = e.target.value;
+            this.paramsSearch[type] = e.target.value;
         }
-        this.getJobs();
+        this.getCompanies();
+    }
+
+    selectPage(page) {
+        this.paramsSearch['page'] = page;
+        this.getCompanies();
     }
 
     redirect() {
@@ -46,10 +56,29 @@ class CompaniesPage extends Component {
             <>
                 {this.redirect()}
                 <TitlePage data={["Companies"]}></TitlePage>
+                <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="title">Title</label>
+                            <input onChange={(e) => this.inputSearch(e, 'title')} type="email" class="form-control" id="title" placeholder="Enter username" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="title">Name</label>
+                            <input onChange={(e) => this.inputSearch(e, 'name')} type="email" class="form-control" id="title" placeholder="Enter username" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="title">Email</label>
+                            <input onChange={(e) => this.inputSearch(e, 'email')} type="email" class="form-control" id="title" placeholder="Enter full name" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="title">Website</label>
+                            <input onChange={(e) => this.inputSearch(e, 'website')} type="email" class="form-control" id="title" placeholder="Enter email" />
+                        </div>
+                    </div>
+                </form>
+                <h1>Total : {this.total}</h1>
                 <div class="row">
-
-
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    {/* <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="card">
                             <div class="card-body">
                                 <form>
@@ -58,55 +87,43 @@ class CompaniesPage extends Component {
                                 </form>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
+                    </div> */}
+                    <div class="col-xl-12 col-lg-8 col-md-8 col-sm-12 col-12">
                         {
-                            this.list_company.map((item, index) => { 
+                            this.list_company.map((item, index) => {
                                 return <div key={index} class="card">
-                                <div class="card-body">
-                                    <div class="row align-items-center">
-                                        <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12">
-                                            <div class="user-avatar float-xl-left pr-4 float-none">
-                                                <img src="/assets/images/avatar-1.jpg" alt="User Avatar"
-                                                    class="rounded-circle user-avatar-xl" />
-                                            </div>
-                                            <div class="pl-xl-3">
-                                                <div class="m-b-0">
-                                                    <div class="user-avatar-name d-inline-block">
-                                                        <h2 class="font-24 m-b-10">{item.name}</h2>
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                <div class="user-avatar float-xl-left pr-4 float-none">
+                                                    <img src="/assets/images/avatar-1.jpg" alt="User Avatar"
+                                                        class="rounded-circle user-avatar-xl" />
+                                                </div>
+                                                <div class="pl-xl-3">
+                                                    <div class="m-b-0">
+                                                        <div class="user-avatar-name d-inline-block">
+                                                            <h2 class="font-24 m-b-10">{item.name}</h2>
+                                                        </div>
                                                     </div>
-                                                    <div class="rating-star d-inline-block pl-xl-2 mb-2 mb-xl-0">
-                                                        <i class="fa fa-fw fa-star"></i>
-                                                        <i class="fa fa-fw fa-star"></i>
-                                                        <i class="fa fa-fw fa-star"></i>
-                                                        <i class="fa fa-fw fa-star"></i>
-                                                        <i class="fa fa-fw fa-star"></i>
-                                                        <p class="d-inline-block text-dark">14 Reviews </p>
+                                                    <div class="user-avatar-address">
+                                                        <p class="mb-2">Email: {item.email}<br />
+                                                            <span class="m-l-2">Description: {item.description}<span class="m-l-20">Website: {item.website}</span></span>
+                                                        </p>
                                                     </div>
                                                 </div>
-                                                <div class="user-avatar-address">
-                                                    <p class="mb-2">Email: {item.email}<br/>
-                                                 <span class="m-l-2">Description: {item.description}<span class="m-l-20">Website: {item.website}</span></span>
-                                                    </p>
-                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12">
-                                            <div class="float-xl-right float-none mt-xl-0 mt-4">
-                                                <a onClick={() => { this.changePage = true }} href="#" class="btn btn-secondary">Go To Detail</a>
+                                            <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                <div class="float-xl-right float-none mt-xl-0 mt-4">
+                                                    <a onClick={() => { this.current_id_company = item.id; this.changePage = true }} href="#" class="btn btn-secondary">Go To Detail</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             })
                         }
-                        
-
-
                     </div>
-                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12">
+                    {/* <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12">
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="font-16">Sorting By</h3>
@@ -225,10 +242,12 @@ class CompaniesPage extends Component {
                                 <a href="#" class="btn btn-secondary btn-lg btn-block">Submit</a>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
 
-
+                    {
+                        this.list_company.length > 0 ? <Pagination callback={(page) => { this.selectPage(page) }} number_page={this.last_page}></Pagination> : <></>
+                    }
                 </div>
             </>
         );
