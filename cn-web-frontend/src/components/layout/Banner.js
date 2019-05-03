@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 export default class Banner extends Component {
     render() {
         const bgStyle = {
-            backgroundImage: 'url("images/hero_bg_2.jpg")'
+            backgroundImage: 'url("/images/hero_bg_2.jpg")'
         }
         const { current } = this.props;
         return (

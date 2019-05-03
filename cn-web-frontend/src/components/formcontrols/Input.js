@@ -9,6 +9,7 @@ export default class Input extends Component {
         className: '',
         type: 'text',
         blockStyle: false,
+        label: '',
         onChange: function () { }
     }
 

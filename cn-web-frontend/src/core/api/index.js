@@ -1,7 +1,7 @@
 const axios = require('axios');
 const qs = require('qs');
 
-const client = axios.create({
+const api = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
     headers: { 'content-type': 'application/x-www-form-urlencoded' }
 });
@@ -17,7 +17,7 @@ const parseData = (data, isFormData) => {
     return formData;
 }
 
-client.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
     const { isAuth, data, isFormData } = config;
     let cloneConfig = { ...config };
     if (data) {
@@ -29,7 +29,7 @@ client.interceptors.request.use((config) => {
             const authHeader = {
                 'authorization': `Bearer ${token}`,
             };
-            cloneConfig.headers = { ...cloneConfig, ...authHeader };
+            cloneConfig.headers = { ...cloneConfig.headers, ...authHeader };
         }
     }
     return cloneConfig;
@@ -37,10 +37,10 @@ client.interceptors.request.use((config) => {
     return Promise.reject(err);
 });
 
-client.interceptors.response.use((response) => {
+api.interceptors.response.use((response) => {
     return response.data;
 }, (err) => {
     return Promise.reject(err);
 });
 
-export default client;
+export default api;

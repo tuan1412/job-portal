@@ -2,12 +2,8 @@ import React, { Component } from 'react'
 
 export default class Select extends Component {
     static defaultProps = {
-        defaultValue: '',
+        value: '',
         onChange: function() {}
-    }
-
-    state = {
-        value: this.props.defaultValue
     }
 
     renderOptions = () => {
@@ -19,16 +15,14 @@ export default class Select extends Component {
     }
 
     onChange = (event) => {
-        this.setState({
-            value: event.target.value
-        }, this.props.onChange.bind(null, this.state.value));
+        this.props.onChange(event.target.value)
     }
 
     render() {
         return (
             <div className="select-wrap">
                 <span className="icon-keyboard_arrow_down arrow-down"></span>
-                <select className="form-control" onChange={this.onChange}>
+                <select className="form-control" onChange={this.onChange} value={this.props.value}>
                     {this.renderOptions()}
                 </select>
             </div>

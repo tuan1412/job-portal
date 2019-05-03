@@ -9,14 +9,14 @@ export default class Button extends Component {
     }
     
     render() {
-        const { onClick, className, blockStyle } = this.props;
+        const { onClick, className, blockStyle, ...rest } = this.props;
         const cls = classnames({
             'btn btn-primary': true,
             'btn-block': blockStyle,
             [className]: className
         });
         return (
-            <button className={cls} onClick={onClick}>{this.props.children}</button>
+            <button className={cls} onClick={onClick} {...rest}>{this.props.children}</button>
         )
     }
 }
