@@ -38,6 +38,16 @@ class JobsPage extends Component {
         }
     }
 
+    async acceptJob() {
+        try {
+            await this.service.acceptJob({ job_id: this.job_current.id });
+            alert("accept sucess job: " + this.job_current.id);
+            this.getJobs();
+        } catch (error) {
+            alert("accept sucess job: " + this.job_current.id);
+        }
+    }
+
     async rejectJob() {
         try {
             await this.service.rejectJob({ job_id: this.job_current.id });
@@ -52,6 +62,8 @@ class JobsPage extends Component {
         if (data == 'submit') {
             if (this.optionsStateDetailChange == 2) {
                 this.rejectJob();
+            } else if (this.optionsStateDetailChange == 1) {
+                this.acceptJob();
             }
         }
 
