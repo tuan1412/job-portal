@@ -1,11 +1,111 @@
 import React, { Component } from 'react';
 import TitlePage from '../components/layout/TitlePage';
+import CompanySerivce from '../services/CompanyService';
 
 class CompanyDetailPage extends Component {
+    page = 1;
+    company_info;
+    list_user = [];
+    list_job = [];
+    optionsStateDetailChange = -1;
+    check_disable_button = true;
+    state_tabs = "staff";
     constructor(props) {
         super(props);
+        console.log('Goto CompanyDetailPage');
         this.state = {};
-        console.log('CompanyDetailPage: ', props);
+        this.service = new CompanySerivce();
+        this.company_id = this.props.match.params.id;
+        this.changeStatusUser = this.changeStatusUser.bind(this);
+        this.getDetailCompany();
+        this.getDataTabs();
+    }
+
+    async getDetailCompany() {
+        let params = {
+            page: this.page,
+        }
+        try {
+            this.company_info = await this.service.getDetail(this.company_id);
+            console.log('company_info', this.company_info);
+            this.forceUpdate();
+        } catch (error) {
+
+        }
+    }
+
+    getDataTabs() {
+        if (this.state_tabs == "staff") {
+            this.getUsers();
+        } else if (this.state_tabs = "jobs") {
+            this.getJobs();
+        }
+    }
+
+    async getJobs() {
+        try {
+            let params = {
+                page: 1,
+                per_page: 10000
+            }
+            let data = await this.service.getJobs(params, this.company_id);
+            this.list_job = data.data;
+            this.total_job = data.total;
+            this.forceUpdate();
+        } catch (error) {
+        }
+    }
+
+    async getUsers() {
+        try {
+            let params = {
+                page: 1,
+                per_page: 10000,
+                company_id: this.company_id
+            }
+            let data = await this.service.getUsers(params);
+            this.list_user = data.data;
+            this.total_user = data.total;
+            this.forceUpdate();
+        } catch (error) {
+        }
+    }
+
+    async banUser() {
+        try {
+            await this.service.banUser({ user_id: this.user_current.id });
+            alert("ban sucess user: " + this.user_current.id);
+            this.getUsers();
+        } catch (error) {
+            alert("ban fail user: " + this.user_current.id);
+        }
+    }
+
+    preGotoDetail(id, index) {
+        this.user_current = this.list_user[index];
+        this.forceUpdate();
+        document.getElementById("btn-modal-confirm").click()
+    }
+
+    callbackDetail(data) {
+        if (data == 'submit') {
+            if (this.optionsStateDetailChange == 1) {
+                this.banUser();
+            }
+        }
+
+        this.check_disable_button = true;
+        this.optionsStateDetailChange = -1;
+    }
+    changeStatusUser(e) {
+        let data = e.target.value;
+        this.optionsStateDetailChange = data;
+        if (data == 1) {
+            this.check_disable_button = false;
+        } else {
+            this.check_disable_button = true;
+        }
+        this.forceUpdate();
     }
     render() {
         return (
@@ -131,170 +231,178 @@ class CompanyDetailPage extends Component {
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="section-block">
-                            <h3 class="section-title">My Active Campaigns</h3>
-                        </div>
-                        <div class="card">
-                            <div class="campaign-table table-responsive">
-                                <table class="table">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-12">
+                    <div class="section-block">
+                        <h5 class="section-title">Outline Tabs</h5>
+                        <p>Takes the basic nav from above and adds the .nav-tabs class to generate a tabbed interface..</p>
+                    </div>
+                    <div class="tab-outline">
+                        <ul class="nav nav-tabs" id="myTab2" role="tablist">
+                            <li class="nav-item" onClick={() => { this.state_tabs = "staff"; this.getDataTabs(); }}>
+                                <a class="nav-link active" id="tab-outline-one" data-toggle="tab" href="#outline-one" role="tab" aria-controls="home" aria-selected="true">Staff</a>
+                            </li>
+                            <li class="nav-item" onClick={() => { this.state_tabs = "jobs"; this.getDataTabs(); }}>
+                                <a class="nav-link" id="tab-outline-two" data-toggle="tab" href="#outline-two" role="tab" aria-controls="profile" aria-selected="false">Jobs</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent2">
+                            <div class="tab-pane fade show active" id="outline-one" role="tabpanel" aria-labelledby="tab-outline-one">
+
+                                <h1>Total : {this.total_user} Staff</h1>
+                                <table class="table table-hover">
                                     <thead>
-                                        <tr class="border-0">
-                                            <th class="border-0">Company</th>
-                                            <th class="border-0">Campaign Name</th>
-                                            <th class="border-0">Social Platform</th>
-                                            <th class="border-0">Min / Max Views</th>
-                                            <th class="border-0">Status</th>
-                                            <th class="border-0">Start Date</th>
-                                            <th class="border-0">Action</th>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Full name</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Gender</th>
+                                            <th scope="col">Username</th>
+                                            <th scope="col">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="m-r-10"><img src="/assets/images/dribbble.png" alt="user" width="35" /></div>
-                                            </td>
-                                            <td>Fashion E Commerce </td>
-                                            <td>
-                                                <div class="avatar-group">
-                                                    <span><a href="#"><i class="fab fa-fw fa-facebook-square facebook-color"></i></a></span>
-                                                    <span><a href="#"><i class="fab fa-fw fa-twitter-square twitter-color"></i></a></span>
-                                                    <span><a href="#"><i class="fab fa-fw fa-instagram instagram-color"></i></a></span>
-                                                    <span><a href="#"><i class="fab fa-fw fa-pinterest-square pinterest-color"></i></a></span>
-                                                </div>
-                                            </td>
-                                            <td>1,00,000 / 1,50,000</td>
-                                            <td>70%</td>
-                                            <td>7 Aug,2018</td>
-                                            <td>
-                                                <div class="dropdown float-right">
-                                                    <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">
-                                                        <i class="mdi mdi-dots-vertical"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="m-r-10"><img src="/assets/images/github.png" alt="user" width="35" /></div>
-                                            </td>
-                                            <td>Fitness Products </td>
-                                            <td>
-                                                <div class="avatar-group">
-                                                    <span><a href="#"><i class="fab fa-fw fa-facebook-square facebook-color "></i></a></span>
-                                                    <span><a href="#"><i class="fab fa-fw fa-twitter-square twitter-color "></i></a></span>
-                                                </div>
-                                            </td>
-                                            <td>2,50,000 / 3,50,000</td>
-                                            <td>70%</td>
-                                            <td>10 Aug,2018</td>
-                                            <td>
-                                                <div class="dropdown float-right">
-                                                    <a href="#" class="dropdown-toggle  card-drop" data-toggle="dropdown" aria-expanded="true">
-                                                        <i class="mdi mdi-dots-vertical"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="m-r-10"><img src="/assets/images/dropbox.png" alt="user" width="35" /></div>
-                                            </td>
-                                            <td>Gym Trainer Program </td>
-                                            <td>
-                                                <div class="avatar-group">
-                                                    <span><a href="#"><i class="fab fa-fw fa-facebook-square facebook-color "></i></a></span>
-                                                    <span><a href="#"><i class="fab fa-fw fa-pinterest-square pinterest-color "></i></a></span>
-                                                </div>
-                                            </td>
-                                            <td>3,50,000 / 4,50,000</td>
-                                            <td>70%</td>
-                                            <td>22 Aug,2018</td>
-                                            <td>
-                                                <div class="dropdown float-right">
-                                                    <a href="#" class="dropdown-toggle  card-drop" data-toggle="dropdown" aria-expanded="true">
-                                                        <i class="mdi mdi-dots-vertical"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="m-r-10"><img src="/assets/images/bitbucket.png" alt="user" width="30" /></div>
-                                            </td>
-                                            <td>2018 Top Product </td>
-                                            <td>
-                                                <div class="avatar-group">
-                                                    <span><a href="#"><i class="fab fa-fw fa-pinterest-square pinterest-color"></i></a></span>
-                                                </div>
-                                            </td>
-                                            <td>4,50,000 / 5,50,000</td>
-                                            <td>70%</td>
-                                            <td>25 Aug,2018</td>
-                                            <td>
-                                                <div class="dropdown float-right">
-                                                    <a href="#" class="dropdown-toggle  card-drop" data-toggle="dropdown" aria-expanded="true">
-                                                        <i class="mdi mdi-dots-vertical"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="m-r-10"><img src="/assets/images/mail_chimp.png" alt="user" width="30" /></div>
-                                            </td>
-                                            <td>Top Dashboard Sale 2018</td>
-                                            <td>
-                                                <div class="avatar-group">
-                                                    <span><a href="#"><i class="fab fa-fw fa-facebook-square facebook-color"></i></a></span>
-                                                    <span><a href="#"><i class="fab fa-fw fa-pinterest-square pinterest-color"></i></a></span>
-                                                </div>
-                                            </td>
-                                            <td>5,50,000 / 6,50,000</td>
-                                            <td>70%</td>
-                                            <td>27 Aug,2018</td>
-                                            <td>
-                                                <div class="dropdown float-right">
-                                                    <a href="#" class="dropdown-toggle  card-drop" data-toggle="dropdown" aria-expanded="true">
-                                                        <i class="mdi mdi-dots-vertical"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        {
+                                            this.list_user.map((item, index) => {
+                                                return <tr key={index} onClick={() => { this.preGotoDetail(item.id, index) }}>
+                                                    <th scope="row">{item.id}</th>
+                                                    <td>{item.fullname}</td>
+                                                    <td>{item.email}</td>
+                                                    {(() => {
+                                                        switch (item.gender) {
+                                                            case 0:
+                                                                return <td>Male</td>;
+                                                            default:
+                                                                return <td>Female</td>;
+                                                        }
+                                                    })()}
+                                                    <td>{item.username}</td>
+                                                    {(() => {
+                                                        switch (item.role) {
+                                                            case 'inactive':
+                                                                return <td>Inactive</td>;
+                                                            default:
+                                                                return <td>Active</td>;
+                                                        }
+                                                    })()}
+
+                                                    {/* <td><FormButton name={"abcd: " + index} ></FormButton></td> */}
+                                                </tr>;
+                                            })
+                                        }
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Full name</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Gender</th>
+                                            <th scope="col">Username</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
+                            <div class="tab-pane fade" id="outline-two" role="tabpanel" aria-labelledby="tab-outline-two">
+                                <h1>Total : {this.total_job} Jobs</h1>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Title Job</th>
+                                            <th scope="col">Address</th>
+                                            <th scope="col">Company</th>
+                                            <th scope="col">Salary</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            this.list_job.map((item, index) => {
+                                                return <tr key={index} onClick={() => { this.preGotoDetail(item.id, index) }}>
+                                                    <th scope="row">{item.id}</th>
+                                                    <td>{item.title_job}</td>
+                                                    <td>{item.address}</td>
+                                                    <td>{item.name_company}</td>
+                                                    <td>{item.from_salary}$ - {item.to_salary}$</td>
+                                                    {(() => {
+                                                        switch (item.status) {
+                                                            case 0:
+                                                                return <td>New</td>;
+                                                            case 1:
+                                                                return <td>Accepted</td>;
+                                                            case 2:
+                                                                return <td>Rejected</td>;
+                                                            default:
+                                                                return null;
+                                                        }
+                                                    })()}
+                                                </tr>;
+                                            })
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Title Job</th>
+                                            <th scope="col">Address</th>
+                                            <th scope="col">Company</th>
+                                            <th scope="col">Salary</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            {
+                                this.user_current ?
+                                    <div class="modal fade" id="_detail" tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Change status user: {this.user_current.id}</h5>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
+                                                        <div class="form-group row">
+                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">ID: </label>
+                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.id}</label>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">Full name: </label>
+                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.fullname}</label>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">Status: </label>
+                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">
+                                                                <select class="col-sm-9 col-form-label" value={this.optionsStateDetailChange} onChange={this.changeStatusUser} class="form-control" id="exampleSelect1">
+                                                                    {
+                                                                        this.user_current.role == 'inactive' ? <></> : <option value="0" >Active</option>
+                                                                    }
+                                                                    <option value="1" >Inactive</option>
+                                                                </select></label>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">Email: </label>
+                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.email}</label>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">Gender: </label>
+                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.gender}</label>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">Username: </label>
+                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.username}</label>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" onClick={() => { this.callbackDetail("cancel") }} class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                    <button disabled={this.check_disable_button} type="button" onClick={() => { this.callbackDetail("submit") }} class="btn btn-success" data-dismiss="modal">Submit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> : <></>
+                            }
+                            <button style={{ "display": "none" }} id={"btn-modal-confirm"} type="button" class="btn btn-info" data-toggle="modal" data-target="#_detail"></button>
                         </div>
                     </div>
                 </div>
