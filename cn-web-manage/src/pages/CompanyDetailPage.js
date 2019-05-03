@@ -17,6 +17,7 @@ class CompanyDetailPage extends Component {
         this.service = new CompanySerivce();
         this.company_id = this.props.match.params.id;
         this.changeStatusUser = this.changeStatusUser.bind(this);
+        this.changeStatusJob = this.changeStatusJob.bind(this);
         this.getDetailCompany();
         this.getDataTabs();
     }
@@ -81,16 +82,48 @@ class CompanyDetailPage extends Component {
         }
     }
 
+    async acceptJob() {
+        try {
+            await this.service.acceptJob({ job_id: this.job_current.id });
+            alert("accept sucess job: " + this.job_current.id);
+            this.getJobs();
+        } catch (error) {
+            alert("accept sucess job: " + this.job_current.id);
+        }
+    }
+
+    async rejectJob() {
+        try {
+            await this.service.rejectJob({ job_id: this.job_current.id });
+            this.getJobs();
+            alert("reject sucess job: " + this.job_current.id);
+        } catch (error) {
+            alert("reject fail job: " + this.job_current.id);
+        }
+    }
+
     preGotoDetail(id, index) {
-        this.user_current = this.list_user[index];
+        if (this.state_tabs == "staff") {
+            this.user_current = this.list_user[index];
+        } else {
+            this.job_current = this.list_job[index];
+        }
         this.forceUpdate();
         document.getElementById("btn-modal-confirm").click()
     }
 
     callbackDetail(data) {
         if (data == 'submit') {
-            if (this.optionsStateDetailChange == 1) {
-                this.banUser();
+            if (this.state_tabs == 'staff') {
+                if (this.optionsStateDetailChange == 1) {
+                    this.banUser();
+                }
+            } else {
+                if (this.optionsStateDetailChange == 2) {
+                    this.rejectJob();
+                } else if (this.optionsStateDetailChange == 1) {
+                    this.acceptJob();
+                }
             }
         }
 
@@ -107,6 +140,18 @@ class CompanyDetailPage extends Component {
         }
         this.forceUpdate();
     }
+
+    changeStatusJob(e) {
+        let data = e.target.value;
+        this.optionsStateDetailChange = data;
+        if (data != this.job_current.status) {
+            this.check_disable_button = false;
+        } else {
+            this.check_disable_button = true;
+        }
+        this.forceUpdate();
+    }
+
     render() {
         return (
             <>
@@ -352,55 +397,132 @@ class CompanyDetailPage extends Component {
                                     </tfoot>
                                 </table>
                             </div>
-                            {
-                                this.user_current ?
-                                    <div class="modal fade" id="_detail" tabindex="-1" role="dialog" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Change status user: {this.user_current.id}</h5>
+                            {(() => {
+                                switch (this.state_tabs) {
+                                    case "staff":
+                                        return this.user_current ?
+                                            <div class="modal fade" id="_detail" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Change status user: {this.user_current.id}</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">ID: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.id}</label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Full name: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.fullname}</label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Status: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">
+                                                                        <select class="col-sm-9 col-form-label" value={this.optionsStateDetailChange} onChange={this.changeStatusUser} class="form-control" id="exampleSelect1">
+                                                                            {
+                                                                                this.user_current.role == 'inactive' ? <></> : <option value="0" >Active</option>
+                                                                            }
+                                                                            <option value="1" >Inactive</option>
+                                                                        </select></label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Email: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.email}</label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Gender: </label>
+                                                                    {(() => {
+                                                                        switch (this.user_current.gender) {
+                                                                            case 0:
+                                                                                return <label for="inputEmail3" class="col-sm-9 col-form-label">Male</label>
+                                                                            default:
+                                                                                return <label for="inputEmail3" class="col-sm-9 col-form-label">Famale</label>
+                                                                        }
+                                                                    })()}
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Username: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.username}</label>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" onClick={() => { this.callbackDetail("cancel") }} class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button disabled={this.check_disable_button} type="button" onClick={() => { this.callbackDetail("submit") }} class="btn btn-success" data-dismiss="modal">Submit</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
-                                                        <div class="form-group row">
-                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">ID: </label>
-                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.id}</label>
+                                            </div> : <></>;
+                                    case "jobs":
+                                        return this.job_current ?
+                                            <div class="modal fade" id="_detail" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Change status user: {this.job_current.id}</h5>
                                                         </div>
-                                                        <div class="form-group row">
-                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">Full name: </label>
-                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.fullname}</label>
+                                                        <div class="modal-body">
+                                                            <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">ID: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.id}</label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Job: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.title_job}</label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Status: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">
+                                                                        <select class="col-sm-9 col-form-label" value={this.optionsStateDetailChange} onChange={this.changeStatusJob} class="form-control" id="exampleSelect1">
+                                                                            {
+                                                                                this.job_current.status == 0 ? <option value="0" >New</option> : <></>
+                                                                            }
+                                                                            {
+                                                                                this.job_current.status != 2 ? <option value="1" >Accepted</option> : <></>
+                                                                            }
+                                                                            <option value="2" >Rejected</option>
+                                                                        </select></label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Category: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.category_name}</label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Address: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.address}</label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Company: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.name_company}</label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Salary: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.from_salary}$ - {this.job_current.to_salary}$</label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Expire Date: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.expire_date}</label>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Description: </label>
+                                                                    <label for="inputEmail3" class="col-sm-9 col-form-label">{this.job_current.description}</label>
+                                                                </div>
+                                                            </form>
                                                         </div>
-                                                        <div class="form-group row">
-                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">Status: </label>
-                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">
-                                                                <select class="col-sm-9 col-form-label" value={this.optionsStateDetailChange} onChange={this.changeStatusUser} class="form-control" id="exampleSelect1">
-                                                                    {
-                                                                        this.user_current.role == 'inactive' ? <></> : <option value="0" >Active</option>
-                                                                    }
-                                                                    <option value="1" >Inactive</option>
-                                                                </select></label>
+                                                        <div class="modal-footer">
+                                                            <button type="button" onClick={() => { this.callbackDetail("cancel") }} class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button disabled={this.check_disable_button} type="button" onClick={() => { this.callbackDetail("submit") }} class="btn btn-success" data-dismiss="modal">Submit</button>
                                                         </div>
-                                                        <div class="form-group row">
-                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">Email: </label>
-                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.email}</label>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">Gender: </label>
-                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.gender}</label>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label for="inputEmail3" class="col-sm-3 col-form-label">Username: </label>
-                                                            <label for="inputEmail3" class="col-sm-9 col-form-label">{this.user_current.username}</label>
-                                                        </div>
-                                                    </form>
+                                                    </div>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" onClick={() => { this.callbackDetail("cancel") }} class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                    <button disabled={this.check_disable_button} type="button" onClick={() => { this.callbackDetail("submit") }} class="btn btn-success" data-dismiss="modal">Submit</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> : <></>
+                                            </div> : <></>;
+                                    default:
+                                        return null;
+                                }
+                            })()
                             }
                             <button style={{ "display": "none" }} id={"btn-modal-confirm"} type="button" class="btn btn-info" data-toggle="modal" data-target="#_detail"></button>
                         </div>

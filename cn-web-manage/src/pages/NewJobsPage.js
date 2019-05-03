@@ -11,7 +11,6 @@ class NewJobsPage extends Component {
         this.confirmModal = new ConfirmModal();
         this.state = {};
         this.service = new JobService();
-        this.confirmModal = new ConfirmModal();
         this.page = 1;
         this.total = 0;
         this.paramsSearch = {
