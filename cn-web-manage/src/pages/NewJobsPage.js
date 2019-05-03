@@ -11,6 +11,7 @@ class NewJobsPage extends Component {
     last_page;
     constructor(props) {
         super(props);
+        console.log('Goto NewJobsPage');
         this.confirmModal = new ConfirmModal();
         this.state = {};
         this.service = new JobService();
@@ -76,7 +77,7 @@ class NewJobsPage extends Component {
             console.log()
         }
     }
-    
+
     selectPage(page) {
         this.paramsSearch['page'] = page;
         this.getJobs();
