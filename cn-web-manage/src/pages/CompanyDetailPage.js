@@ -4,7 +4,7 @@ import CompanySerivce from '../services/CompanyService';
 
 class CompanyDetailPage extends Component {
     page = 1;
-    company_info;
+    company_info = {};
     list_user = [];
     list_job = [];
     optionsStateDetailChange = -1;
@@ -27,7 +27,8 @@ class CompanyDetailPage extends Component {
             page: this.page,
         }
         try {
-            this.company_info = await this.service.getDetail(this.company_id);
+            let data = await this.service.getDetail(this.company_id);
+            this.company_info = data.company;
             console.log('company_info', this.company_info);
             this.forceUpdate();
         } catch (error) {
@@ -130,6 +131,7 @@ class CompanyDetailPage extends Component {
         this.check_disable_button = true;
         this.optionsStateDetailChange = -1;
     }
+
     changeStatusUser(e) {
         let data = e.target.value;
         this.optionsStateDetailChange = data;
@@ -171,40 +173,32 @@ class CompanyDetailPage extends Component {
                                         <div class="user-avatar-info">
                                             <div class="m-b-20">
                                                 <div class="user-avatar-name">
-                                                    <h2 class="mb-1">Henry Barbara</h2>
+                                                    <h2 class="mb-1">{this.company_info.name}</h2>
                                                 </div>
                                                 <div class="rating-star  d-inline-block">
+                                                    {/* <i class="fa fa-fw fa-star"></i>
                                                     <i class="fa fa-fw fa-star"></i>
                                                     <i class="fa fa-fw fa-star"></i>
                                                     <i class="fa fa-fw fa-star"></i>
                                                     <i class="fa fa-fw fa-star"></i>
-                                                    <i class="fa fa-fw fa-star"></i>
-                                                    <p class="d-inline-block text-dark">14 Reviews </p>
+                                                    <p class="d-inline-block text-dark">14 Reviews </p> */}
                                                 </div>
                                             </div>
                                             <div class="user-avatar-address">
-                                                <p class="border-bottom pb-3">
-                                                    <span class="d-xl-inline-block d-block mb-2"><i
-                                                        class="fa fa-map-marker-alt mr-2 text-primary "></i>4045
-															Denver AvenueLos Angeles, CA 90017</span>
-                                                    <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">Joined
-															date: 23 June, 2018 </span>
-                                                    <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">Male
-														</span>
-                                                    <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">29 Year
-															Old </span>
-                                                </p>
-                                                <div class="mt-3">
+                                            <p class="mb-2">Email: {this.company_info.email}<br />
+                                                            <span class="m-l-2">Description: {this.company_info.description}<span class="m-l-20">Website: {this.company_info.website}</span></span>
+                                                        </p>
+                                                {/* <div class="mt-3">
                                                     <a href="#" class="badge badge-light mr-1">Fitness</a> <a
                                                         href="#" class="badge badge-light mr-1">Life Style</a> <a
                                                             href="#" class="badge badge-light">Gym</a>
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="border-top user-social-box">
+                            {/* <div class="border-top user-social-box">
                                 <div class="user-social-media d-xl-inline-block"><span class="mr-2 twitter-color">
                                     <i class="fab fa-twitter-square"></i></span><span>13,291</span></div>
                                 <div class="user-social-media d-xl-inline-block"><span
@@ -218,11 +212,11 @@ class CompanyDetailPage extends Component {
                                     <i class="fab fa-medium"></i></span><span>291</span></div>
                                 <div class="user-social-media d-xl-inline-block"><span class="mr-2 youtube-color">
                                     <i class="fab fa-youtube"></i></span><span>1291</span></div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                {/* <div class="row">
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                         <div class="card">
                             <div class="card-body">
@@ -275,12 +269,8 @@ class CompanyDetailPage extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-12">
-                    <div class="section-block">
-                        <h5 class="section-title">Outline Tabs</h5>
-                        <p>Takes the basic nav from above and adds the .nav-tabs class to generate a tabbed interface..</p>
-                    </div>
                     <div class="tab-outline">
                         <ul class="nav nav-tabs" id="myTab2" role="tablist">
                             <li class="nav-item" onClick={() => { this.state_tabs = "staff"; this.getDataTabs(); }}>
@@ -293,7 +283,7 @@ class CompanyDetailPage extends Component {
                         <div class="tab-content" id="myTabContent2">
                             <div class="tab-pane fade show active" id="outline-one" role="tabpanel" aria-labelledby="tab-outline-one">
 
-                                <h1>Total : {this.total_user} Staff</h1>
+                                <h1>Total : {this.total_user} Staffs</h1>
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
