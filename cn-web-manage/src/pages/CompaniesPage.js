@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import TitlePage from '../components/layout/TitlePage';
 import CompanySerivce from '../services/CompanyService';
 import { Redirect } from "react-router-dom";
+import Pagination from '../components/Pagination';
 class CompaniesPage extends Component {
     changePage = false;
     list_company = [];
     current_id_company;
-    page  = 0;
+    page = 0;
+    last_page;
     constructor(props) {
         super(props);
         this.state = {};
@@ -22,6 +24,7 @@ class CompaniesPage extends Component {
         try {
             let data = await this.service.getCompanies(this.paramsSearch);
             this.list_company = data.data;
+            this.last_page = data.last_page;
             this.total = data.total;
         } catch (error) {
 
@@ -38,6 +41,11 @@ class CompaniesPage extends Component {
         this.getCompanies();
     }
 
+    selectPage(page) {
+        this.paramsSearch['page'] = page;
+        this.getCompanies();
+    }
+
     redirect() {
         if (this.changePage)
             return <Redirect exact to={'/app/company/' + this.current_id_company} />
@@ -50,7 +58,7 @@ class CompaniesPage extends Component {
                 <TitlePage data={["Companies"]}></TitlePage>
                 <form style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <div class="form-row">
-                    <div class="form-group col-md-6">
+                        <div class="form-group col-md-6">
                             <label for="title">Title</label>
                             <input onChange={(e) => this.inputSearch(e, 'title')} type="email" class="form-control" id="title" placeholder="Enter username" />
                         </div>
@@ -106,7 +114,7 @@ class CompaniesPage extends Component {
                                             </div>
                                             <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12">
                                                 <div class="float-xl-right float-none mt-xl-0 mt-4">
-                                                    <a onClick={() => { this.current_id_company = item.id ;this.changePage = true }} href="#" class="btn btn-secondary">Go To Detail</a>
+                                                    <a onClick={() => { this.current_id_company = item.id; this.changePage = true }} href="#" class="btn btn-secondary">Go To Detail</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -237,7 +245,9 @@ class CompaniesPage extends Component {
                     </div> */}
 
 
-
+                    {
+                        this.list_company.length > 0 ? <Pagination callback={(page) => { this.selectPage(page) }} number_page={this.last_page}></Pagination> : <></>
+                    }
                 </div>
             </>
         );
