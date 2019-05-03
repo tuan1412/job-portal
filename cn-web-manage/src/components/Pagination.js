@@ -14,6 +14,7 @@ class Pagination extends Component {
     start() {
         this.number_page = this.props.number_page || 10;
         this.current_page = this.props.current_page || 1;
+        console.log('Pagination', this.props);
         if (this.number_page <= 6) {
             this.to_page = this.number_page;
         } else {
@@ -28,12 +29,12 @@ class Pagination extends Component {
     }
 
     click(page) {
-        this.props.callback(page);
         this.current_page = page;
         this.check();
     }
 
     check() {
+        this.props.callback(this.current_page);
         this.forceUpdate();
     }
 

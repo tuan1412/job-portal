@@ -7,16 +7,18 @@ import Pagination from '../components/Pagination';
 class NewJobsPage extends Component {
     list = [];
     job_current;
+    page = 1;
+    last_page;
     constructor(props) {
         super(props);
         this.confirmModal = new ConfirmModal();
         this.state = {};
         this.service = new JobService();
-        this.page = 1;
+
         this.total = 0;
         this.paramsSearch = {
             page: this.page,
-            per_page: 20,
+            per_page: 30,
             status: 0
         };
         this.selectRow = this.selectRow.bind(this);
@@ -62,11 +64,14 @@ class NewJobsPage extends Component {
     async getJobs() {
         try {
             let data = await this.service.getJobs(this.paramsSearch);
+            this.last_page = data.last_page;
             this.list = data.data;
             this.page = data.current_page;
             this.total = data.total;
             console.log("getJobs: " + this.page, data);
-            this.forceUpdate();
+            setTimeout(() => {
+                this.forceUpdate();
+            }, 100);
         } catch (error) {
             console.log()
         }
@@ -223,7 +228,10 @@ class NewJobsPage extends Component {
                         </div> : <></>
                 }
                 <button style={{ "display": "none" }} id={"btn-modal-confirm"} type="button" class="btn btn-info" data-toggle="modal" data-target="#_detail"></button>
-                <Pagination callback={(page) => {  }} number_page="" current_page=""></Pagination>
+                {
+                    this.list.length > 0 ? <Pagination callback={(page) => { }} number_page={this.last_page} current_page={this.page}></Pagination> : <></>
+                }
+                
             </>
         );
     }
