@@ -3,12 +3,14 @@ import TitlePage from '../components/layout/TitlePage';
 import ConfirmModal from '../services/confirm-modal';
 import JobService from '../services/JobService';
 import { Redirect } from "react-router-dom";
+import Pagination from '../components/Pagination';
 class JobsPage extends Component {
     list = [];
     optionsState = -1;
     optionsStateDetailChange = -1;
     check_disable_button = true;
     job_current;
+    last_page;
     constructor(props) {
         super(props);
         console.log("Goto JobsPage")
@@ -31,6 +33,7 @@ class JobsPage extends Component {
             this.list = data.data;
             this.page = data.current_page;
             this.total = data.total;
+            this.last_page = data.last_page;
             console.log("getJobs: " + this.page, data);
             this.forceUpdate();
         } catch (error) {
@@ -98,6 +101,12 @@ class JobsPage extends Component {
         }
         this.getJobs();
     }
+
+    selectPage(page) {
+        this.paramsSearch['page'] = page;
+        this.getJobs();
+    }
+
     inputSearch(e) {
         if (e.target.value == "") {
             delete this.paramsSearch.title;
@@ -246,6 +255,9 @@ class JobsPage extends Component {
                         </div> : <></>
                 }
                 <button style={{ "display": "none" }} id={"btn-modal-confirm"} type="button" class="btn btn-info" data-toggle="modal" data-target="#_detail"></button>
+                {
+                    this.list.length > 0 ? <Pagination callback={(page) => { this.selectPage(page) }} number_page={this.last_page}></Pagination> : <></>
+                }
             </>
         );
     }

@@ -76,6 +76,11 @@ class NewJobsPage extends Component {
             console.log()
         }
     }
+    
+    selectPage(page) {
+        this.paramsSearch['page'] = page;
+        this.getJobs();
+    }
 
     preGotoDetail(id) {
         this.id_current_job = id;
@@ -229,9 +234,9 @@ class NewJobsPage extends Component {
                 }
                 <button style={{ "display": "none" }} id={"btn-modal-confirm"} type="button" class="btn btn-info" data-toggle="modal" data-target="#_detail"></button>
                 {
-                    this.list.length > 0 ? <Pagination callback={(page) => { }} number_page={this.last_page} current_page={this.page}></Pagination> : <></>
+                    this.list.length > 0 ? <Pagination callback={(page) => { this.selectPage(page) }} number_page={this.last_page}></Pagination> : <></>
                 }
-                
+
             </>
         );
     }
