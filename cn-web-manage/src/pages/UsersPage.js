@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import TitlePage from '../components/layout/TitlePage';
-import UserService from '../services/UserService'
+import UserService from '../services/UserService';
+import Pagination from '../components/Pagination';
 class UsersPage extends Component {
     list = [];
     optionsState = -1;
     optionsStateDetailChange = -1;
     check_disable_button = true;
     user_current;
+    last_page;
     constructor(props) {
         super(props);
         console.log("Goto JobsPage")
@@ -26,6 +28,7 @@ class UsersPage extends Component {
         try {
             let data = await this.service.getUsers(this.paramsSearch);
             this.list = data.data;
+            this.last_page = data.last_page;
             this.page = data.current_page;
             this.total = data.total;
             console.log("getUsers: " + this.page, data);
@@ -54,6 +57,11 @@ class UsersPage extends Component {
 
         this.check_disable_button = true;
         this.optionsStateDetailChange = -1;
+    }
+
+    selectPage(page) {
+        this.paramsSearch['page'] = page;
+        this.getUsers();
     }
 
     changeStatusUser(e) {
@@ -212,6 +220,9 @@ class UsersPage extends Component {
                         </div> : <></>
                 }
                 <button style={{ "display": "none" }} id={"btn-modal-confirm"} type="button" class="btn btn-info" data-toggle="modal" data-target="#_detail"></button>
+                {
+                    this.list.length > 0 ? <Pagination callback={(page) => { this.selectPage(page) }} number_page={this.last_page}></Pagination> : <></>
+                }
             </>
         );
     }
