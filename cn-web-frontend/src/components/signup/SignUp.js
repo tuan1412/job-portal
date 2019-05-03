@@ -18,7 +18,6 @@ export default class SignUp extends Component {
 
     constructor(props) {
         super(props);
-        console.log(props);
         const { type } = props;
         this.state = {
             [type]: '',
@@ -34,7 +33,6 @@ export default class SignUp extends Component {
         ev.preventDefault();
         const avatar = this.avatar.getFile();
         const data = { ...this.state, avatar: avatar }
-        console.log(data);
         this.props.callback(data);
     }
 

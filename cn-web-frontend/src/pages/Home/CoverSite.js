@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import FormSearchJob from '../../components/FormSearchJob';
+import FormSearchJob from '../../components/formsearchjob/FormSearchJob';
 
 export default class SiteCover extends Component {
     render() {

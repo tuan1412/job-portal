@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component, Fragment } from 'react'
-
+import { Link } from 'react-router-dom'
 export default class Header extends Component {
     render() {
         return (
@@ -18,7 +18,11 @@ export default class Header extends Component {
                         <div className="row align-items-center">
 
                             <div className="col-6 col-xl-2">
-                                <h1 className="mb-0"><a href="index.html" className="text-black h2 mb-0">Job<strong>start</strong></a></h1>
+                                <h1 className="mb-0">
+                                    <Link to='/'>
+                                        <span className="text-black h2 mb-0">Job<strong>start</strong></span>
+                                    </Link>
+                                </h1>
                             </div>
 
                             <div className="col-10 col-xl-10 d-none d-xl-block">

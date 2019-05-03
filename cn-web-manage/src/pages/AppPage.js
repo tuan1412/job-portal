@@ -60,6 +60,7 @@ class AppPage extends Component {
                         <div class="container-fluid dashboard-content">
                             <Router>
                                 <Switch>
+                                    <Redirect exact to="/" from="/new-jobs" />
                                     <Route path={this.url + "/"} exact component={HomePage} />
                                     <Route path={this.url + "/companies"} component={CompaniesPage} />
                                     <Route path={this.url + "/company/:id"} component={CompanyDetailPage} />
