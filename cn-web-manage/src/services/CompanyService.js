@@ -17,10 +17,10 @@ class CompanySerivce {
     async getDetail(id) {
         try {
             let data = await this.core_api.get("api/get_company_detail/" + id);
-            console.log('getCompanies success', data);
+            console.log('getDetail success', data);
             return data;
         } catch (error) {
-            console.log('getCompanies error: ', error);
+            console.log('getDetail error: ', error);
             throw new Error(error);
         }
     }
@@ -28,10 +28,10 @@ class CompanySerivce {
     async getUsers(params) {
         try {
             let data = await this.core_api.post("admin/company_users", params);
-            console.log('getCompanies success', data);
+            console.log('getUsers success', data);
             return data;
         } catch (error) {
-            console.log('getCompanies error: ', error);
+            console.log('getUsers error: ', error);
             throw new Error(error);
         }
     }
