@@ -35,8 +35,9 @@ class JobController extends Controller
             'expire_date' => $request->expire_date,
             'company_id' => $request->company_id,
             'description' => $request->description,
-            'status' => 1,
+            'status' => 0,
         ]);
+
 
         return response()->json([
             'message' => 'Create job successfully',

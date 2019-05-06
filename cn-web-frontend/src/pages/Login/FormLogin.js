@@ -5,8 +5,8 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import GoogleLogin from 'react-google-login';
 import Modal from '../../components/modal';
 import SignUp from '../../components/signup';
-import client from '../../core/api';
-import { notificationSystem } from '../../App';
+import client from '../../core/api/client';
+import { NotificationRef } from '../../App';
 
 export default class FormLogin extends Component {
     state = {
@@ -15,8 +15,8 @@ export default class FormLogin extends Component {
         openSignUp: false,
     }
 
-    onChange = (ev) => {
-        const { name, value } = ev.target;
+    onChange = ({ target }) => {
+        const { name, value } = target;
         this.setState({
             [name]: value
         });
@@ -25,15 +25,18 @@ export default class FormLogin extends Component {
     onSubmit = (ev) => {
         ev.preventDefault();
         const { username, password } = this.state;
-        client({
-            method: 'post',
-            url: '/api/auth/login',
-            data: { username, password }
-        }).then((res) => {
-            console.log(res);
-        }).catch((err) => {
-            console.log(err);
-        });
+        const { history, location } = this.props;
+        const { state = {} } = location;
+        const { from = '/' } = state;
+        this.setState({ logining: true })
+        client
+            .login({ username, password })
+            .then(() => {
+                this.setState({ logining: false })
+                history.push(from);
+            }).catch((err) => {
+                console.log(err);
+            });
     }
 
     openSignUp = () => {
@@ -41,6 +44,7 @@ export default class FormLogin extends Component {
     }
 
     closeSignUp = (callback) => {
+        if (typeof callback !== 'function') callback = function() {};
         this.setState({
             openSignUp: false
         }, () => callback());
@@ -49,7 +53,7 @@ export default class FormLogin extends Component {
     signup = (res) => {
         this.closeSignUp(() => {
             if (res.status) {
-                notificationSystem.current.addNotification({
+                NotificationRef.current.addNotification({
                     message: 'Đăng kí thành công',
                     level: 'success',
                     position: 'tc',
@@ -78,7 +82,7 @@ export default class FormLogin extends Component {
         )
     }
     render() {
-        const { openSignUp, username, password } = this.state;
+        const { openSignUp, username, password, logining } = this.state;
         return (
             <section className="login-wrapper bg-light">
                 <Modal
@@ -109,7 +113,7 @@ export default class FormLogin extends Component {
                                 value={password}
                             />
                             <label><span>Forget Password?</span></label>
-                            <Button blockStyle={true}>Login</Button>
+                            <Button blockStyle={true} disabled={logining}>Login</Button>
                             <div className="mt-2">Have't Any Account <span className="link-sign-up" onClick={this.openSignUp}>Create An Account</span></div>
                             <div className="text-center mt-4">Or login with</div>
                             <div className="row">

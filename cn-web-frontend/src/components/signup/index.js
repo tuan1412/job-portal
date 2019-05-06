@@ -2,43 +2,37 @@ import React, { Component } from 'react'
 import Tabpane from '../tabpane';
 import SignUp from './SignUp';
 import './style.css';
-import client from '../../core/api';
+import client from '../../core/api/client';
 
 export default class SignUpModal extends Component {
-    signUpCandidate = ({ candidate:username, password, email, avatar }) => {
-        client({
-            method: 'post',
-            url: '/api/auth/candidate_user/signup',
-            data: { username, password, email, avatar },
-            isFormData: true
-        }).then(res => {
-            this.props.callback(res);
-        }).catch(err => {
-            console.log(err);
-        })
+    signUpCandidate = ({ candidate: username, password, email, avatar }) => {
+        client
+            .signUpCandidate({ username, password, email, avatar })
+            .then(res => {
+                this.props.callback(res);
+            }).catch(err => {
+                console.warn(err);
+            })
     }
 
-    signUpCompany = ({ company:username, password, companyName:company_name, email, avatar }) => {
-        client({
-            method: 'post',
-            url: '/api/auth/candidate_user/signup',
-            data: { username, company_name, password, email, avatar },
-            isFormData: true
-        }).then(res => {
-            console.log(res);
-        }).catch(err => {
-            console.log(err);
-        })
+    signUpCompany = ({ company: username, password, companyName: company_name, email, avatar }) => {
+        client
+            .signUpCompany({ username, company_name, password, email, avatar })
+            .then(res => {
+                this.props.callback(res);
+            }).catch(err => {
+                console.warn(err);
+            });
     }
 
     panes = [
         {
             label: 'For candidate',
-            pane: <SignUp callback={this.signUpCandidate} type='candidate'  />
+            pane: <SignUp callback={this.signUpCandidate} type='candidate' />
         },
         {
             label: 'For company',
-            pane: <SignUp type='company' callback={this.signUpCandidate} />
+            pane: <SignUp callback={this.signUpCandidate} type='company' />
         }
     ]
 

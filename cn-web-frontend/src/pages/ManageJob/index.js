@@ -3,6 +3,9 @@ import JobPosted from './JobPosted';
 import JobProcessing from './JobProcessing';
 import TabPane from '../../components/tabpane';
 import Loadable from '../../components/lazyload';
+import Layout from '../../components/layout/Layout';
+import PermissionWrapper from '../../components/validator/PermissionWrapper';
+import { ROLE_COMPANY } from '../../core/utils/constant';
 
 export default class ManageJob extends Component {
     panes = [
@@ -19,11 +22,15 @@ export default class ManageJob extends Component {
 
     render() {
         return (
-            <div className='pt-2 pb-2 bg-light'>
-                <div className="container justify-content-center pt-5 pb-5 ">
-                    <TabPane panes={this.panes} />
-                </div>
-            </div>
+            <PermissionWrapper permission={ROLE_COMPANY}>
+                <Layout>
+                    <div className='pt-2 pb-2 bg-light'>
+                        <div className="container justify-content-center pt-5 pb-5 ">
+                            <TabPane panes={this.panes} />
+                        </div>
+                    </div>
+                </Layout>
+            </PermissionWrapper>
         )
     }
 }
