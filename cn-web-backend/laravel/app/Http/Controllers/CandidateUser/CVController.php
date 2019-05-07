@@ -22,8 +22,8 @@ class CVController extends Controller
     public function getAll(Request $request)
     {
         return DB::table('cvs')
-                    ->where('user_id', $request->user_id)
-                    ->get(['id', 'name']);
+                    ->where('user_id', Auth::id())
+                    ->get(['id', 'name', 'path']);
     }
 
     public function index(Request $request)
