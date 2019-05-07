@@ -40,18 +40,24 @@ class UserController extends Controller
             'password' => \bcrypt('123456'),
             'role'     => 'company_user',
         ]);
+        
+        $companyUser = CompanyUser::create([
+                        'company_id'  => $request->company_id,
+                        'user_id'     => $user->id,
+                        'fullname'    => $request->fullname,
+                        'email'       => $request->email,
+                        'gender'      => $request->gender,
+                    ]);
 
-        CompanyUser::create([
-            'company_id'  => $request->company_id,
-            'user_id'     => $user->id,
-            'fullname'    => $request->fullname,
-            'email'       => $request->email,
-            'gender'      => $request->gender,
-        ]);
+        $user->company_id = $companyUser->company_id;
+        $user->fullname = $companyUser->fullname;
+        $user->email = $companyUser->email;
+        $user->gender = $companyUser->gender;
 
         return response()->json([
             'message' => 'Create user successfully',
             'status'  => 1,
+            'user'    => $user,
         ], 201);
     }
 
