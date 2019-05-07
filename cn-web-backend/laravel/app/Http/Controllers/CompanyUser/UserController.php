@@ -17,7 +17,7 @@ class UserController extends Controller
                     ->join('users', 'users.id', '=', 'company_users.user_id')
                     ->where('company_id', $request->company_id)
                     ->select('users.id', 'username','fullname', 'email', 'gender')
-                    ->paginate(5);
+                    ->paginate(12);
     }
 
     public function create(Request $request)
