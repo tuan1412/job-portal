@@ -1,8 +1,22 @@
 import React, { Component } from 'react'
 import Loadable from '../../components/lazyload';
 import Layout from '../../components/layout/Layout';
+import client from '../../core/api/client';
 
 export default class DetailCompany extends Component {
+    state = {
+        company: {}
+    }
+
+    componentDidMount() {
+        const { match } = this.props;
+        const { id } = match.params;
+        client.getDetailCompany({ id })
+            .then(({ company }) => {
+                this.setState({ company })
+            });
+    }
+
     render() {
         return (
             <Layout>
@@ -13,7 +27,7 @@ export default class DetailCompany extends Component {
                                 <div className='basic-information'>
                                     <div className='row mb-4'>
                                         <div className='col-md-3 col-sm-3'>
-                                            <img src='images/microsoft.png' alt='' className='img-responsive' />
+                                            <img src='/images/microsoft.png' alt='' className='img-responsive' />
                                         </div>
                                         <div className='col-md-9 col-sm-9'>
                                             <div className='profile-content'>

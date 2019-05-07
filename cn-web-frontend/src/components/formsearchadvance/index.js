@@ -4,7 +4,7 @@ import Select from '../formcontrols/Select';
 export default class FormSearchAdvance extends Component {
     state = {
         title: '',
-        location: '',
+        address: '',
         category: '',
         fromSalary: 0,
         toSalary: '',
@@ -32,7 +32,7 @@ export default class FormSearchAdvance extends Component {
 
     render() {
         const { items } = this.props
-        const { title, location, category, fromSalary, toSalary, expireDate } = this.state
+        const { title, address, category, fromSalary, toSalary, expireDate } = this.state;
         return (
             <div className='container'>
                 <div className='row'>
@@ -46,7 +46,7 @@ export default class FormSearchAdvance extends Component {
                         <div className='form-group row'>
                             <label htmlFor='colFormLabelSm1' className='col-sm-3 col-form-label'>Địa chỉ</label>
                             <div className='col-sm-9'>
-                                <input type='text' value={location} name='location' onChange={this.onChange} className='form-control' id='colFormLabelSm1' placeholder='Hà Nội' />
+                                <input type='text' value={address} name='address' onChange={this.onChange} className='form-control' id='colFormLabelSm1' placeholder='Hà Nội' />
                             </div>
                         </div>
                         <div className='form-group row'>

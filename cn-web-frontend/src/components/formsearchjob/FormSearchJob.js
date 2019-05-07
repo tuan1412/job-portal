@@ -71,7 +71,8 @@ export default class FormSearchJob extends Component {
 
     searchAdvance = (props) => {
         const { searchAdvance } = this.props;
-        searchAdvance(props);
+        const params = {...props, callback: this.closeSearchAdvance };
+        searchAdvance(params);
     }
 
     render() {
@@ -84,9 +85,8 @@ export default class FormSearchJob extends Component {
                     cls='form-search-advance'
                     open={openSearchAdvance}
                     onClose={this.closeSearchAdvance}
-                    callback={this.searchAdvance}
                 >
-                    <FormSearchAdvance items={categories} />
+                    <FormSearchAdvance items={categories} callback={this.searchAdvance} />
                 </CustomModal>
 
                 <form onSubmit={this.onSubmit}>
