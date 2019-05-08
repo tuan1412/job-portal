@@ -22,7 +22,9 @@ class CoreAPI {
             axios(options).then(res => {
                 resolve(res.data);
             }, err => {
-                reject(err.response.data);
+                if (err && err.response && err.response.data)
+                    reject(err.response.data);
+                reject(err);
             });
         })
     }
@@ -40,10 +42,11 @@ class CoreAPI {
                 url: this.config.url_server + "/" + url,
             };
             axios(options).then(res => {
-                console.log('data_trongnv',res);
                 resolve(res.data);
-            }, err => {console.log('data_trongnv',err);
-                reject(err.response.data);
+            }, err => {
+                if (err && err.response && err.response.data)
+                    reject(err.response.data);
+                reject(err);
             });
         })
     }
