@@ -5,6 +5,8 @@ namespace App\Http\Controllers\CandidateUser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\CV;
+use App\Model\CVJob;
+use App\Model\Job;
 use Illuminate\Support\Facades\DB;
 use App\Model\UserCompany;
 use App\Services\UploadFileService;
@@ -85,10 +87,16 @@ class CVController extends Controller
 
     public function apply(Request $request)
     {
+        $companyId = Job::find($request->job_id)->company_id;
         UserCompany::create([
             'user_id' => Auth::id(),
-            'company_id' => $request->company_id,
+            'company_id' => $companyId,
+        ]);
+
+        CVJob::create([
             'cv_id' => $request->id,
+            'job_id' => $request->job_id,
+            'status' => 0
         ]);
 
         return response()->json([
