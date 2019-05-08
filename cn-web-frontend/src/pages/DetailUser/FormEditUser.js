@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+
 export default class FormEditUser extends Component {
 
     state = {
@@ -23,7 +24,7 @@ export default class FormEditUser extends Component {
 
     onSubmit = (ev) => {
         ev.preventDefault();
-        console.log(this.state.user);
+        this.props.callback(this.state);
     }
 
     render() {

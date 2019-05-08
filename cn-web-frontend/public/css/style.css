@@ -2424,3 +2424,27 @@ a.instagram {
   cursor: pointer;
 }
 
+.edit-avatar label {
+  display: none;
+}
+
+.avatar-container:hover label {
+  display: block;
+  position: absolute;
+  bottom: -7px;
+  width: 100%;
+  font-size: 15px;
+  line-height: 15px;
+  text-align: center;
+  background: rgba(33, 37, 41, 0.6);
+  color: #fff;
+  margin-right: 0px;
+}
+
+.edit-avatar {
+  position: relative;
+}
+
+input#avatar {
+  display: none;
+}

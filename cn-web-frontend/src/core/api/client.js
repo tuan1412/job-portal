@@ -196,5 +196,50 @@ export default {
             method: 'get',
             url: '/api/get_company_detail/1'
         })
+    },
+    updateUser({ full_name, email, mobile, birthday, description }) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/update_info',
+            data: { full_name, email, mobile, birthday, description },
+            isAuth: true
+        })
+    },
+    updateAvatar({ avatar }) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/update_avatar',
+            data: { avatar },
+            isAuth: true,
+            isFormData: true
+        })
+    },
+    deleteUserByCM({ id }) {
+        return api({
+            method: 'delete',
+            url: `/api/company_user/delete_user/${id}`,
+            isAuth: true,
+        })
+    },
+    createUserByCM({ username, password }) {
+        const userInfo = _.getUserInfo();
+        const company_id = userInfo['company_id'];
+
+        return api({
+            method: 'post',
+            url: `/api/company_user/create_user/${company_id}`,
+            data: { username, password },
+            isAuth: true
+        })
+    },
+    getAllCVs() {
+        const userInfo = _.getUserInfo();
+        const userId = userInfo.id;
+
+        return api({
+            method: 'get',
+            url: `/api/candidate_user/get_all_cv/${userId}`,
+            isAuth: true
+        })
     }
 }

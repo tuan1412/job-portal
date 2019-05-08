@@ -1,4 +1,6 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable no-undef */
+/* eslint-disable-next-line no-undef */
+
 import React, { Component } from 'react'
 import Loadable from '../../components/lazyload';
 import Layout from '../../components/layout/Layout';
@@ -7,6 +9,7 @@ import client from '../../core/api/client';
 import _ from '../../core/utils';
 import CustomModal from '../../components/modal';
 import FormEditUser from './FormEditUser';
+import { NotificationRef } from '../../App';
 
 export default class DetailUser extends Component {
 
@@ -30,6 +33,42 @@ export default class DetailUser extends Component {
 
     closeEdit = () => {
         this.setState({ openEdit: false })
+    }
+
+    updateUser = ({ user }) => {
+        client.updateUser(user)
+            .then(() => {
+                NotificationRef.current.addNotification({
+                    message: 'Chỉnh sủa thành công',
+                    level: 'success',
+                    position: 'tc',
+                    autoDismiss: '2'
+                });
+                this.setState({
+                    user,
+                    openEdit: false
+                })
+            })
+    }
+
+    changeAvatar = () => {
+        $('#avatar').trigger('click');
+    }
+
+    readUrl = (ev) => {
+        const { files } = ev.target;
+        if (files.length > 0) {
+            const file = files[0];
+            client.updateAvatar({ avatar: file })
+                .then(({ user }) => {
+                    const { path_avatar } = user;
+                    this.setState(({ user }) => {
+                        return {
+                            user: { ...user, path_avatar }
+                        }
+                    });
+                })
+        }
     }
 
     renderBtnEdit = () => {
@@ -67,17 +106,42 @@ export default class DetailUser extends Component {
         return null;
     }
 
+    renderAvatar = () => {
+        const { match } = this.props;
+        const { id } = match.params;
+        const { user } = this.state;
+        const avatar = _.buildAvatarUrl(user.path_avatar);
+
+        if (_.isAuthUser(id)) {
+            return (
+                <div className='avatar-container' onClick={this.changeAvatar}>
+                    <img src={avatar} alt='' className='img-responsive' />
+                    <div className='edit-avatar'>
+                        <label htmlFor='avatar'>Thay ảnh</label>
+                        <input id='avatar' type='file' accept='.png, .jpg, .jpeg' onChange={this.readUrl} />
+                    </div>
+                </div>
+            )
+        }
+        return (
+            <div className='avatar-container'>
+                <img src={avatar} alt='' className='img-responsive' />
+            </div>
+        )
+
+    }
+
     render() {
         const { user, openEdit } = this.state;
         const { full_name, username, email, mobile, birthday, description } = user;
         return (
             <Layout>
                 <section className='profile-detail bg-light'>
-                    <CustomModal 
+                    <CustomModal
                         open={openEdit}
                         onClose={this.closeEdit}
                     >
-                        <FormEditUser user={user}/>
+                        <FormEditUser user={user} callback={this.updateUser} />
                     </CustomModal>
                     <div className='container'>
                         <div className='col-md-12'>
@@ -85,7 +149,7 @@ export default class DetailUser extends Component {
                                 <div className='basic-information mb-4'>
                                     <div className='row mb-4'>
                                         <div className='col-md-3 col-sm-3'>
-                                            <img src='/images/person_1.jpg' alt='' className='img-responsive' />
+                                            {this.renderAvatar()}
                                         </div>
                                         <div className='col-md-9 col-sm-9'>
                                             <div className='profile-content'>

@@ -1,19 +1,58 @@
 import React, { Component, Fragment } from 'react'
-import CustomModal from '../../components/modal';
 import client from '../../core/api/client';
+import CustomModal from '../modal';
+import FormUploadCV from '../formuploadcv';
 import { NotificationRef } from '../../App';
-import FormUploadCV from '../../components/formuploadcv';
-export default class ListCV extends Component {
+import classnames from 'classnames';
+
+export default class FormCV extends Component {
     state = {
+        listCVs: [],
         openEdit: false,
         openUpload: false,
-        listCVs: this.props.listCVs,
+    }
+    componentDidMount() {
+        client.getAllCVs()
+            .then((listCVs) => {
+                this.setState({ listCVs })
+            })
     }
 
-    componentWillReceiveProps({ listCVs }) {
-        this.setState({
-            listCVs
+    renderCVs = () => {
+        const { listCVs = [], choosedCV = {}} = this.state;
+        if (listCVs.length === 0) return <tr><th>Không có cái CV</th></tr>
+        return listCVs.map((cv, i) => {
+            const { name, id } = cv;
+            const cls = classnames({ 'bg-primary': id === choosedCV.id })
+            return (
+                <tr key={id} className={cls}>
+                    <th scope='row' className='w-10'>{i + 1}</th>
+                    <td className='w-60'>{name}</td>
+                    <td className='w-30'>
+                        <button type='button' className='btn btn-info mr-2' onClick={() => this.openCV(cv)}>
+                            <i className='fa fa-search' aria-hidden='true'></i>
+                        </button>
+                        <button type='button' className='btn btn-warning mr-2' onClick={() => this.editCV(cv)}>
+                            <i className='fa fa-pencil' aria-hidden='true'></i>
+                        </button>
+                        <button type='button' className='btn btn-danger mr-2' onClick={() => this.deleteCV(cv)}>
+                            <i className='fa fa-trash' aria-hidden='true'></i>
+                        </button>
+                        <button
+                            disabled={id === choosedCV.id}
+                            type='button' 
+                            className='btn bg-success mr-2' 
+                            onClick={() => this.chooseCV(cv)}>
+                            <i className='fa fa-bookmark' aria-hidden='true'></i>
+                        </button>
+                    </td>
+                </tr>
+            )
         })
+    }
+
+    chooseCV = (cv) => {
+        this.setState({ choosedCV: cv });
     }
 
     editCV = (cv) => {
@@ -34,32 +73,6 @@ export default class ListCV extends Component {
 
     openCV = (cv) => {
         window.open(`${process.env.REACT_APP_API_URL}/${cv.path}`, '_blank');
-    }
-
-    renderCVs = () => {
-        const { listCVs = [] } = this.state;
-        if (listCVs.length === 0) return <tr><th>Không có cái CV</th></tr>
-        return listCVs.map((cv, i) => {
-            const { name, id } = cv;
-            return (
-                <tr key={id}>
-                    <th scope='row' className='w-10'>{i + 1}</th>
-                    <td className='w-60'>{name}</td>
-                    <td className='w-30'>
-                        <button type='button' className='btn btn-info mr-2' onClick={() => this.openCV(cv)}>
-                            <i className='fa fa-search' aria-hidden='true'></i>
-                        </button>
-                        <button type='button' className='btn btn-warning mr-2' onClick={() => this.editCV(cv)}>
-                            <i className='fa fa-pencil' aria-hidden='true'></i>
-                        </button>
-                        <button type='button' className='btn btn-danger mr-2' onClick={() => this.deleteCV(cv)}>
-                            <i className='fa fa-trash' aria-hidden='true'></i>
-                        </button>
-                    </td>
-                </tr>
-            )
-        })
-
     }
 
     onChangeEdit = (event) => {
@@ -153,6 +166,12 @@ export default class ListCV extends Component {
                         </div>
                     </div>
                 </CustomModal>
+                <div className='panel panel-default'>
+                    <div className='panel-heading'>
+                        <i className='fa fa-user fa-fw'></i> Hồ sơ của tôi
+                    </div>
+                </div>
+
                 <table className='table'>
                     <thead>
                         <tr>
@@ -175,7 +194,6 @@ export default class ListCV extends Component {
                     <FormUploadCV callback={this.uploadCV} />
                 </CustomModal>
             </Fragment>
-
         )
     }
 }
