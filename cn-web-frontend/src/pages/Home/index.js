@@ -18,10 +18,22 @@ export default class Home extends Component {
             .catch((err) => console.warn(err))
     }
 
+    searchJobAdvance = ({ category, expireDate, fromSalary, location, title, toSalary }) => {
+        client.searchJobAdvance({ category, expireDate, fromSalary, location, title, toSalary })
+            .then(({ data: jobs, current_page: pageIndex, per_page: pageSize, total: totalItems}) => {
+                const { history } = this.props;
+                history.push({
+                    pathname: '/list-job',
+                    state: { title, location, category, jobs, pageIndex, pageSize, totalItems }
+                });
+            })
+            .catch((err) => console.warn(err))
+    }
+
     render() {
         return (
             <Layout>
-                <CoverSite callback={this.searchJob} />
+                <CoverSite callback={this.searchJob} searchJobAdvance={this.searchJobAdvance}/>
                 <JobListSection history={this.props.history} />
             </Layout>
         )

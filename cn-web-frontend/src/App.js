@@ -27,8 +27,8 @@ class App extends Component {
           <Switch>
               <Route path="/" exact component={AsyncHome} />
               <Route path="/login" component={AsyncLogin} />
-              <Route path="/detail-user" component={AsyncDetailUser} />
-              <Route path="/detail-company" component={AsyncDetailCompany} />
+              <Route path="/detail-user/:id" component={AsyncDetailUser} />
+              <Route path="/detail-company/:id" component={AsyncDetailCompany} />
               <PrivateRoute path="/manage-job" component={AsyncManageJob} />
               <Route path="/list-job" component={AsyncListJob} />
               <Route path="/apply-job" component={AsyncApply} />

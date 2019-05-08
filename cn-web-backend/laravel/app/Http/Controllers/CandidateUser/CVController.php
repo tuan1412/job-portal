@@ -22,8 +22,8 @@ class CVController extends Controller
     public function getAll(Request $request)
     {
         return DB::table('cvs')
-                    ->where('user_id', $request->user_id)
-                    ->get(['id', 'name']);
+                    ->where('user_id', Auth::id())
+                    ->get(['id', 'name', 'path']);
     }
 
     public function index(Request $request)
@@ -35,31 +35,41 @@ class CVController extends Controller
 
     public function create(Request $request)
     {
-        CV::create([
-            'user_id' => $request->user_id,
-            'name' => $request->name,
-            'path' => $this->uploadFileService->store($request->cv),
-            'status' => 0,
-        ]);
+        $cv = CV::create([
+                'user_id' => Auth::id(),
+                'name' => $request->name,
+                'path' => $this->uploadFileService->store($request->cv),
+                'status' => 0,
+            ]);
 
         return response()->json([
             'message' => 'Create CV successfully',
             'status'  => 1,
+            'cv'      => $cv
         ], 201);
     }
 
     public function update(Request $request)
     {
-        CV::where('id', $request->id)
-            ->update([
-                'name' => $request->name,
-                'path' => $this->uploadFileService->store($request->cv),
-                //'status' => $request->status,
-        ]);
+        if ($request->hasFile('cv')) {
+            CV::where('id', $request->id)
+                ->update([
+                    'name' => $request->name,
+                    'path' => $this->uploadFileService->store($request->cv),
+                ]);
+        } else {
+            CV::where('id', $request->id)
+                ->update([
+                    'name' => $request->name,
+                ]);
+        }
 
+        $cv = CV::where('id', $request->id)->first();
+        
         return response()->json([
             'message' => 'Update CV successfully',
             'status'  => 1,
+            'cv'      => $cv
         ], 200);
     }
 

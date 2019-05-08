@@ -1,9 +1,49 @@
 import React, { Component } from 'react'
 import Loadable from '../../components/lazyload';
 import Layout from '../../components/layout/Layout';
+import client from '../../core/api/client';
+import _ from '../../core/utils';
+import ListUser from './ListUser';
 
 export default class DetailCompany extends Component {
+    state = {
+        company: {}
+    }
+
+    componentDidMount() {
+        const { match } = this.props;
+        const { id } = match.params;
+        client.getDetailCompany({ id })
+            .then(({ company }) => {
+                this.setState({ company })
+            });
+    }
+
+    renderUsers = () => {
+        const { match } = this.props;
+        const { id } = match.params;
+        const { listUsers } = this.state.company;
+
+        if (_.isCompanyManager(id)) {
+            return (
+                <div className='panel panel-default'>
+                    <div className='panel-heading'>
+                        <i className='fa fa-leaf fa-fw'></i> Danh sách nhân viên
+                    </div>
+                    <div className='panel-body'>
+                        <p>Quản lý nhân viên của mình một cách dễ dàng</p>
+                        <ListUser listUsers={listUsers} />
+                    </div>
+                </div>
+            )
+        }
+        return null;
+    }
+
     render() {
+        const { company } = this.state;
+        const { name, email, website, description, title } = company;
+
         return (
             <Layout>
                 <section className='profile-detail'>
@@ -13,96 +53,29 @@ export default class DetailCompany extends Component {
                                 <div className='basic-information'>
                                     <div className='row mb-4'>
                                         <div className='col-md-3 col-sm-3'>
-                                            <img src='images/microsoft.png' alt='' className='img-responsive' />
+                                            <img src='/images/microsoft.png' alt='' className='img-responsive' />
                                         </div>
                                         <div className='col-md-9 col-sm-9'>
                                             <div className='profile-content'>
-                                                <h2>Microsoft<span>Internet and computer software</span></h2>
-                                                <p>Now Hiring(102)</p>
+                                                <h2>{title}<span>{name}</span></h2>
                                                 <ul className='information'>
-                                                    <li><span>Address:</span>Menlo Park, CA</li>
-                                                    <li><span>Website:</span>Google.com</li>
-                                                    <li><span>Employee:</span>50,000 - 70,000 employer</li>
-                                                    <li><span>Mail:</span>info@google.com</li>
-                                                    <li><span>From:</span>1998</li>
+                                                    <li><span>Tên:</span>{name}</li>
+                                                    <li><span>Website:</span>{website}</li>
+                                                    <li><span>Mail:</span>{email}</li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
 
-
                                     <div className='panel panel-default'>
                                         <div className='panel-heading'>
-                                            <i className='fa fa-user fa-fw'></i> About Microsoft
-							</div>
+                                            <i className='fa fa-user fa-fw'></i> Về công ty
+							            </div>
                                         <div className='panel-body'>
-                                            <p>The front end is the part that users see and interact with, includes the User Interface, the animations, and usually a bunch of logic to talk to the backend. It is the visual bit that the user interacts with.</p>
+                                            <p>{description}</p>
                                         </div>
                                     </div>
-
-                                    <div className='panel panel-default'>
-                                        <div className='panel-heading'>
-                                            <i className='fa fa-leaf fa-fw'></i> Responsibilities:
-							</div>
-                                        <div className='panel-body'>
-                                            <p>Rapid growth since incorporation has triggered a chain of products, acquisitions and partnerships beyond Google's core search engine (Google Search).</p>
-                                            <ul>
-                                                <li>Software testing in a Web Applications/Mobile environment.</li>
-                                                <li>Software Test Plans from Business Requirement Specifications for test engineering group.</li>
-                                                <li>Software testing in a Web Applications environment.</li>
-                                                <li>Translate designs into responsive web interfaces</li>
-                                                <li>Software testing in a Web Applications/Mobile environment.</li>
-                                                <li>Software testing in a Web Applications environment.</li>
-                                                <li>Translate designs into responsive web interfaces</li>
-                                                <li>Software Test Plans from Business Requirement Specifications for test engineering group.</li>
-                                                <li>Run production tests as part of software implementation; Create, deliver and support test plans for testing group to execute.</li>
-                                                <li>Run production tests as part of software implementation; Create, deliver and support test plans for testing group to execute.</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div className='panel panel-default'>
-                                        <div className='panel-heading'>
-                                            <i className='fa fa-coffee fa-fw'></i> Minimum qualifications:
-							</div>
-                                        <div className='panel-body'>
-                                            <p>Rapid growth since incorporation has triggered a chain of products.</p>
-                                            <ul>
-                                                <li>Software testing in a Web Applications/Mobile environment.</li>
-                                                <li>Software Test Plans from Business Requirement Specifications for test engineering group.</li>
-                                                <li>Software testing in a Web Applications environment.</li>
-                                                <li>Translate designs into responsive web interfaces</li>
-                                                <li>Software testing in a Web Applications/Mobile environment.</li>
-                                                <li>Software testing in a Web Applications environment.</li>
-                                                <li>Translate designs into responsive web interfaces</li>
-                                                <li>Software Test Plans from Business Requirement Specifications for test engineering group.</li>
-                                                <li>Run production tests as part of software implementation; Create, deliver and support test plans for testing group to execute.</li>
-                                                <li>Run production tests as part of software implementation; Create, deliver and support test plans for testing group to execute.</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div className='panel panel-default'>
-                                        <div className='panel-heading'>
-                                            <i className='fa fa-graduation-cap fa-fw'></i> Preferred qualifications:
-							</div>
-                                        <div className='panel-body'>
-                                            <ul>
-                                                <li>Software testing in a Web Applications/Mobile environment.</li>
-                                                <li>Software Test Plans from Business Requirement Specifications for test engineering group.</li>
-                                                <li>Software testing in a Web Applications environment.</li>
-                                                <li>Translate designs into responsive web interfaces</li>
-                                                <li>Software testing in a Web Applications/Mobile environment.</li>
-                                                <li>Software testing in a Web Applications environment.</li>
-                                                <li>Translate designs into responsive web interfaces</li>
-                                                <li>Software Test Plans from Business Requirement Specifications for test engineering group.</li>
-                                                <li>Run production tests as part of software implementation; Create, deliver and support test plans for testing group to execute.</li>
-                                                <li>Run production tests as part of software implementation; Create, deliver and support test plans for testing group to execute.</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-
+                                    {this.renderUsers()}
                                 </div>
                             </div>
                         </div>
