@@ -43,9 +43,34 @@ export default class ListJobSearch extends Component {
             .catch((err) => console.warn(err))
     }
 
+    searchJobAdvance = ({ category, expireDate, fromSalary, location, title, toSalary, callback }) => {
+        client.searchJobAdvance({ category, expireDate, fromSalary, location, title, toSalary })
+            .then(({ data: jobs, current_page: pageIndex, per_page: pageSize, total: totalItems }) => {
+                this.setState({
+                    jobs,
+                    pageIndex,
+                    pageSize,
+                    totalItems,
+                    title,
+                    location,
+                    category,
+                    loading: false
+                });
+                callback();
+            })
+            .catch((err) => console.warn(err))
+    }
+
     onChangePage = (page) => {
         const { title, location, category } = this.state;
         this.searchJob({ title, location, category, page });
+    }
+
+    showDetailJob = (id) => {
+        const { history } = this.props;
+        history.push({
+            pathname: `/detail-job/${id}`,
+        });
     }
 
     render() {
@@ -55,11 +80,13 @@ export default class ListJobSearch extends Component {
                 <div className="site-section bg-light">
                     <div className="container mb-4">
                         <div className="col-md-12 bg-white py-5">
-                            <FormSearchJob {...rest} callback={this.searchJob} />
+                            <FormSearchJob {...rest} callback={this.searchJob} searchAdvance={this.searchJobAdvance} />
                         </div>
                     </div>
                     <div className="container">
                         <JobList
+                            btnText='Xem chi tiết'
+                            btnAction={this.showDetailJob}
                             loading={loading}
                             jobs={jobs}
                             pageIndex={pageIndex}

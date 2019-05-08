@@ -68,6 +68,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::delete('delete_job/{id}', 'JobController@delete');
     
         Route::get('get_cv/{company_id}', 'CVController@index');
+
+        Route::post('update_info', 'MeController@updateInfo');
     });
 
     Route::group([
@@ -79,10 +81,12 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('update_cv/{id}', 'CVController@update');
         Route::delete('delete_cv/{id}', 'CVController@delete');
         Route::post('apply_cv', 'CVController@apply');
-        Route::get('get_all_cv/{user_id}', 'CVController@getAll');
+        Route::get('get_all_cv', 'CVController@getAll');
         Route::get('get_cv/{id}', 'CVController@index');
 
         Route::get('detail', 'MeController@index');
+        Route::post('update_info', 'MeController@updateInfo');
+        Route::post('update_avatar', 'MeController@updateAvatar');
     });
 });
 

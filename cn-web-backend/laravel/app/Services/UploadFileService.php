@@ -10,6 +10,6 @@ class UploadFileService
     {
         $fileName = time().'.'.$file->getClientOriginalExtension();
         $file->move(public_path('files'), $fileName);
-        return public_path('files').'/'.$fileName;
+        return 'files'.'/'.$fileName;
     }
 }
