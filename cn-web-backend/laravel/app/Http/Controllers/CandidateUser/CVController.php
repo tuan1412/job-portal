@@ -105,4 +105,25 @@ class CVController extends Controller
             'status'  => 1,
         ], 201);
     }
+
+    public function checkCVApplied(Request $request)
+    {
+        $check = DB::table('cvs')
+                   ->join('cv_job', 'cv_job.cv_id', '=', 'cvs.id')
+                   ->where(['user_id' => Auth::id(), 'job_id' => $request->job_id])
+                   ->first();
+        if ($check) {
+            $cv['id'] = $check->id;
+            $cv['name'] = $check->name;
+            $cv['path'] = $check->path;
+            $cv['status'] = $check->status;
+            return response()->json([
+                'cv' => $cv,
+            ], 201);
+        }
+
+        return response()->json([
+                'cv' => [],
+        ], 201);
+    }
 }

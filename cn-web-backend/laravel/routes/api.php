@@ -85,6 +85,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('apply_cv', 'CVController@apply');
         Route::get('get_all_cv', 'CVController@getAll');
         Route::get('get_cv/{id}', 'CVController@index');
+        Route::post('check_cv_applied', 'CVController@checkCVApplied');
 
         Route::get('detail', 'MeController@index');
         Route::post('update_info', 'MeController@updateInfo');
