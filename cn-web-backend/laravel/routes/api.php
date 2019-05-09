@@ -68,6 +68,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::delete('delete_job/{id}', 'JobController@delete');
     
         Route::post('get_cv', 'CVController@index');
+        Route::post('reject_cv/{id}', 'CVController@reject');
+        Route::post('accept_cv/{id}', 'CVController@accept');
 
         Route::post('update_info', 'MeController@updateInfo');
     });
