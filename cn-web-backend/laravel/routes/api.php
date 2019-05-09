@@ -91,6 +91,14 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('detail', 'MeController@index');
         Route::post('update_info', 'MeController@updateInfo');
         Route::post('update_avatar', 'MeController@updateAvatar');
+
+        Route::post('follow_company', 'CompanyController@follow');
+        Route::post('unfollow_company', 'CompanyController@unfollow');
+        Route::post('check_follow_company', 'CompanyController@checkFollow');
+
+        Route::post('follow_category', 'CategoryController@follow');
+        Route::post('unfollow_category', 'CategoryController@unfollow');
+        Route::post('check_follow_category', 'CategoryController@checkFollow');
     });
 });
 
