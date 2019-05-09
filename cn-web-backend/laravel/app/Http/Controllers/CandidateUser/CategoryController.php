@@ -36,11 +36,11 @@ class CategoryController extends Controller
     	$check = UserCategory::where(['user_id' => Auth::id(), 'category_id' => $request->category_id])->first();
     	if ($check) {
     		return response()->json([
-	            'status' => 'true',
+	            'status' => true,
 	        ], 200);
     	}
     	return response()->json([
-	            'status' => 'false',
+	            'status' => false,
 	        ], 200);
     }
 }

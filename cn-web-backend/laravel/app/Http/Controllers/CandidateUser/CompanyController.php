@@ -36,11 +36,11 @@ class CompanyController extends Controller
     	$check = UserCompany::where(['user_id' => Auth::id(), 'company_id' => $request->company_id])->first();
     	if ($check) {
     		return response()->json([
-	            'status' => 'true',
+	            'status' => true,
 	        ], 200);
     	}
     	return response()->json([
-	            'status' => 'false',
+	            'status' => false,
 	        ], 200);
     }
 }
