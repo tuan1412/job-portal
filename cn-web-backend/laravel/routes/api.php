@@ -100,5 +100,12 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('unfollow_category', 'CategoryController@unfollow');
         Route::post('check_follow_category', 'CategoryController@checkFollow');
     });
+
+    Route::group([
+        'middleware' => 'role:company_user,company_manager,candidate_user'
+    ], function () {
+        Route::get('get_notification', 'Api\NotificationController@getNotification');
+        Route::post('change_status_notification', 'Api\NotificationController@changeStatus');
+    });
 });
 
