@@ -91,6 +91,7 @@ class CVController extends Controller
         UserCompany::create([
             'user_id' => Auth::id(),
             'company_id' => $companyId,
+            'cv_id' => $request->id,
         ]);
 
         CVJob::create([
