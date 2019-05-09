@@ -33,6 +33,7 @@ Route::get('get_list_categories', 'CandidateUser\JobController@getListCategories
 Route::get('get_user_detail/{user_id}', 'Api\GuestController@getUserDetail');
 Route::get('get_job_detail/{job_id}', 'Api\GuestController@getJobDetail');
 Route::get('get_company_detail/{company_id}', 'Api\GuestController@getCompanyDetail');
+Route::post('get_company', 'Api\GuestController@getCompany');
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::group([
