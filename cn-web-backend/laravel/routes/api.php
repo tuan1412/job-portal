@@ -99,6 +99,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('follow_category', 'CategoryController@follow');
         Route::post('unfollow_category', 'CategoryController@unfollow');
         Route::post('check_follow_category', 'CategoryController@checkFollow');
+        Route::get('check_category', 'CategoryController@getAll');
     });
 
     Route::group([
