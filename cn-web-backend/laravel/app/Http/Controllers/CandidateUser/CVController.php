@@ -123,7 +123,7 @@ class CVController extends Controller
         }
 
         return response()->json([
-                'cv' => [],
+                'cv' => false,
         ], 201);
     }
 }
