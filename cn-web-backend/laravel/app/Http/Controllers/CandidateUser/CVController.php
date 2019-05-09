@@ -88,11 +88,11 @@ class CVController extends Controller
     public function apply(Request $request)
     {
         $companyId = Job::find($request->job_id)->company_id;
-        UserCompany::create([
-            'user_id' => Auth::id(),
-            'company_id' => $companyId,
-            'cv_id' => $request->id,
-        ]);
+        // UserCompany::create([
+        //     'user_id' => Auth::id(),
+        //     'company_id' => $companyId,
+        //     'cv_id' => $request->id,
+        // ]);
 
         CVJob::create([
             'cv_id' => $request->id,
