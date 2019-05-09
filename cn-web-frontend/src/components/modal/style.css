@@ -1,3 +1,9 @@
 .job-start-modal {
     padding: 0;
 }
+
+.list-apply-cv {
+    width: 800px;
+    height: 100%;
+    overflow: auto;
+}

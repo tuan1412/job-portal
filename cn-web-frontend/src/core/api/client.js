@@ -233,13 +233,69 @@ export default {
         })
     },
     getAllCVs() {
-        const userInfo = _.getUserInfo();
-        const userId = userInfo.id;
-
         return api({
             method: 'get',
-            url: `/api/candidate_user/get_all_cv/${userId}`,
+            url: `/api/candidate_user/get_all_cv`,
             isAuth: true
         })
+    },
+    applyCV({ cvId, jobId }) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/apply_cv',
+            data: { id: cvId, job_id: jobId },
+            isAuth: true,
+        })
+    },
+    getAllCVsByJob({ id }) {
+        return api({
+            method: 'post',
+            url: '/api/company_user/get_cv',
+            data: { job_id: id, page: 1, per_page: 100 },
+            isAuth: true,
+        })
+    },
+    acceptCVByCompany(id) {
+        return api({
+            method: 'post',
+            url: `api/company_user/accept_cv/${id}`,
+            isAuth: true
+        })
+    },
+    rejectCVByCompany(id) {
+        return api({
+            method: 'post',
+            url: `/api/company_user/reject_cv/${id}`,
+            isAuth: true
+        })
+    },
+    getDetailJobByCandidate(jobId) {
+        return new Promise((resolve, reject) => {
+            Promise.all([
+                this.getDetailJob({ id: jobId }),
+                api({
+                    method: 'post',
+                    url: '/api/candidate_user/check_cv_applied',
+                    data: { job_id: jobId },
+                    isAuth: true
+                })
+            ])
+                .then((value) => {
+                    const detailJob = value[0];
+                    const applyCV = value[1].cv ? value[1].cv : {};
+                    resolve({ ...detailJob, appliedCV: { ...applyCV } })
+                })
+                .catch((err) => {
+                    reject(err);
+                })
+
+        })
+    },
+    getCompanyId({ title }) {
+        return api({
+            method: 'post',
+            url: '/api/get_company',
+            data: { title }
+        })
     }
-}
+} 

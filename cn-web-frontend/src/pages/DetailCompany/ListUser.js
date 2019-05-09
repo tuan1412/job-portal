@@ -83,17 +83,19 @@ export default class ListUser extends Component {
             const { username, fullname, email, id } = user;
             return (
                 <tr key={id}>
-                    <th scope='row' className='w-10'>{i + 1}</th>
+                    <th>{i + 1}</th>
                     <td>{username}</td>
                     <td>{fullname}</td>
                     <td>{email}</td>
                     <td>
-                        <button type='button' className='btn btn-info mr-2' onClick={() => this.openUser(user)}>
-                            <i className='fa fa-search' aria-hidden='true'></i>
-                        </button>
-                        <button type='button' className='btn btn-danger mr-2' onClick={() => this.deleteUser(user)}>
-                            <i className='fa fa-trash' aria-hidden='true'></i>
-                        </button>
+                        <div>
+                            <button type='button' className='btn btn-info mr-2' onClick={() => this.openUser(user)}>
+                                <i className='fa fa-search' aria-hidden='true'></i>
+                            </button>
+                            <button type='button' className='btn btn-danger mr-2' onClick={() => this.deleteUser(user)}>
+                                <i className='fa fa-trash' aria-hidden='true'></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             )
@@ -105,15 +107,15 @@ export default class ListUser extends Component {
         const { username = '', password = '' } = createUser;
         return (
             <Fragment>
-                <div className='table-responsive-sm'>
+                <div className='table-responsive'>
                     <table className='table'>
                         <thead>
                             <tr>
-                                <th scope='col'>#</th>
+                                <th scope='col' style={{ minWidth: 20 }}>#</th>
                                 <th scope='col'>Username</th>
                                 <th scope='col'>Họ tên</th>
                                 <th scope='col'>Email</th>
-                                <th scope='col'>Thao tác</th>
+                                <th scope='col' style={{ minWidth: 200 }}>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -121,6 +123,7 @@ export default class ListUser extends Component {
                         </tbody>
                     </table>
                 </div>
+
 
                 <div className='custom-file-upload' onClick={this.openCreateUser}>
                     <i className='fa fa-plus'></i> Tạo thêm nhân viên

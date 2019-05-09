@@ -1,18 +1,51 @@
+/* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react'
 import PermissionComponent from '../validator/PermissionComponent';
 import { ROLE_CANDIDATE } from '../../core/utils/constant';
 import FormCV from './FormCV';
+import client from '../../core/api/client';
+import { NotificationRef } from '../../App';
 
 class DetailJobContent extends Component {
 
+
+    state = {
+        chooseCV: {}
+    }
+    
     applyJob = () => {
-        console.log('applyJob');
+        const { chooseCV } = this.state;
+        const { job } = this.props;
+        if (typeof chooseCV.id === 'undefined') {
+            return NotificationRef.current.addNotification({
+                message: 'Chưa chọn cv',
+                level: 'error',
+                position: 'tc',
+                autoDismiss: '100'
+            });
+        }
+        client.applyCV({ cvId: chooseCV.id, jobId: job.id })
+            .then((res) => {
+                NotificationRef.current.addNotification({
+                    message: 'Apply thành công',
+                    level: 'success',
+                    position: 'tc',
+                    autoDismiss: '100'
+                });
+                this.setState({
+                    appliedCV: chooseCV
+                })
+            })
+    }
+
+    chooseCV = (cv) => {
+        this.setState({ chooseCV: cv })
     }
 
     render() {
-        const { title_job, address, description, category_name, name_company } = this.props.job;
-
+        let { title_job, address, description, category_name, name_company, appliedCV = {} } = this.props.job;
+        appliedCV = this.state.appliedCV ? this.state.appliedCV  : appliedCV;
         return (
             <div className="container p-5 bg-white">
                 <div className="row">
@@ -37,11 +70,27 @@ class DetailJobContent extends Component {
                         </div>
                     </div>
                 </div>
-                <FormCV />
+                <PermissionComponent permission={ROLE_CANDIDATE}>
+                    <FormCV chooseCV={this.chooseCV} />
+                </PermissionComponent>
                 <p className="mt-5">
-                    <PermissionComponent permission={ROLE_CANDIDATE}>
-                        <button className="btn btn-primary py-2 px-4" onClick={this.applyJob}>Apply Job</button>
-                    </PermissionComponent>
+                    {
+                        (typeof appliedCV.id !== 'undefined')
+                            ? (
+                                <PermissionComponent permission={ROLE_CANDIDATE}>
+                                    <span>Bạn đã appky công việc này với cv: 
+                                        <a href={`${process.env.REACT_APP_API_URL}/${appliedCV.path}`} target='_blank'>{appliedCV.name}</a>
+                                    </span>
+                                </PermissionComponent>
+                            )
+                            : (
+                                <PermissionComponent permission={ROLE_CANDIDATE}>
+                                    <button className="btn btn-primary py-2 px-4" onClick={this.applyJob}>Apply Job</button>
+
+                                </PermissionComponent>
+
+                            )
+                    }
                 </p>
             </div>
         )

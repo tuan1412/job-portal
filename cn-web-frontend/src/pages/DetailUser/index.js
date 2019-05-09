@@ -10,6 +10,7 @@ import _ from '../../core/utils';
 import CustomModal from '../../components/modal';
 import FormEditUser from './FormEditUser';
 import { NotificationRef } from '../../App';
+import { ROLE_CANDIDATE } from '../../core/utils/constant';
 
 export default class DetailUser extends Component {
 
@@ -89,7 +90,7 @@ export default class DetailUser extends Component {
         const { match } = this.props;
         const { id } = match.params;
 
-        if (_.isAuthUser(id)) {
+        if (_.isAuthUser(id) && _.getPermission() === ROLE_CANDIDATE) {
             const { list_cvs: listCVS } = this.state.user;
             return (
                 <div className='panel panel-default'>
