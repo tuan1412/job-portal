@@ -9,7 +9,7 @@ class Layout extends Component {
     render() {
         return (
             <Fragment>
-                <Header />
+                <Header history={this.props.history} />
                 {this.props.children}
                 <SubscribeMail />
                 <Footer />

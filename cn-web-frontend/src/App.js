@@ -14,6 +14,7 @@ import PrivateRoute from './components/validator/PrivateRoute';
 import { AsyncPostJob } from './pages/PostJob';
 import { AsyncDetailJob } from './pages/DetailJob';
 import FormSearchAdvance from './components/formsearchadvance';
+import Logout from './pages/Logout';
 
 
 export const NotificationRef = React.createRef();
@@ -35,6 +36,7 @@ class App extends Component {
               <Route path="/post-job" component={AsyncPostJob} />
               <Route path="/detail-job/:id" component={AsyncDetailJob} />
               <Route path="/test" component={FormSearchAdvance} />
+              <Route path="/logout" component={Logout} />
               <Route component={Async404} />
           </Switch>
         </Router>

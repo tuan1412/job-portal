@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import Button from '../formcontrols/Button';
 import _ from '../../core/utils';
+import client from '../../core/api/client';
 
 export default class JobItem extends Component {
 
@@ -12,13 +13,24 @@ export default class JobItem extends Component {
         btnAction(id)
     }
 
+    getDetail = () => {
+        const { title_company } = this.props;
+        client.getCompanyId({ title: title_company })
+            .then((resData) => {
+                
+            })
+    }
+
     render() {
         const {
-            title_job: title, 
+            title_job: title,
             category_name: type,
-            address: location, 
-            title_company: company, 
-            btnText, 
+            address: location,
+            title_company: company,
+            btnText,
+            to_salary,
+            from_salary,
+            expire_date
         } = this.props;
         return (
             <div className="row aos-init aos-animate" data-aos="fade">
@@ -33,11 +45,19 @@ export default class JobItem extends Component {
                             </div>
                             <div className="job-post-item-body d-block d-md-flex">
                                 <div className="mr-3"><span className="fl-bigmug-line-portfolio23"> </span>
-                                    <a href="#">{company}</a>
+                                    <span onClick={this.getDetail}>{company}</span>
                                 </div>
-                                <div>
-                                    <span className="fl-bigmug-line-big104"> </span>
-                                    <span>{location}</span>
+                                <div className="mr-3">
+                                    <span className="fl-bigmug-line-big104"></span>
+                                    <span> {location}</span>
+                                </div>
+                                <div className="mr-3">
+                                    <i className="fa fa-money" aria-hidden="true"></i>
+                                    <span> {from_salary}-{to_salary}</span>
+                                </div>
+                                <div className="mr-3">
+                                <i className="fa fa-calendar" aria-hidden="true"></i>
+                                    <span> {expire_date}</span>
                                 </div>
                             </div>
                         </div>

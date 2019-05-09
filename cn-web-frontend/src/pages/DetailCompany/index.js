@@ -32,7 +32,9 @@ export default class DetailCompany extends Component {
                     </div>
                     <div className='panel-body'>
                         <p>Quản lý nhân viên của mình một cách dễ dàng</p>
-                        <ListUser listUsers={listUsers} />
+                        <div>
+                            <ListUser listUsers={listUsers} />
+                        </div>
                     </div>
                 </div>
             )

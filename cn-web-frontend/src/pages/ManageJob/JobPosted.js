@@ -1,7 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import JobList from '../../components/joblist/JobList';
 import _ from '../../core/utils';
 import client from '../../core/api/client';
+import Modal from '../../components/modal';
+import ListApplyCV from './ListApplyCV';
 
 export default class JobPosted extends Component {
     state = {
@@ -10,6 +12,7 @@ export default class JobPosted extends Component {
         pageSize: 10,
         totalItems: 0,
         loading: false,
+        openModal: false,
     }
 
     userInfo = _.getUserInfo();
@@ -40,9 +43,41 @@ export default class JobPosted extends Component {
         this.searchJob({ company_id, status: 1, page });
     }
 
+    onBtnAction = (id) => {
+        client.getAllCVsByJob({ id })
+            .then(({ data }) => {
+                this.setState({
+                    openModal: true,
+                    listCvs: data
+                })
+            })
+    }
+
+    closeModal = () => {
+        this.setState({
+            openModal: false
+        })
+    }
+
     render() {
+        const { openModal, listCvs } = this.state;
         return (
-            <JobList {...this.state} onChangePage={this.onChangePage} />
+            <Fragment>
+                <Modal
+                    cls='list-apply-cv'
+                    open={openModal}
+                    onClose={this.closeModal}
+                >
+                    <ListApplyCV listCvs={listCvs}/>
+                </Modal>
+                <JobList
+                    {...this.state}
+                    onChangePage={this.onChangePage}
+                    btnText='Xem chi tiết'
+                    btnAction={this.onBtnAction}
+                />
+            </Fragment>
+
         )
     }
 }
