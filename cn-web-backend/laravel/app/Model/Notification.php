@@ -11,6 +11,7 @@ class Notification extends Model
     	'company_id',
     	'description',
     	'status',
+        'job_id',
     ];
 
     protected $hidden = [
