@@ -1,4 +1,5 @@
-import { ROLE_MANAGER, ROLE_CANDIDATE } from "./constant";
+import { ROLE_MANAGER, ROLE_CANDIDATE, ROLE_COMPANY } from "./constant";
+import Pusher from 'pusher-js';
 
 export default {
     sample(array) {
@@ -26,10 +27,28 @@ export default {
     setAuth({ user, access_token }) {
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('token', access_token);
+        this.setupRealtime({ user });
+    },
+    setupRealtime({ user }) {
+        window.pusher = {};
+        window.pusher.instance= new Pusher(process.env.REACT_APP_PUSHER_KEY, {
+            cluster: 'ap1',
+            encrypted: true
+        });
+
+        const { role, id, company_id } = user;
+        if (role === ROLE_CANDIDATE) {
+            window.pusher.channel = window.pusher.instance.subscribe(`NotifyUser${id}`)
+        } else if (role === ROLE_MANAGER || role === ROLE_COMPANY) {
+            window.pusher.channel = window.pusher.instance.subscribe(`NotifyCompany${company_id}`)
+        }
     },
     logout() {
         localStorage.removeItem('user');
         localStorage.removeItem('token');
+        if (typeof window.pusher !== 'undefined') {
+            window.pusher = undefined;
+        }
     },
     getUserInfo() {
         if (!this.isAuth()) return;
@@ -49,7 +68,7 @@ export default {
     isCandidateUser() {
         return this.isAuth() && this.getPermission() === ROLE_CANDIDATE
     },
-    buildAvatarUrl(url, type='candidate') {
+    buildAvatarUrl(url, type = 'candidate') {
         if (!url || url === 'default' || url === '') {
             return type === 'candidate' ? '/images/default-image.png' : '/images/default-company.png';
         }
@@ -58,7 +77,7 @@ export default {
     isCompanyManager(id) {
         const userInfo = this.getUserInfo();
         const company_id = parseInt(id, 10);
-        return userInfo  && userInfo['company_id'] === company_id && userInfo['role'] === ROLE_MANAGER;
+        return userInfo && userInfo['company_id'] === company_id && userInfo['role'] === ROLE_MANAGER;
     },
-    
+
 }

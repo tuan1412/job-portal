@@ -131,7 +131,9 @@
     text-align: left;
     position: absolute;
 }
-
+.list-notifications .seen {
+    background: #e8e8f9
+}
 .list-group-item {
     font-size: 12px;
 }
@@ -140,4 +142,18 @@
     .list-notifications {
         width: 80vw;
     }
+}
+
+.list-notifications::-webkit-scrollbar {
+    width: 0.3em;
+    border-radius: 0.3em;
+}
+
+.list-notifications::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.list-notifications::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
 }

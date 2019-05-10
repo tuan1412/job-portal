@@ -2,6 +2,7 @@ import api from ".";
 import _ from '../utils';
 import { ROLE_CANDIDATE, ROLE_MANAGER } from "../utils/constant";
 
+
 export default {
     login({ username, password }) {
         return new Promise((resolve, reject) => {
@@ -353,6 +354,29 @@ export default {
             url: '/api/candidate_user/follow_category',
             data: { category_id },
             isAuth: true
+        })
+    },
+    seenNotification(id) {
+        return api({
+            method: 'post',
+            url: '/api/change_status_notification',
+            data: { id },
+            isAuth: true
+        })
+    },
+    getAllNotifactions() {
+        return new Promise((resolve, reject) => {
+            api({
+                method: 'get',
+                url: '/api/get_notification',
+                isAuth: true
+            })
+            .then(({ notification }) => {
+                notification = notification || [];
+                const notifications = notification.reverse();
+                resolve(notifications)
+            })
+            .catch((err) => reject(err));
         })
     }
 } 
