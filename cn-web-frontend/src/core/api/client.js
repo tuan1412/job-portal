@@ -297,5 +297,62 @@ export default {
             url: '/api/get_company',
             data: { title }
         })
+    },
+    getDetailCompanyByCandidate(id) {
+        return new Promise((resolve, reject) => {
+            Promise.all([
+                this.getDetailCompany({ id }),
+                api({
+                    method: 'post',
+                    url: '/api/candidate_user/check_follow_company',
+                    data: { company_id: id },
+                    isAuth: true
+                })
+            ])
+                .then((values) => {
+                    var { company } = values[0];
+                    var isFollow = !!values[1].status;
+                    resolve({ company: { ...company, isFollow } })
+                });
+        })
+    },
+    followCompany(company_id) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/follow_company',
+            data: { company_id },
+            isAuth: true
+        })
+    },
+    unfollowCompany(company_id) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/unfollow_company',
+            isAuth: true,
+            data: { company_id }
+        })
+    },
+    getCategoriesByCandidate() {
+        return api({
+            method: 'get',
+            url: '/api/candidate_user/check_category',
+            isAuth: true
+        })
+    },
+    followCategory(category_id) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/follow_category',
+            data: { category_id },
+            isAuth: true
+        })
+    },
+    unfollowCategory(category_id) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/follow_category',
+            data: { category_id },
+            isAuth: true
+        })
     }
 } 

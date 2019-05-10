@@ -15,6 +15,7 @@ import { AsyncPostJob } from './pages/PostJob';
 import { AsyncDetailJob } from './pages/DetailJob';
 import FormSearchAdvance from './components/formsearchadvance';
 import Logout from './pages/Logout';
+import { AsyncCategories } from './pages/Categories';
 
 
 export const NotificationRef = React.createRef();
@@ -37,6 +38,7 @@ class App extends Component {
               <Route path="/detail-job/:id" component={AsyncDetailJob} />
               <Route path="/test" component={FormSearchAdvance} />
               <Route path="/logout" component={Logout} />
+              <Route path="/categories" component={AsyncCategories} />
               <Route component={Async404} />
           </Switch>
         </Router>
