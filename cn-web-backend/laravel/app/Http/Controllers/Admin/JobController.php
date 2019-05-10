@@ -72,7 +72,7 @@ class JobController extends Controller
                                 'status' => 0,
                                 'job_id' => $job->id,
                             ]);
-        $pusher->trigger('NotifyCompany' . $companyId, 'job-accepted', $notificationCompany);
+        $pusher->trigger('NotifyCompany' . $companyId, 'notify', $notificationCompany);
 
         $userIds = UserCompany::where('company_id', $companyId)->get('user_id');
         if ($userIds) {
@@ -84,7 +84,7 @@ class JobController extends Controller
                                     'status' => 0,
                                     'job_id' => $job->id,
                                 ]);
-                $pusher->trigger('NotifyUser' . $userId, 'company-post-job', $notificationUser);
+                $pusher->trigger('NotifyUser' . $userId, 'notify', $notificationUser);
             }
         }
 
