@@ -8,6 +8,8 @@ use App\Model\Job;
 use App\Model\Company;
 use App\Model\Notification;
 use App\Model\UserCompany;
+use App\Model\UserCategory;
+use App\Model\Category;
 use Illuminate\Support\Facades\DB;
 use App\Services\PusherService;
 
@@ -74,13 +76,29 @@ class JobController extends Controller
                             ]);
         $pusher->trigger('NotifyCompany' . $companyId, 'notify', $notificationCompany);
 
-        $userIds = UserCompany::where('company_id', $companyId)->get('user_id');
-        if ($userIds) {
-            foreach ($userIds as $userId) {
+        $userIdFollowCompanys = UserCompany::where('company_id', $companyId)->get('user_id');
+        if ($userIdFollowCompanys) {
+            foreach ($userIdFollowCompanys as $userId) {
                 $notificationUser = Notification::create([
                                     'user_id' => $userId,
                                     'company_id' => $companyId,
                                     'description' => $companyName . 'posted job.',
+                                    'status' => 0,
+                                    'job_id' => $job->id,
+                                ]);
+                $pusher->trigger('NotifyUser' . $userId, 'notify', $notificationUser);
+            }
+        }
+
+        $categoryId = $job->category_id;
+        $categoryName = Category::where('id', $categoryId)->first()->name;
+        $userIdFollowCategories = UserCategory::where('category_id', $categoryId)->get('user_id');
+        if ($userIdFollowCategories) {
+            foreach ($userIdFollowCategories as $userId) {
+                $notificationUser = Notification::create([
+                                    'user_id' => $userId,
+                                    'company_id' => $companyId,
+                                    'description' => $categoryName . 'has new job.',
                                     'status' => 0,
                                     'job_id' => $job->id,
                                 ]);
