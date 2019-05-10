@@ -70,7 +70,7 @@ class JobController extends Controller
         $pusher = PusherService::createPusher();
         $notificationCompany = Notification::create([
                                 'company_id' => $companyId,
-                                'description' => $jobTitle . 'is accepted.',
+                                'description' => $jobTitle . ' được chấp nhận.',
                                 'status' => 0,
                                 'job_id' => $job->id,
                             ]);
@@ -81,7 +81,7 @@ class JobController extends Controller
                 $notificationUser = Notification::create([
                                     'user_id' => $userId->user_id,
                                     'company_id' => $companyId,
-                                    'description' => $companyName . 'posted job.',
+                                    'description' => $companyName . ' đã đăng job.',
                                     'status' => 0,
                                     'job_id' => $job->id,
                                 ]);
@@ -97,7 +97,7 @@ class JobController extends Controller
                 $notificationUser = Notification::create([
                                     'user_id' => $userId->user_id,
                                     'company_id' => $companyId,
-                                    'description' => $categoryName . 'has new job.',
+                                    'description' => $categoryName . 'có job mới.',
                                     'status' => 0,
                                     'job_id' => $job->id,
                                 ]);

@@ -6,13 +6,19 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Notification;
 use Illuminate\Support\Facades\Auth;
+use App\Model\CompanyUser;
 
 class NotificationController extends Controller
 {
     public function getNotification(Request $request)
     {
-    	$notification = Notification::where(['user_id' => Auth::id(), 'status' => 0])
-    								 ->get();
+        if ($request->user_role == 'candidate_user') {
+            $notification = Notification::where('user_id', Auth::id())->get();
+        } else {
+            $companyId = CompanyUser::where('user_id', Auth::id())->first()->company_id;
+            $notification = Notification::where('company_id', $companyId)->get();
+        }
+    	
     	if ($notification->isEmpty()) {
     		return response()->json([
 	            'notification' => false,
