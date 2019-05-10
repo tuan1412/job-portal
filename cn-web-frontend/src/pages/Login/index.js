@@ -7,7 +7,6 @@ import Layout from '../../components/layout/Layout';
 
 export default class Login extends Component {
     render() {
-        console.log(this.props);
         return (
             _.isAuth() 
             ? <Redirect to='/' /> 

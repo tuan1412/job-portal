@@ -3,7 +3,7 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import PermissionComponent from '../validator/PermissionComponent';
-import { ROLE_COMPANY, ROLE_MANAGER } from '../../core/utils/constant';
+import { ROLE_COMPANY, ROLE_MANAGER, ROLE_CANDIDATE } from '../../core/utils/constant';
 import _ from '../../core/utils';
 import client from '../../core/api/client';
 import NotifcationBell from '../notificationbell';
@@ -133,6 +133,14 @@ export default class Header extends Component {
                                                 Trang chủ
                                             </Link>
                                         </li>
+
+                                        <PermissionComponent permission={[ROLE_CANDIDATE]} requireAuth>
+                                            <li>
+                                                <Link to={`/categories`}>
+                                                    Loại công việc
+                                                </Link>
+                                            </li>
+                                        </PermissionComponent>
 
                                         <li>
                                             <Link to='/list-job'>Tìm việc ngay</Link>

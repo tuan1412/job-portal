@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react'
 import Button from '../formcontrols/Button';
@@ -16,8 +17,8 @@ export default class JobItem extends Component {
     getDetail = () => {
         const { title_company } = this.props;
         client.getCompanyId({ title: title_company })
-            .then((resData) => {
-                
+            .then(({ company_id }) => {
+                window.open(`${location.origin}/detail-company/${company_id}`, '_blank');
             })
     }
 
@@ -32,6 +33,7 @@ export default class JobItem extends Component {
             from_salary,
             expire_date
         } = this.props;
+        
         return (
             <div className="row aos-init aos-animate" data-aos="fade">
                 <div className="col-md-12">
