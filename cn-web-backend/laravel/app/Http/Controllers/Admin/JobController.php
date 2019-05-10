@@ -75,34 +75,33 @@ class JobController extends Controller
                                 'job_id' => $job->id,
                             ]);
         $pusher->trigger('NotifyCompany' . $companyId, 'notify', $notificationCompany);
-
-        $userIdFollowCompanys = UserCompany::where('company_id', $companyId)->get('user_id');
+        $userIdFollowCompanys = UserCompany::where('company_id', $companyId)->get(['user_id']);
         if ($userIdFollowCompanys) {
             foreach ($userIdFollowCompanys as $userId) {
                 $notificationUser = Notification::create([
-                                    'user_id' => $userId,
+                                    'user_id' => $userId->user_id,
                                     'company_id' => $companyId,
                                     'description' => $companyName . 'posted job.',
                                     'status' => 0,
                                     'job_id' => $job->id,
                                 ]);
-                $pusher->trigger('NotifyUser' . $userId, 'notify', $notificationUser);
+                $pusher->trigger('NotifyUser' . $userId->user_id, 'notify', $notificationUser);
             }
         }
 
         $categoryId = $job->category_id;
         $categoryName = Category::where('id', $categoryId)->first()->name;
-        $userIdFollowCategories = UserCategory::where('category_id', $categoryId)->get('user_id');
+        $userIdFollowCategories = UserCategory::where('category_id', $categoryId)->get(['user_id']);
         if ($userIdFollowCategories) {
             foreach ($userIdFollowCategories as $userId) {
                 $notificationUser = Notification::create([
-                                    'user_id' => $userId,
+                                    'user_id' => $userId->user_id,
                                     'company_id' => $companyId,
                                     'description' => $categoryName . 'has new job.',
                                     'status' => 0,
                                     'job_id' => $job->id,
                                 ]);
-                $pusher->trigger('NotifyUser' . $userId, 'notify', $notificationUser);
+                $pusher->trigger('NotifyUser' . $userId->user_id, 'notify', $notificationUser);
             }
         }
 
