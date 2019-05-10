@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Job;
 use App\Model\Company;
+use App\Model\Notification;
+use App\Model\UserCompany;
 use Illuminate\Support\Facades\DB;
+use App\Services\PusherService;
 
 class JobController extends Controller
 {
@@ -58,6 +61,32 @@ class JobController extends Controller
 
         $job->status = 1;
         $job->save();
+
+        $companyId = $job->company_id;
+        $companyName = Company::where('id', $companyId)->first()->name;
+        $jobTitle = $job->title;
+        $pusher = PusherService::createPusher();
+        $notificationCompany = Notification::create([
+                                'company_id' => $companyId,
+                                'description' => $jobTitle . 'is accepted.',
+                                'status' => 0,
+                                'job_id' => $job->id,
+                            ]);
+        $pusher->trigger('NotifyCompany' . $companyId, 'job-accepted', $notificationCompany);
+
+        $userIds = UserCompany::where('company_id', $companyId)->get('user_id');
+        if ($userIds) {
+            foreach ($userIds as $userId) {
+                $notificationUser = Notification::create([
+                                    'user_id' => $userId,
+                                    'company_id' => $companyId,
+                                    'description' => $companyName . 'posted job.',
+                                    'status' => 0,
+                                    'job_id' => $job->id,
+                                ]);
+                $pusher->trigger('NotifyUser' . $userId, 'company-post-job', $notificationUser);
+            }
+        }
 
         return response()->json([
             'message' => 'Job is accepted',
