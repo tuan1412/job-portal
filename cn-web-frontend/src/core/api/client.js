@@ -31,7 +31,7 @@ export default {
     signUpCompany({ username, company_name, password, email, avatar }) {
         return api({
             method: 'post',
-            url: '/api/auth/candidate_user/signup',
+            url: '/api/auth/company_user/signup',
             data: { username, company_name, password, email, avatar },
             isFormData: true
         })
