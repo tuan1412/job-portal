@@ -32,7 +32,7 @@ export default class SignUpModal extends Component {
         },
         {
             label: 'For company',
-            pane: <SignUp callback={this.signUpCandidate} type='company' />
+            pane: <SignUp callback={this.signUpCompany} type='company' />
         }
     ]
 
