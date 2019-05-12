@@ -6,7 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Job;
 use App\Model\Company;
+use App\Model\Notification;
+use App\Model\UserCompany;
+use App\Model\UserCategory;
+use App\Model\Category;
 use Illuminate\Support\Facades\DB;
+use App\Services\PusherService;
 
 class JobController extends Controller
 {
@@ -58,6 +63,47 @@ class JobController extends Controller
 
         $job->status = 1;
         $job->save();
+
+        $companyId = $job->company_id;
+        $companyName = Company::where('id', $companyId)->first()->name;
+        $jobTitle = $job->title;
+        $pusher = PusherService::createPusher();
+        $notificationCompany = Notification::create([
+                                'company_id' => $companyId,
+                                'description' => $jobTitle . ' được chấp nhận.',
+                                'status' => 0,
+                                'job_id' => $job->id,
+                            ]);
+        $pusher->trigger('NotifyCompany' . $companyId, 'notify', $notificationCompany);
+        $userIdFollowCompanys = UserCompany::where('company_id', $companyId)->get(['user_id']);
+        if ($userIdFollowCompanys) {
+            foreach ($userIdFollowCompanys as $userId) {
+                $notificationUser = Notification::create([
+                                    'user_id' => $userId->user_id,
+                                    'company_id' => $companyId,
+                                    'description' => $companyName . ' đã đăng job.',
+                                    'status' => 0,
+                                    'job_id' => $job->id,
+                                ]);
+                $pusher->trigger('NotifyUser' . $userId->user_id, 'notify', $notificationUser);
+            }
+        }
+
+        $categoryId = $job->category_id;
+        $categoryName = Category::where('id', $categoryId)->first()->name;
+        $userIdFollowCategories = UserCategory::where('category_id', $categoryId)->get(['user_id']);
+        if ($userIdFollowCategories) {
+            foreach ($userIdFollowCategories as $userId) {
+                $notificationUser = Notification::create([
+                                    'user_id' => $userId->user_id,
+                                    'company_id' => $companyId,
+                                    'description' => $categoryName . 'có job mới.',
+                                    'status' => 0,
+                                    'job_id' => $job->id,
+                                ]);
+                $pusher->trigger('NotifyUser' . $userId->user_id, 'notify', $notificationUser);
+            }
+        }
 
         return response()->json([
             'message' => 'Job is accepted',

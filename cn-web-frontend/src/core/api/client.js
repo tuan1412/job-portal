@@ -2,6 +2,7 @@ import api from ".";
 import _ from '../utils';
 import { ROLE_CANDIDATE, ROLE_MANAGER } from "../utils/constant";
 
+
 export default {
     login({ username, password }) {
         return new Promise((resolve, reject) => {
@@ -233,13 +234,149 @@ export default {
         })
     },
     getAllCVs() {
-        const userInfo = _.getUserInfo();
-        const userId = userInfo.id;
-
         return api({
             method: 'get',
-            url: `/api/candidate_user/get_all_cv/${userId}`,
+            url: `/api/candidate_user/get_all_cv`,
             isAuth: true
         })
+    },
+    applyCV({ cvId, jobId }) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/apply_cv',
+            data: { id: cvId, job_id: jobId },
+            isAuth: true,
+        })
+    },
+    getAllCVsByJob({ id }) {
+        return api({
+            method: 'post',
+            url: '/api/company_user/get_cv',
+            data: { job_id: id, page: 1, per_page: 100 },
+            isAuth: true,
+        })
+    },
+    acceptCVByCompany(id) {
+        return api({
+            method: 'post',
+            url: `api/company_user/accept_cv/${id}`,
+            isAuth: true
+        })
+    },
+    rejectCVByCompany(id) {
+        return api({
+            method: 'post',
+            url: `/api/company_user/reject_cv/${id}`,
+            isAuth: true
+        })
+    },
+    getDetailJobByCandidate(jobId) {
+        return new Promise((resolve, reject) => {
+            Promise.all([
+                this.getDetailJob({ id: jobId }),
+                api({
+                    method: 'post',
+                    url: '/api/candidate_user/check_cv_applied',
+                    data: { job_id: jobId },
+                    isAuth: true
+                })
+            ])
+                .then((value) => {
+                    const detailJob = value[0];
+                    const applyCV = value[1].cv ? value[1].cv : {};
+                    resolve({ ...detailJob, appliedCV: { ...applyCV } })
+                })
+                .catch((err) => {
+                    reject(err);
+                })
+
+        })
+    },
+    getCompanyId({ title }) {
+        return api({
+            method: 'post',
+            url: '/api/get_company',
+            data: { title }
+        })
+    },
+    getDetailCompanyByCandidate(id) {
+        return new Promise((resolve, reject) => {
+            Promise.all([
+                this.getDetailCompany({ id }),
+                api({
+                    method: 'post',
+                    url: '/api/candidate_user/check_follow_company',
+                    data: { company_id: id },
+                    isAuth: true
+                })
+            ])
+                .then((values) => {
+                    var { company } = values[0];
+                    var isFollow = !!values[1].status;
+                    resolve({ company: { ...company, isFollow } })
+                });
+        })
+    },
+    followCompany(company_id) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/follow_company',
+            data: { company_id },
+            isAuth: true
+        })
+    },
+    unfollowCompany(company_id) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/unfollow_company',
+            isAuth: true,
+            data: { company_id }
+        })
+    },
+    getCategoriesByCandidate() {
+        return api({
+            method: 'get',
+            url: '/api/candidate_user/check_category',
+            isAuth: true
+        })
+    },
+    followCategory(category_id) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/follow_category',
+            data: { category_id },
+            isAuth: true
+        })
+    },
+    unfollowCategory(category_id) {
+        return api({
+            method: 'post',
+            url: '/api/candidate_user/follow_category',
+            data: { category_id },
+            isAuth: true
+        })
+    },
+    seenNotification(id) {
+        return api({
+            method: 'post',
+            url: '/api/change_status_notification',
+            data: { id },
+            isAuth: true
+        })
+    },
+    getAllNotifactions() {
+        return new Promise((resolve, reject) => {
+            api({
+                method: 'get',
+                url: '/api/get_notification',
+                isAuth: true
+            })
+            .then(({ notification }) => {
+                notification = notification || [];
+                const notifications = notification.reverse();
+                resolve(notifications)
+            })
+            .catch((err) => reject(err));
+        })
     }
-}
+} 

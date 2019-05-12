@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import _ from '../../core/utils';
-import { ROLE_MANAGER, ROLE_COMPANY } from '../../core/utils/constant';
 
 class PermissionComponent extends Component {
     login = () => {
@@ -13,16 +12,23 @@ class PermissionComponent extends Component {
     }
 
     render() {
-        const { permission } = this.props;
+        let { permission, requireAuth } = this.props;
+        if (requireAuth && !_.isAuth()) return null;
+        if (!Array.isArray(permission)) {
+            permission = [permission]
+        }
+
         let permissionUser = _.getPermission();
-        permissionUser = permissionUser === ROLE_MANAGER ? ROLE_COMPANY : permissionUser;
+        const hasPermission = permission.some((per) => {
+            return per === permissionUser
+        });
 
         if (!permissionUser) {
             return (
                 React.cloneElement(this.props.children, { onClick: this.login })
             )
         }
-        if (permissionUser === permission) {
+        if (hasPermission) {
             return (
                 React.cloneElement(this.props.children)
             )

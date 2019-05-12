@@ -33,6 +33,7 @@ Route::get('get_list_categories', 'CandidateUser\JobController@getListCategories
 Route::get('get_user_detail/{user_id}', 'Api\GuestController@getUserDetail');
 Route::get('get_job_detail/{job_id}', 'Api\GuestController@getJobDetail');
 Route::get('get_company_detail/{company_id}', 'Api\GuestController@getCompanyDetail');
+Route::post('get_company', 'Api\GuestController@getCompany');
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::group([
@@ -67,7 +68,9 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('update_job/{id}', 'JobController@update');
         Route::delete('delete_job/{id}', 'JobController@delete');
     
-        Route::get('get_cv/{company_id}', 'CVController@index');
+        Route::post('get_cv', 'CVController@index');
+        Route::post('reject_cv/{id}', 'CVController@reject');
+        Route::post('accept_cv/{id}', 'CVController@accept');
 
         Route::post('update_info', 'MeController@updateInfo');
     });
@@ -83,10 +86,27 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('apply_cv', 'CVController@apply');
         Route::get('get_all_cv', 'CVController@getAll');
         Route::get('get_cv/{id}', 'CVController@index');
+        Route::post('check_cv_applied', 'CVController@checkCVApplied');
 
         Route::get('detail', 'MeController@index');
         Route::post('update_info', 'MeController@updateInfo');
         Route::post('update_avatar', 'MeController@updateAvatar');
+
+        Route::post('follow_company', 'CompanyController@follow');
+        Route::post('unfollow_company', 'CompanyController@unfollow');
+        Route::post('check_follow_company', 'CompanyController@checkFollow');
+
+        Route::post('follow_category', 'CategoryController@follow');
+        Route::post('unfollow_category', 'CategoryController@unfollow');
+        Route::post('check_follow_category', 'CategoryController@checkFollow');
+        Route::get('check_category', 'CategoryController@getAll');
+    });
+
+    Route::group([
+        'middleware' => 'role:company_user,company_manager,candidate_user'
+    ], function () {
+        Route::get('get_notification', 'Api\NotificationController@getNotification');
+        Route::post('change_status_notification', 'Api\NotificationController@changeStatus');
     });
 });
 

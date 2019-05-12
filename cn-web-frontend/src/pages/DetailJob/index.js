@@ -3,6 +3,7 @@ import Layout from '../../components/layout/Layout';
 import Loadable from '../../components/lazyload';
 import DetailJobContent from '../../components/detailjob/DetailJob';
 import client from '../../core/api/client';
+import _ from '../../core/utils';
 
 export default class DetailJob extends Component {
 
@@ -13,15 +14,25 @@ export default class DetailJob extends Component {
   componentDidMount() {
     const { match } = this.props;
     const { id } = match.params;
-    client.getDetailJob({ id })
-      .then((res) => {
-        this.setState({
-          job: {...res}
+    if (_.isCandidateUser()) {
+      client.getDetailJobByCandidate(id)
+        .then((res) => {
+          this.setState({
+            job: { ...res }
+          })
         })
-      })
-      .catch((err) => {
-        console.warn(err);
-      })
+    } else {
+      client.getDetailJob({ id })
+        .then((res) => {
+          this.setState({
+            job: { ...res }
+          })
+        })
+        .catch((err) => {
+          console.warn(err);
+        })
+    }
+
   }
 
   render() {

@@ -10,6 +10,8 @@ export default class FormCV extends Component {
         listCVs: [],
         openEdit: false,
         openUpload: false,
+        choosedCV: {},
+        editCV: {}
     }
     componentDidMount() {
         client.getAllCVs()
@@ -25,7 +27,7 @@ export default class FormCV extends Component {
             const { name, id } = cv;
             const cls = classnames({ 'bg-primary': id === choosedCV.id })
             return (
-                <tr key={id} className={cls}>
+                <tr key={id} className={cls} onClick={() => this.chooseCV(cv)}>
                     <th scope='row' className='w-10'>{i + 1}</th>
                     <td className='w-60'>{name}</td>
                     <td className='w-30'>
@@ -38,13 +40,7 @@ export default class FormCV extends Component {
                         <button type='button' className='btn btn-danger mr-2' onClick={() => this.deleteCV(cv)}>
                             <i className='fa fa-trash' aria-hidden='true'></i>
                         </button>
-                        <button
-                            disabled={id === choosedCV.id}
-                            type='button' 
-                            className='btn bg-success mr-2' 
-                            onClick={() => this.chooseCV(cv)}>
-                            <i className='fa fa-bookmark' aria-hidden='true'></i>
-                        </button>
+                       
                     </td>
                 </tr>
             )
@@ -52,7 +48,15 @@ export default class FormCV extends Component {
     }
 
     chooseCV = (cv) => {
-        this.setState({ choosedCV: cv });
+        const { choosedCV } = this.state;
+        if (cv.id === choosedCV.id) {
+            return this.setState({ choosedCV: {} }, () => {
+                this.props.chooseCV({});
+            });
+        } 
+        this.setState({ choosedCV: cv }, () => {
+            this.props.chooseCV(cv);
+        });
     }
 
     editCV = (cv) => {

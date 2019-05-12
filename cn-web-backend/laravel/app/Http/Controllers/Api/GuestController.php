@@ -56,4 +56,12 @@ class GuestController extends Controller
             'company' => $company,
         ], 200);
     }
+
+    public function getCompany(Request $request)
+    {
+        $companyId = Company::where('title', $request->title)->first()->id;
+        return response()->json([
+            'company_id' => $companyId,
+        ], 200);
+    }
 }

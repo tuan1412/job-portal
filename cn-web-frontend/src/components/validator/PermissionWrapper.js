@@ -4,10 +4,14 @@ import Page403 from '../../pages/403';
 
 export default class PermissionWrapper extends Component {
   render() {
-    const { permission } = this.props
-    if (_.getPermission() === permission) {
-      return this.props.children;
+    let { permission, children } = this.props
+    if (!Array.isArray(permission)) {
+      permission = [permission]
     }
-    return <Page403 />
+    const myPermission = _.getPermission();
+    const hasPermission = permission.some((per) => {
+      return per === myPermission
+    });
+    return hasPermission ? children : <Page403 />
   }
 }

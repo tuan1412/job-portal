@@ -13,10 +13,18 @@ export default class DetailCompany extends Component {
     componentDidMount() {
         const { match } = this.props;
         const { id } = match.params;
-        client.getDetailCompany({ id })
-            .then(({ company }) => {
-                this.setState({ company })
-            });
+        if (_.isCandidateUser()) {
+            client.getDetailCompanyByCandidate(id)
+                .then(({ company }) => {
+                    this.setState({ company })
+                })
+        } else {
+            client.getDetailCompany({ id })
+                .then(({ company }) => {
+                    this.setState({ company })
+                });
+        }
+
     }
 
     renderUsers = () => {
@@ -32,11 +40,79 @@ export default class DetailCompany extends Component {
                     </div>
                     <div className='panel-body'>
                         <p>Quản lý nhân viên của mình một cách dễ dàng</p>
-                        <ListUser listUsers={listUsers} />
+                        <div>
+                            <ListUser listUsers={listUsers} />
+                        </div>
                     </div>
                 </div>
             )
         }
+        return null;
+    }
+    followCompany = () => {
+        const { company } = this.state;
+        const { id } = company;
+        client.followCompany(id)
+            .then(() => {
+                this.setState({
+                    company: { ...company, isFollow: true }
+                })
+            });
+    }
+
+    unfollowCompany = () => {
+        const { company } = this.state;
+        const { id } = company;
+        client.unfollowCompany(id)
+            .then(() => {
+                this.setState({
+                    company: { ...company, isFollow: false }
+                })
+            });
+    }
+    renderAvatar = () => {
+        const { match } = this.props;
+        const { id } = match.params;
+        const { company } = this.state;
+        const avatar = _.buildAvatarUrl(company.path_avatar, 'company');
+
+        if (_.isAuthUser(id)) {
+            return (
+                <div className='avatar-container' onClick={this.changeAvatar}>
+                    <img src={avatar} alt='' className='img-responsive' />
+                    <div className='edit-avatar'>
+                        <label htmlFor='avatar'>Thay ảnh</label>
+                        <input id='avatar' type='file' accept='.png, .jpg, .jpeg' onChange={this.readUrl} />
+                    </div>
+                </div>
+            )
+        }
+        return (
+            <div className='avatar-container'>
+                <img src={avatar} alt='' className='img-responsive' />
+            </div>
+        )
+    }
+
+    renderBtnFollow = () => {
+        const { isFollow } = this.state.company;
+
+        if (_.isCandidateUser()) {
+            if (!isFollow) {
+                return (
+                    <button className='btn btn-warning' onClick={this.followCompany} style={{ float: 'right' }}>
+                        Theo dõi
+                    </button>
+                )
+            }
+            return (
+                <button className='btn btn-warning' onClick={this.unfollowCompany} style={{ float: 'right' }}>
+                    Không theo dõi
+                </button>
+            )
+
+        }
+
         return null;
     }
 
@@ -53,10 +129,11 @@ export default class DetailCompany extends Component {
                                 <div className='basic-information'>
                                     <div className='row mb-4'>
                                         <div className='col-md-3 col-sm-3'>
-                                            <img src='/images/microsoft.png' alt='' className='img-responsive' />
+                                            {this.renderAvatar()}
                                         </div>
                                         <div className='col-md-9 col-sm-9'>
                                             <div className='profile-content'>
+                                                {this.renderBtnFollow()}
                                                 <h2>{title}<span>{name}</span></h2>
                                                 <ul className='information'>
                                                     <li><span>Tên:</span>{name}</li>

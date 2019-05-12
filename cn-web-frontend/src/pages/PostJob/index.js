@@ -67,6 +67,7 @@ export default class PostJob extends Component {
                         fromSalary: 0,
                         toSalary: 0,
                         expireDate: '',
+                        description: '',
                         categories: [{ value: '', name: 'Ngành nghề' }],
                     })
                 }

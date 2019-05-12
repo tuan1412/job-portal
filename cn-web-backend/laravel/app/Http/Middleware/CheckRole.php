@@ -20,6 +20,7 @@ class CheckRole
         
         foreach ($roles as $role) {
             if ($user->role == $role) {
+                $request->user_role = $user->role;
                 return $next($request);
             }
         }

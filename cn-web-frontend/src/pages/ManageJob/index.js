@@ -5,7 +5,7 @@ import TabPane from '../../components/tabpane';
 import Loadable from '../../components/lazyload';
 import Layout from '../../components/layout/Layout';
 import PermissionWrapper from '../../components/validator/PermissionWrapper';
-import { ROLE_COMPANY } from '../../core/utils/constant';
+import { ROLE_COMPANY, ROLE_MANAGER } from '../../core/utils/constant';
 
 export default class ManageJob extends Component {
     panes = [
@@ -22,7 +22,7 @@ export default class ManageJob extends Component {
 
     render() {
         return (
-            <PermissionWrapper permission={ROLE_COMPANY}>
+            <PermissionWrapper permission={[ROLE_COMPANY, ROLE_MANAGER]}>
                 <Layout>
                     <div className='pt-2 pb-2 bg-light'>
                         <div className="container justify-content-center pt-5 pb-5 ">

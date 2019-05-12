@@ -5,6 +5,8 @@ namespace App\Http\Controllers\CandidateUser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\CV;
+use App\Model\CVJob;
+use App\Model\Job;
 use Illuminate\Support\Facades\DB;
 use App\Model\UserCompany;
 use App\Services\UploadFileService;
@@ -85,15 +87,43 @@ class CVController extends Controller
 
     public function apply(Request $request)
     {
-        UserCompany::create([
-            'user_id' => Auth::id(),
-            'company_id' => $request->company_id,
+        $companyId = Job::find($request->job_id)->company_id;
+        // UserCompany::create([
+        //     'user_id' => Auth::id(),
+        //     'company_id' => $companyId,
+        //     'cv_id' => $request->id,
+        // ]);
+
+        CVJob::create([
             'cv_id' => $request->id,
+            'job_id' => $request->job_id,
+            'status' => 0
         ]);
 
         return response()->json([
             'message' => 'Apply CV successfully',
             'status'  => 1,
+        ], 201);
+    }
+
+    public function checkCVApplied(Request $request)
+    {
+        $check = DB::table('cvs')
+                   ->join('cv_job', 'cv_job.cv_id', '=', 'cvs.id')
+                   ->where(['user_id' => Auth::id(), 'job_id' => $request->job_id])
+                   ->first();
+        if ($check) {
+            $cv['id'] = $check->id;
+            $cv['name'] = $check->name;
+            $cv['path'] = $check->path;
+            $cv['status'] = $check->status;
+            return response()->json([
+                'cv' => $cv,
+            ], 201);
+        }
+
+        return response()->json([
+                'cv' => false,
         ], 201);
     }
 }
